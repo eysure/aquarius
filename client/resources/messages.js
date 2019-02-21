@@ -1,4 +1,13 @@
 export default {
+    DEMO_WELCOME: {
+        title: ["Welcome to AquariusOS"],
+        content: "This is a demo of AquariusOS, test account is provided. Please enjoy! And you are always welcome to drop a feedback.",
+        class: 2,
+        icon: "favorite",
+        persist: true,
+        more_info_uri: "mailto:eysure@gmail.com?subject=Feedback of AquariusOS",
+        more_info_button: ["Email", "发邮件"]
+    },
     LOGIN_SUCCESSFUL: {
         title: ["Welcome back, ${username}", "欢迎回来, ${username}"],
         class: 2,
@@ -59,26 +68,28 @@ export default {
         class: 5,
         persist: true
     },
+    APP_NOT_READY: {
+        title: ["This app is still developing", "此应用正在开发中"],
+        content: ["All we provide is the concept and demo. Though, you are welcome to drop a feedback.", "目前提供的仅是概念与展示，同时欢迎提供反馈建议"],
+        class: 3,
+        persist: true,
+        more_info_uri: "mailto:eysure@gmail.com",
+        more_info_button: ["Email", "发邮件"]
+    },
     APP_LAUNCH_FAILED: {
         title: ["App launch failed", "应用启动失败"],
-        content: [
-            "${msgContent}\n\nYou can send this message to Henry and ask for help.",
-            "${msgContent}\n\n你可以向Henry报告这一信息并求助"
-        ],
+        content: ["${msgContent}\n\nYou can send this message to Henry and ask for help.", "${msgContent}\n\n你可以向Henry报告这一信息并求助"],
         class: 5,
         persist: true,
-        more_info_uri: "mailto:eysure@gmail.com?subject=[Trumode.app] App launch failed&body=${msgContent}",
+        more_info_uri: "mailto:eysure@gmail.com?subject=App launch failed&body=${msgContent}",
         more_info_button: ["Email", "发邮件"]
     },
     APP_CRASH: {
         title: ["App Crash", "应用已意外停止"],
-        content: [
-            "${msgContent}\n\nYou can send this message to Henry and ask for help.",
-            "${msgContent}\n\n你可以向Henry报告这一信息并求助"
-        ],
+        content: ["${msgContent}\n\nYou can send this message to Henry and ask for help.", "${msgContent}\n\n你可以向Henry报告这一信息并求助"],
         class: 5,
         persist: true,
-        more_info_uri: "mailto:eysure@gmail.com?subject=[Trumode.app] App Crash&body=${msgContent}",
+        more_info_uri: "mailto:eysure@gmail.com?subject=App Crash&body=${msgContent}",
         more_info_button: ["Email", "发邮件"]
     },
     WHATS_LOREM_IPSUM: {

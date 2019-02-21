@@ -1,6 +1,7 @@
 import _ from "lodash";
 import uuidv4 from "uuid/v4";
 import { Collection, oss } from "./resources";
+import { Accounts } from "meteor/accounts-base";
 
 getEmailById = userId => {
     let user = Meteor.users.findOne({ _id: userId });

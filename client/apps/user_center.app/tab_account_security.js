@@ -64,6 +64,12 @@ class AccountSecurityTab extends React.Component {
             return;
         }
 
+        // Demo only
+        // if (Meteor.settings.public.demo) {
+        //     this.props.throwMsg(R.Msg("DEMO_CANT_CHANGE_PASSWORD"));
+        //     return;
+        // }
+
         Accounts.changePassword(currentPassword, newPassword, error => {
             if (error) {
                 this.props.throwMsg(R.Msg("CHANGE_PASSWORD_FAILED", { error: error.message }));
@@ -88,14 +94,7 @@ class AccountSecurityTab extends React.Component {
                         name="currentPassword"
                         type="password"
                     />
-                    <PI
-                        title={R.Str("NEW_PASSWORD")}
-                        value={this.state.newPassword}
-                        onChange={this.handleChange}
-                        input
-                        name="newPassword"
-                        type="password"
-                    />
+                    <PI title={R.Str("NEW_PASSWORD")} value={this.state.newPassword} onChange={this.handleChange} input name="newPassword" type="password" />
                     <PI
                         title={R.Str("REPEAT_NEW_PASSWORD")}
                         value={this.state.repeatNewPassword}
@@ -122,13 +121,7 @@ class AccountSecurityTab extends React.Component {
 
                 <UI.Button
                     color="primary"
-                    disabled={
-                        !(
-                            this.state.currentPassword &&
-                            this.state.newPasswordValidated &&
-                            this.state.newPassword === this.state.repeatNewPassword
-                        )
-                    }
+                    disabled={!(this.state.currentPassword && this.state.newPasswordValidated && this.state.newPassword === this.state.repeatNewPassword)}
                     variant="outlined"
                     style={{ width: "100%" }}
                     onClick={this.handlePasswordChange}

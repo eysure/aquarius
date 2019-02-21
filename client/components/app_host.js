@@ -19,9 +19,7 @@ class AppHost extends Component {
                     if (!thisApp) {
                         this.props.throwMsg(
                             R.Msg("APP_LAUNCH_FAILED", {
-                                msgContent:
-                                    "No appKey found in appList." +
-                                    appInState.key
+                                msgContent: "No appKey found in appList." + appInState.key
                             })
                         );
                         this.props.appClose(appInState.key);
@@ -46,7 +44,7 @@ class AppHost extends Component {
                     );
                 }
             } catch (e) {
-                console.log(e);
+                console.error(e);
             }
         });
 
@@ -55,9 +53,7 @@ class AppHost extends Component {
                 id="app-host"
                 className="first-class-overlap"
                 style={{
-                    height: `calc(100% - ${
-                        this.props.system.menuBarHide ? "0px" : "36px"
-                    })`,
+                    height: `calc(100% - ${this.props.system.menuBarHide ? "0px" : "36px"})`,
                     transition: "300ms"
                 }}
             >

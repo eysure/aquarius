@@ -78,9 +78,7 @@ class Launchpad extends React.Component {
             return;
         }
         this.pointerMoved = [];
-        this.pointerMoved[0] = e.touches
-            ? [e.touches[0].pageX, e.touches[0].pageY]
-            : [e.clientX, e.clientY];
+        this.pointerMoved[0] = e.touches ? [e.touches[0].pageX, e.touches[0].pageY] : [e.clientX, e.clientY];
     };
     onTouchMove = e => {
         this.pointerMoved[1] = [e.touches[0].pageX, e.touches[0].pageY];
@@ -88,48 +86,28 @@ class Launchpad extends React.Component {
     onTouchEnd = e => {
         if (!this.pointerMoved[0]) return;
         if (e.button === 1) return;
-        if (e.clientX || e.clientY)
-            this.pointerMoved[1] = [e.clientX, e.clientY];
+        if (e.clientX || e.clientY) this.pointerMoved[1] = [e.clientX, e.clientY];
         if (!this.pointerMoved[1]) {
             this.props.launchPadControl(false);
             return;
         }
-        let dist = Math.sqrt(
-            Math.pow(this.pointerMoved[0][0] - this.pointerMoved[1][0], 2) +
-                Math.pow(this.pointerMoved[0][1] - this.pointerMoved[1][1], 2)
-        );
+        let dist = Math.sqrt(Math.pow(this.pointerMoved[0][0] - this.pointerMoved[1][0], 2) + Math.pow(this.pointerMoved[0][1] - this.pointerMoved[1][1], 2));
         if (dist < 6) {
             this.props.launchPadControl(false);
         }
     };
 
-    itemDown = () => {
-        console.log("item down");
-        this.setState({ canDrag: false });
-        this.pointerMoved[0] = null;
-    };
-    itemUp = () => {
-        console.log("item up");
-        this.setState({ canDrag: true });
-    };
-
-    onWheel = e => {};
-
     render() {
         let launchpadStyleAnimation = {
             opacity: this.props.system.launchpadStatus ? 1 : 0,
-            transform: this.props.system.launchpadStatus
-                ? "scale(1)"
-                : "scale(1.1)",
+            transform: this.props.system.launchpadStatus ? "scale(1)" : "scale(1.1)",
             pointerEvents: this.props.system.launchpadStatus ? "unset" : "none",
             transition: "300ms all"
         };
 
         let launchpadGridStyle = {
             display: "grid",
-            gridTemplateColumns: `repeat(${
-                this.state.isViewPortVertical ? 5 : 7
-            }, 16vmin)`,
+            gridTemplateColumns: `repeat(${this.state.isViewPortVertical ? 5 : 7}, 16vmin)`,
             gridAutoRows: "16vmin",
             position: "absolute",
             top: "8vh"
@@ -162,10 +140,8 @@ class Launchpad extends React.Component {
                             ...styles.slide
                         }}
                     >
-                        <div
-                            className="launchpad-item-container"
-                            style={launchpadGridStyle}
-                        >
+                        <div className="launchpad-item-container" style={launchpadGridStyle}>
+                            <AppLaunchpadItem appKey="welcome" />
                             <AppLaunchpadItem appKey="order_manager" />
                             <AppLaunchpadItem appKey="crm" />
                             <AppLaunchpadItem appKey="product_manager" />
@@ -174,6 +150,7 @@ class Launchpad extends React.Component {
                             <AppLaunchpadItem appKey="preference" />
                             <AppLaunchpadItem appKey="app_manager" />
                             <AppLaunchpadItem appKey="search" />
+                            <AppLaunchpadItem appKey="manual" />
                         </div>
                     </div>
                     <div style={styles.slide}>slide 3</div>
@@ -187,14 +164,6 @@ class Launchpad extends React.Component {
             </div>
         );
     }
-
-    onKeyDown = (keyName, e, handle) => {
-        console.log(keyName);
-    };
-
-    onKeyUp = e => {
-        console.log(e);
-    };
 
     updateWindowDimensions = () => {
         this.setState({
@@ -213,11 +182,9 @@ class Launchpad extends React.Component {
         });
         hotkeys("left", (event, handler) => {
             if (this.state.index === 0) {
-                this.swipeableViewsRef.current.containerNode.style.transform =
-                    "translate(10%,0)";
+                this.swipeableViewsRef.current.containerNode.style.transform = "translate(10%,0)";
                 setTimeout(() => {
-                    this.swipeableViewsRef.current.containerNode.style.transform =
-                        "translate(0%,0)";
+                    this.swipeableViewsRef.current.containerNode.style.transform = "translate(0%,0)";
                 }, 200);
                 return;
             }
@@ -225,15 +192,9 @@ class Launchpad extends React.Component {
         });
         hotkeys("right", (event, handler) => {
             if (this.state.index === this.pages - 1) {
-                this.swipeableViewsRef.current.containerNode.style.transform = `translate(${-(
-                    this.pages - 1
-                ) *
-                    100 -
-                    10}%,0)`;
+                this.swipeableViewsRef.current.containerNode.style.transform = `translate(${-(this.pages - 1) * 100 - 10}%,0)`;
                 setTimeout(() => {
-                    this.swipeableViewsRef.current.containerNode.style.transform = `translate(${-(
-                        this.pages - 1
-                    ) * 100}%,0)`;
+                    this.swipeableViewsRef.current.containerNode.style.transform = `translate(${-(this.pages - 1) * 100}%,0)`;
                 }, 200);
                 return;
             }

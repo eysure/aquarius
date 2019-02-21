@@ -8,9 +8,7 @@ const fullscreenWrapper = () => {
      */
     if (!Element.prototype.requestFullscreen) {
         Element.prototype.requestFullscreen =
-            Element.prototype.mozRequestFullscreen ||
-            Element.prototype.webkitRequestFullscreen ||
-            Element.prototype.msRequestFullscreen;
+            Element.prototype.mozRequestFullscreen || Element.prototype.webkitRequestFullscreen || Element.prototype.msRequestFullscreen;
     }
 
     /**
@@ -19,8 +17,7 @@ const fullscreenWrapper = () => {
      * @license MIT
      */
     if (!document.exitFullscreen) {
-        document.exitFullscreen =
-            document.mozExitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+        document.exitFullscreen = document.mozExitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
     }
 
     /**
@@ -32,17 +29,13 @@ const fullscreenWrapper = () => {
     if (!document.fullscreenElement) {
         Object.defineProperty(document, "fullscreenElement", {
             get: function() {
-                return (
-                    document.mozFullScreenElement || document.msFullscreenElement || document.webkitFullscreenElement
-                );
+                return document.mozFullScreenElement || document.msFullscreenElement || document.webkitFullscreenElement;
             }
         });
 
         Object.defineProperty(document, "fullscreenEnabled", {
             get: function() {
-                return (
-                    document.mozFullScreenEnabled || document.msFullscreenEnabled || document.webkitFullscreenEnabled
-                );
+                return document.mozFullScreenEnabled || document.msFullscreenEnabled || document.webkitFullscreenEnabled;
             }
         });
     }
@@ -127,14 +120,6 @@ const closeConfirm = () => {
 
 const initialization = () => {
     fullscreenWrapper();
-    document.addEventListener("drop", e => {
-        e.preventDefault();
-        console.log("document drop");
-    });
-    window.addEventListener("drop", e => {
-        e.preventDefault();
-        console.log("window drop");
-    });
     // closeConfirm();
 };
 

@@ -13,13 +13,8 @@ class Admin extends React.Component {
 
     render() {
         return (
-            <Window
-                appProps={this.props.appProps}
-                width={840}
-                height={720}
-                aria-labelledby="admin"
-            >
-                <UI.DialogTitle>Trumode.app Admin Page</UI.DialogTitle>
+            <Window appProps={this.props.appProps} width={840} height={720} aria-labelledby="admin">
+                <UI.DialogTitle>AquariusOS Admin Page</UI.DialogTitle>
             </Window>
         );
     }

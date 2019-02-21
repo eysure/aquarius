@@ -19,7 +19,8 @@ const notificationStyle = {
     pointerEvents: "all",
     display: "flex",
     flexFlow: "column",
-    padding: "12px 16px"
+    padding: "12px 16px",
+    border: "1px solid rgba(35,35,35,0.15)"
 };
 
 const titleStyle = {
@@ -61,44 +62,26 @@ class Notif extends React.Component {
             <div id={this.props._key} style={notificationStyle}>
                 <div className="msg-header">
                     <div className="flex-start">
-                        {this.props.progressBar
-                            ? this.renderProgressBar()
-                            : null}
+                        {this.props.progressBar ? this.renderProgressBar() : null}
                         {this.props.icon || this.props.class ? (
-                            <UI.Icon className="msg-header-icon">
-                                {this.props.icon ||
-                                    msgClsIconMap[this.props.class]}
-                            </UI.Icon>
+                            <UI.Icon className="msg-header-icon">{this.props.icon || msgClsIconMap[this.props.class]}</UI.Icon>
                         ) : null}
                         <h3 style={titleStyle}>{this.props.title}</h3>
                     </div>
                     <div className="flex-end">
                         {this.props.more_info_uri ? (
-                            <UI.Button
-                                key="more"
-                                color="secondary"
-                                size="small"
-                                onClick={this.handleMore}
-                            >
+                            <UI.Button key="more" color="secondary" size="small" onClick={this.handleMore}>
                                 {this.props.more_info_button || "More"}
                             </UI.Button>
                         ) : null}
                         {this.props.hideClose ? null : (
-                            <UI.IconButton
-                                key="close"
-                                aria-label="Close"
-                                color="inherit"
-                                style={{ padding: "4px" }}
-                                onClick={this.handleClose}
-                            >
+                            <UI.IconButton key="close" aria-label="Close" color="inherit" style={{ padding: "4px" }} onClick={this.handleClose}>
                                 <UI.Icon>close</UI.Icon>
                             </UI.IconButton>
                         )}
                     </div>
                 </div>
-                {this.props.content ? (
-                    <div style={contentStyle}>{this.props.content}</div>
-                ) : null}
+                {this.props.content ? <div style={contentStyle}>{this.props.content} </div> : null}
             </div>
         );
     }

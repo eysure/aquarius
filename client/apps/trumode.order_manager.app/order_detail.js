@@ -6,6 +6,8 @@ import Str from "../../components/string_component";
 import ItemTableRow from "./item_table_row";
 import _ from "lodash";
 
+import { R } from "./index";
+
 import { deleteSalesOrder, updateSalesOrder } from "../../actions";
 
 const blankContainerStyle = {
@@ -52,9 +54,7 @@ class OrderDetail extends Component {
         return {
             position: "fixed",
             width: this.props.width,
-            borderBottom: this.state.editMode
-                ? "1px solid #81C0FC"
-                : "1px solid lightgrey",
+            borderBottom: this.state.editMode ? "1px solid #81C0FC" : "1px solid lightgrey",
             padding: "8px 0",
             height: "32px",
             display: "flex",
@@ -68,9 +68,7 @@ class OrderDetail extends Component {
     renderBlankPage() {
         return (
             <div style={blankContainerStyle}>
-                <UI.Icon style={blankContainerIconStyle}>
-                    <Str SALES_ORDER_ICON />
-                </UI.Icon>
+                <UI.Icon style={blankContainerIconStyle}>{R.Str("SALES_ORDER_ICON")}</UI.Icon>
             </div>
         );
     }
@@ -79,9 +77,7 @@ class OrderDetail extends Component {
         this.setState({
             orderDetail: {
                 ...this.state.orderDetail,
-                [e.target.name]: uppercase
-                    ? e.target.value.toUpperCase()
-                    : e.target.value
+                [e.target.name]: uppercase ? e.target.value.toUpperCase() : e.target.value
             }
         });
         e.preventDefault();
@@ -98,15 +94,13 @@ class OrderDetail extends Component {
         return (
             <div style={{ padding: "16px" }}>
                 <UI.Typography variant="title" gutterBottom>
-                    <Str CONFIRM_DELETE_TITLE />
+                    {R.Str("CONFIRM_DELETE_TITLE")}
                 </UI.Typography>
-                <UI.Typography variant="body1">
-                    <Str CONFIRM_DELETE_TIP />
-                </UI.Typography>
+                <UI.Typography variant="body1">{R.Str("CONFIRM_DELETE_TIP")}</UI.Typography>
                 <UI.TextField
                     variant="outlined"
                     name="deleteConfirmOrderID"
-                    label={<Str ORDER_ID />}
+                    label={R.Str("ORDER_ID")}
                     value={this.state.deleteConfirmOrderID}
                     onChange={this.handleDeleteConfirmOrderIDChange}
                     margin="normal"
@@ -114,14 +108,9 @@ class OrderDetail extends Component {
                     error={this.state.deleteConfirmOrderIDError}
                 />
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                    <UI.Button onClick={this.handleDeleteCancel}>
-                        <Str CANCEL />
-                    </UI.Button>
-                    <UI.Button
-                        color="secondary"
-                        onClick={this.handleDeleteConfirm}
-                    >
-                        <Str DELETE />
+                    <UI.Button onClick={this.handleDeleteCancel}>{R.Str("CANCEL")}</UI.Button>
+                    <UI.Button color="secondary" onClick={this.handleDeleteConfirm}>
+                        {R.Str("DELETE")}
                     </UI.Button>
                 </div>
             </div>
@@ -129,9 +118,7 @@ class OrderDetail extends Component {
     }
 
     handleDeleteConfirm = e => {
-        if (
-            this.props.orderDetail.order_id === this.state.deleteConfirmOrderID
-        ) {
+        if (this.props.orderDetail.order_id === this.state.deleteConfirmOrderID) {
             this.props.deleteSalesOrder(this.props.orderDetail.order_id);
             this.setState({ orderDetail: null });
         } else {
@@ -166,10 +153,7 @@ class OrderDetail extends Component {
     };
 
     handleSave = () => {
-        this.props.updateSalesOrder(
-            this.props.orderDetail.order_id,
-            this.state.orderDetail
-        );
+        this.props.updateSalesOrder(this.props.orderDetail.order_id, this.state.orderDetail);
         this.setState({ editMode: false });
     };
 
@@ -184,13 +168,8 @@ class OrderDetail extends Component {
     renderToolBarEditButton() {
         return (
             <div>
-                <UI.Tooltip title={<Str DELETE />} enterDelay={200}>
-                    <UI.Button
-                        color="secondary"
-                        aria-label="Delete"
-                        style={toolbarButtonStyle}
-                        onClick={this.handleDelete}
-                    >
+                <UI.Tooltip title={R.Str("DELETE")} enterDelay={200}>
+                    <UI.Button color="secondary" aria-label="Delete" style={toolbarButtonStyle} onClick={this.handleDelete}>
                         <UI.Icon>delete</UI.Icon>
                     </UI.Button>
                 </UI.Tooltip>
@@ -211,21 +190,13 @@ class OrderDetail extends Component {
                 >
                     {this.renderDeleteConfirmDialog()}
                 </UI.Popover>
-                <UI.Tooltip title={<Str CANCEL />} enterDelay={200}>
-                    <UI.Button
-                        aria-label="Cancel"
-                        style={toolbarButtonStyle}
-                        onClick={this.handleCancel}
-                    >
+                <UI.Tooltip title={R.Str("CANCEL")} enterDelay={200}>
+                    <UI.Button aria-label="Cancel" style={toolbarButtonStyle} onClick={this.handleCancel}>
                         <UI.Icon>clear</UI.Icon>
                     </UI.Button>
                 </UI.Tooltip>
-                <UI.Tooltip title={<Str SAVE />} enterDelay={200}>
-                    <UI.Button
-                        aria-label="Save"
-                        style={toolbarButtonStyle}
-                        onClick={this.handleSave}
-                    >
+                <UI.Tooltip title={R.Str("SAVE")} enterDelay={200}>
+                    <UI.Button aria-label="Save" style={toolbarButtonStyle} onClick={this.handleSave}>
                         <UI.Icon>save</UI.Icon>
                     </UI.Button>
                 </UI.Tooltip>
@@ -236,30 +207,18 @@ class OrderDetail extends Component {
     renderToolBarNonEditButton() {
         return (
             <div>
-                <UI.Tooltip title={<Str BOOKMARK />} enterDelay={200}>
-                    <UI.Button
-                        aria-label="Bookmark"
-                        style={toolbarButtonStyle}
-                        onClick={this.handleBookMark}
-                    >
+                <UI.Tooltip title={R.Str("BOOKMARK")} enterDelay={200}>
+                    <UI.Button aria-label="Bookmark" style={toolbarButtonStyle} onClick={this.handleBookMark}>
                         <UI.Icon>star_border</UI.Icon>
                     </UI.Button>
                 </UI.Tooltip>
-                <UI.Tooltip title={<Str PRINT />} enterDelay={200}>
-                    <UI.Button
-                        aria-label="Print"
-                        style={toolbarButtonStyle}
-                        onClick={this.handlePrint}
-                    >
+                <UI.Tooltip title={R.Str("PRINT")} enterDelay={200}>
+                    <UI.Button aria-label="Print" style={toolbarButtonStyle} onClick={this.handlePrint}>
                         <UI.Icon>print</UI.Icon>
                     </UI.Button>
                 </UI.Tooltip>
-                <UI.Tooltip title={<Str EDIT />} enterDelay={200}>
-                    <UI.Button
-                        aria-label="Edit"
-                        style={toolbarButtonStyle}
-                        onClick={this.handleEditModeOn}
-                    >
+                <UI.Tooltip title={R.Str("EDIT")} enterDelay={200}>
+                    <UI.Button aria-label="Edit" style={toolbarButtonStyle} onClick={this.handleEditModeOn}>
                         <UI.Icon>edit</UI.Icon>
                     </UI.Button>
                 </UI.Tooltip>
@@ -268,13 +227,7 @@ class OrderDetail extends Component {
     }
 
     renderToolBar() {
-        return (
-            <div style={this.gettitleBarStyle()}>
-                {this.state.editMode
-                    ? this.renderToolBarEditButton()
-                    : this.renderToolBarNonEditButton()}
-            </div>
-        );
+        return <div style={this.gettitleBarStyle()}>{this.state.editMode ? this.renderToolBarEditButton() : this.renderToolBarNonEditButton()}</div>;
     }
 
     renderOrderDetail() {
@@ -282,7 +235,7 @@ class OrderDetail extends Component {
             <UI.Grid container spacing={24}>
                 <UI.Grid item xs={12}>
                     <UI.Typography variant="caption" gutterBottom>
-                        <Str BASIC_INFO />
+                        {R.Str("BASIC_INFO")}
                     </UI.Typography>
                     <UI.Paper className="order-detail-paper">
                         <UI.Grid container spacing={24}>
@@ -290,7 +243,7 @@ class OrderDetail extends Component {
                                 <UI.TextField
                                     name="order_id"
                                     className="order-detail-input"
-                                    label={<Str ORDER_ID />}
+                                    label={R.Str("ORDER_ID")}
                                     value={this.state.orderDetail.order_id}
                                     margin="normal"
                                     fullWidth
@@ -304,54 +257,33 @@ class OrderDetail extends Component {
                                     select
                                     name="order_status"
                                     className="order-detail-input"
-                                    label={<Str ORDER_STATUS />}
+                                    label={R.Str("ORDER_STATUS")}
                                     value={this.state.orderDetail.order_status}
                                     margin="normal"
                                     fullWidth
                                     disabled={!this.state.editMode}
                                     onChange={this.handleChange}
                                 >
-                                    <UI.MenuItem
-                                        key="ORDER_STATUS_DRAFT"
-                                        value="ORDER_STATUS_DRAFT"
-                                    >
-                                        <Str ORDER_STATUS_DRAFT />
+                                    <UI.MenuItem key="ORDER_STATUS_DRAFT" value="ORDER_STATUS_DRAFT">
+                                        {R.Str("ORDER_STATUS_DRAFT")}
                                     </UI.MenuItem>
-                                    <UI.MenuItem
-                                        key="ORDER_STATUS_ESTABLISHED"
-                                        value="ORDER_STATUS_ESTABLISHED"
-                                    >
-                                        <Str ORDER_STATUS_ESTABLISHED />
+                                    <UI.MenuItem key="ORDER_STATUS_ESTABLISHED" value="ORDER_STATUS_ESTABLISHED">
+                                        {R.Str("ORDER_STATUS_ESTABLISHED")}
                                     </UI.MenuItem>
-                                    <UI.MenuItem
-                                        key="ORDER_STATUS_IN_PRODUCTION"
-                                        value="ORDER_STATUS_IN_PRODUCTION"
-                                    >
-                                        <Str ORDER_STATUS_IN_PRODUCTION />
+                                    <UI.MenuItem key="ORDER_STATUS_IN_PRODUCTION" value="ORDER_STATUS_IN_PRODUCTION">
+                                        {R.Str("ORDER_STATUS_IN_PRODUCTION")}
                                     </UI.MenuItem>
-                                    <UI.MenuItem
-                                        key="ORDER_STATUS_SHIPPED"
-                                        value="ORDER_STATUS_SHIPPED"
-                                    >
-                                        <Str ORDER_STATUS_SHIPPED />
+                                    <UI.MenuItem key="ORDER_STATUS_SHIPPED" value="ORDER_STATUS_SHIPPED">
+                                        {R.Str("ORDER_STATUS_SHIPPED")}
                                     </UI.MenuItem>
-                                    <UI.MenuItem
-                                        key="ORDER_STATUS_ARREARS"
-                                        value="ORDER_STATUS_ARREARS"
-                                    >
-                                        <Str ORDER_STATUS_ARREARS />
+                                    <UI.MenuItem key="ORDER_STATUS_ARREARS" value="ORDER_STATUS_ARREARS">
+                                        {R.Str("ORDER_STATUS_ARREARS")}
                                     </UI.MenuItem>
-                                    <UI.MenuItem
-                                        key="ORDER_STATUS_FINISHED"
-                                        value="ORDER_STATUS_FINISHED"
-                                    >
-                                        <Str ORDER_STATUS_FINISHED />
+                                    <UI.MenuItem key="ORDER_STATUS_FINISHED" value="ORDER_STATUS_FINISHED">
+                                        {R.Str("ORDER_STATUS_FINISHED")}
                                     </UI.MenuItem>
-                                    <UI.MenuItem
-                                        key="ORDER_STATUS_ABNORMAL"
-                                        value="ORDER_STATUS_ABNORMAL"
-                                    >
-                                        <Str ORDER_STATUS_ABNORMAL />
+                                    <UI.MenuItem key="ORDER_STATUS_ABNORMAL" value="ORDER_STATUS_ABNORMAL">
+                                        {R.Str("ORDER_STATUS_ABNORMAL")}
                                     </UI.MenuItem>
                                 </UI.TextField>
                             </UI.Grid>
@@ -360,7 +292,7 @@ class OrderDetail extends Component {
                                 <UI.TextField
                                     name="create_date"
                                     className="order-detail-input"
-                                    label={<Str CREATE_DATE />}
+                                    label={R.Str("CREATE_DATE")}
                                     type="date"
                                     fullWidth
                                     value={this.state.orderDetail.create_date}
@@ -374,7 +306,7 @@ class OrderDetail extends Component {
                                 <UI.TextField
                                     name="sales"
                                     className="order-detail-input"
-                                    label={<Str SALES />}
+                                    label={R.Str("SALES")}
                                     value={this.state.orderDetail.sales}
                                     margin="normal"
                                     fullWidth
@@ -387,7 +319,7 @@ class OrderDetail extends Component {
                                 <UI.TextField
                                     name="customer"
                                     className="order-detail-input"
-                                    label={<Str CUSTOMER />}
+                                    label={R.Str("CUSTOMER")}
                                     value={this.state.orderDetail.customer}
                                     margin="normal"
                                     fullWidth
@@ -401,27 +333,23 @@ class OrderDetail extends Component {
 
                 <UI.Grid item xs={12}>
                     <UI.Typography variant="caption" gutterBottom>
-                        <Str COMMODITIES_DETAIL />
+                        {R.Str("COMMODITIES_DETAIL")}
                     </UI.Typography>
                     {this.renderOrderItemList()}
                 </UI.Grid>
 
                 <UI.Grid item xs={12}>
                     <UI.Typography variant="caption" gutterBottom>
-                        <Str PAYMENT_DETAIL />
+                        {R.Str("PAYMENT_DETAIL")}
                     </UI.Typography>
-                    <UI.Paper className="order-detail-paper">
-                        PAYMENT_DETAIL
-                    </UI.Paper>
+                    <UI.Paper className="order-detail-paper">{R.Str("PAYMENT_DETAIL")}</UI.Paper>
                 </UI.Grid>
 
                 <UI.Grid item xs={12}>
                     <UI.Typography variant="caption" gutterBottom>
-                        <Str SHIPPING_DETAIL />
+                        {R.Str("SHIPPING_DETAIL")}
                     </UI.Typography>
-                    <UI.Paper className="order-detail-paper">
-                        SHIPPING_DETAIL
-                    </UI.Paper>
+                    <UI.Paper className="order-detail-paper">{R.Str("SHIPPING_DETAIL")}</UI.Paper>
                 </UI.Grid>
             </UI.Grid>
         );
@@ -435,52 +363,35 @@ class OrderDetail extends Component {
                         <UI.TableRow>
                             {this.state.editMode ? (
                                 <UI.TableCell className="order-detail-item-button-cell">
-                                    <UI.IconButton
-                                        color="primary"
-                                        onClick={this.addItem}
-                                    >
+                                    <UI.IconButton color="primary" onClick={this.addItem}>
                                         <UI.Icon>add_circle</UI.Icon>
                                     </UI.IconButton>
                                 </UI.TableCell>
                             ) : null}
-                            <UI.TableCell style={itemImageCellStyle}>
-                                <Str IMAGE />
+                            <UI.TableCell style={itemImageCellStyle}>{R.Str("IMAGE")}</UI.TableCell>
+                            <UI.TableCell style={tableCellStyle}>
+                                <p style={{ fontWeight: 800 }}>{R.Str("ITEM_NO")}</p>
+                                <p>{R.Str("PO_NO")}</p>
                             </UI.TableCell>
                             <UI.TableCell style={tableCellStyle}>
-                                <p style={{ fontWeight: 800 }}>
-                                    <Str ITEM_NO />
-                                </p>
-                                <p>
-                                    <Str PO_NO />
-                                </p>
-                            </UI.TableCell>
-                            <UI.TableCell style={tableCellStyle}>
-                                <p style={{ fontWeight: 800 }}>
-                                    <Str ITEM_NAME />
-                                </p>
-                                <p>
-                                    <Str ITEM_DESC />
-                                </p>
+                                <p style={{ fontWeight: 800 }}>{R.Str("ITEM_NAME")}</p>
+                                <p>{R.Str("ITEM_DESC")}</p>
                             </UI.TableCell>
                             <UI.TableCell align="right" style={tableCellStyle}>
-                                <Str QTY />
+                                {R.Str("QTY")}
                             </UI.TableCell>
                             <UI.TableCell align="right" style={tableCellStyle}>
-                                <Str PRICE />
+                                {R.Str("PRICE")}
                             </UI.TableCell>
                             <UI.TableCell align="right" style={tableCellStyle}>
-                                <Str AMOUNT />
+                                {R.Str("AMOUNT")}
                             </UI.TableCell>
                             <UI.TableCell align="right" style={tableCellStyle}>
-                                <Str DELIVERY_DATE />
+                                {R.Str("DELIVERY_DATE")}
                             </UI.TableCell>
                             <UI.TableCell align="right" style={tableCellStyle}>
-                                <p style={{ fontWeight: 800 }}>
-                                    <Str PURCHASE_ORDER />
-                                </p>
-                                <p>
-                                    <Str PROVIDER />
-                                </p>
+                                <p style={{ fontWeight: 800 }}>{R.Str("PURCHASE_ORDER")}</p>
+                                <p>{R.Str("PROVIDER")}</p>
                             </UI.TableCell>
                         </UI.TableRow>
                     </UI.TableHead>
@@ -556,8 +467,7 @@ class OrderDetail extends Component {
     };
 
     render() {
-        if (_.get(this.state, "orderDetail.order_id", null) === null)
-            return this.renderBlankPage();
+        if (_.get(this.state, "orderDetail.order_id", null) === null) return this.renderBlankPage();
 
         return (
             <div className="order-detail-container">
@@ -607,30 +517,28 @@ OrderDetail.defaultProps = {
                 item_no: "AB1879299",
                 po_no: "B123",
                 item_name: "Men's t-shirt",
-                item_desc:
-                    "A men's beautiful t-shirt with many color on it. And many customers like it.",
+                item_desc: "A men's beautiful t-shirt with many colors on it. Customers must like it.",
                 qty: 3000,
                 price: 3,
                 currency: "USD",
                 amount: 9000,
                 delivery_date: "2019-01-01",
                 purchase_order: "BB910482",
-                provider: "鹂凰"
+                provider: "LiHuang"
             },
             {
                 image: "sample2.jpg",
                 item_no: "AB1879300",
                 po_no: "B123",
                 item_name: "Women's t-shirt",
-                item_desc:
-                    "A women's beautiful t-shirt with many color on it. And many customers like it.",
+                item_desc: "A women's beautiful t-shirt with many colors on it. Customers must like it.",
                 qty: 2000,
                 currency: "USD",
                 price: 4,
                 amount: 8000,
                 delivery_date: "2019-01-01",
                 purchase_order: "BB910482",
-                provider: "鹂凰"
+                provider: "LiHuang"
             }
         ]
     }

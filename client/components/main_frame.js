@@ -156,68 +156,25 @@ class MainFrame extends React.Component {
                                 {this.toolBarTitle()}
                             </UI.Button>
                             <UI.Button className="main-toolbar-button" color="inherit">
-                                File
+                                Toolbar Support Soon
                             </UI.Button>
-                            <UI.Button className="main-toolbar-button" color="inherit">
-                                Edit
-                            </UI.Button>
-                            <UI.Button className="main-toolbar-button" color="inherit">
-                                Selection
-                            </UI.Button>
-                            <UI.Button
-                                className="main-toolbar-button"
-                                color="inherit"
-                                onClick={() => this.props.throwMsg(R.Msg("WHATS_LOREM_IPSUM"))}
-                            >
-                                Lorem
-                            </UI.Button>
-                            <UI.Button
-                                className="main-toolbar-button"
-                                color="inherit"
-                                onClick={() => {
-                                    Meteor.call("getSystemDefaultAuth", (err, res) => {
-                                        this.props.throwMsg({
-                                            title: "System Default Auth",
-                                            content: JSON.stringify(res),
-                                            icon: "bug_report"
-                                        });
-                                    });
-                                }}
-                            >
-                                SystemAuth
+                            <UI.Button className="main-toolbar-button" color="inherit" onClick={() => this.props.throwMsg(R.Msg("WHATS_LOREM_IPSUM"))}>
+                                What's Lorem?
                             </UI.Button>
                             {this.renderMainMenu()}
                         </div>
                         <div style={styles.toolbarGroup}>
-                            <UI.Button
-                                id="fullscreen-button"
-                                className="main-toolbar-button"
-                                color="inherit"
-                                onClick={() => this.props.appLaunch("search")}
-                            >
+                            <UI.Button id="fullscreen-button" className="main-toolbar-button" color="inherit" onClick={() => this.props.appLaunch("search")}>
                                 <UI.Icon>search</UI.Icon>
                             </UI.Button>
-                            <UI.Button
-                                id="fullscreen-button"
-                                className="main-toolbar-button"
-                                color="inherit"
-                                onClick={this.toggleFullscreen}
-                            >
+                            <UI.Button id="fullscreen-button" className="main-toolbar-button" color="inherit" onClick={this.toggleFullscreen}>
                                 <UI.Icon>{this.state.fullscreen ? "fullscreen_exit" : "fullscreen"}</UI.Icon>
                             </UI.Button>
-                            <UI.Button
-                                className="main-toolbar-button"
-                                color="inherit"
-                                aria-label="open notification center"
-                            >
+                            <UI.Button className="main-toolbar-button" color="inherit" aria-label="open notification center">
                                 {this.state.currentTime.toLocaleString()}
                             </UI.Button>
 
-                            <UI.Button
-                                className="main-toolbar-button"
-                                color="inherit"
-                                aria-label="open notification center"
-                            >
+                            <UI.Button className="main-toolbar-button" color="inherit" aria-label="open notification center">
                                 <UI.Icon>list</UI.Icon>
                             </UI.Button>
                         </div>

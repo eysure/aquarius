@@ -1,3 +1,4 @@
+import { Meteor } from "meteor/meteor";
 import { Mongo } from "meteor/mongo";
 import OSS from "ali-oss";
 
@@ -18,10 +19,7 @@ export function Collection(collection) {
 /**
  * Notice: Change OSS Auth need to restart the server, due to the performance issue.
  */
-const ossAuth = Collection("system").findOne(
-    { key: "ossAuth" },
-    { fields: { _id: 0, region: 1, bucket: 1, accessKeyId: 1, accessKeySecret: 1 } }
-);
+const ossAuth = Collection("system").findOne({ key: "ossAuth" }, { fields: { _id: 0, region: 1, bucket: 1, accessKeyId: 1, accessKeySecret: 1 } });
 if (!ossAuth) {
     throw "OSS Auth is not found in system collection! please check the MongoDB connection!";
 }

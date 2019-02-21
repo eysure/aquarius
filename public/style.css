@@ -261,8 +261,7 @@ span {
     padding: 0 8px 0 8px;
 
     background-image: linear-gradient(-180deg, #edeced 1%, #d2d1d2 97%);
-    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 0 #b7b4b7,
-        inset 0 -1px 0 0 rgba(183, 180, 183, 0.3);
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 0 #b7b4b7, inset 0 -1px 0 0 rgba(183, 180, 183, 0.3);
     border-radius: 7px 6px 0 0;
 }
 .window.fusion .titlebar {
@@ -363,6 +362,7 @@ span {
 .window-content {
     padding: 21px;
     max-width: 100%;
+    height: calc(100% - 42px);
 }
 .window-ctrl {
     position: absolute;
@@ -832,4 +832,74 @@ span {
 .drop-file-clickable:hover {
     cursor: pointer;
     filter: brightness(0.8);
+}
+
+.app-template-fill {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #444;
+    background: url("/assets/apps/app-template.svg") repeat 300px;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-size: 300px;
+}
+.app-template-fill img {
+    height: 180px;
+}
+.app-template-fill h1 {
+    margin: 16px 32px 0 32px;
+    font-size: 4rem;
+    font-weight: 800;
+}
+.app-template-fill h2 {
+    margin: 16px 32px;
+    font-size: 2rem;
+    font-weight: 400;
+}
+
+.carousel {
+    width: 100%;
+    height: 100%;
+}
+.carousel .page {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.carousel-ctrl {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    pointer-events: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.carousel-ctrl i {
+    font-size: 2rem;
+}
+.carousel-ctrl button {
+    width: 48px;
+    height: 48px;
+    margin: 0 16px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: none;
+    pointer-events: all;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #999;
+    transition: 200ms;
+}
+.carousel-ctrl button:hover {
+    color: #000;
+    background: rgba(0, 0, 0, 0.2);
 }

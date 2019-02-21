@@ -37,6 +37,7 @@ class Window extends Component {
 
     windowRef = React.createRef();
     toolbarRef = React.createRef();
+    contentRef = React.createRef();
 
     render() {
         let { appProps } = this.props;
@@ -83,19 +84,24 @@ class Window extends Component {
                             <button className="unhandle window-ctrl-btn btn-max" onClick={this.handleMax} />
                         </div>
 
-                        <div className="titlebar-title">
-                            {appProps ? appProps.appStaticProps.appName[getLanguage(this.props.user)] : null}
-                        </div>
+                        <div className="titlebar-title">{appProps ? appProps.appStaticProps.appName[getLanguage(this.props.user)] : null}</div>
                     </div>
                     <div className="toolbar" ref={this.toolbarRef}>
                         {this.props.toolbar}
                     </div>
                 </div>
                 <div
+                    ref={this.contentRef}
                     className={contentClassNames.join(" ")}
                     style={{
                         height: `calc(100% - ${
-                            this.toolbarRef.current ? this.toolbarRef.current.offsetHeight + 22 : 22
+                            this.toolbarRef.current
+                                ? this.toolbarRef.current.offsetHeight + this.contentRef.current
+                                    ? this.contentRef.current
+                                    : 0
+                                : this.contentRef.current
+                                ? this.contentRef.current
+                                : 0
                         }px)`
                     }}
                 >

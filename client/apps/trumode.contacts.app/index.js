@@ -25,6 +25,7 @@ class Contacts extends Component {
         let { group_id, job_title_id, job_type } = assign;
         let jobTitle = _.find(db.job_title, { _id: job_title_id });
         let group = _.find(db.depts_groups, { _id: group_id });
+
         let dept = _.find(db.depts, { _id: group.dept_id });
         return { deptName: R.Str(dept.name), groupName: R.Str(group.name), jobTitle: R.Str(jobTitle.name), job_type };
     };

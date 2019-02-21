@@ -4,7 +4,7 @@ export default {
     LAN: [0, 1],
     NULL: ["", ""],
     DATE_FORMAT: ["MM/dd/yyyy", "yyyy-MM-dd"],
-    COMPANY_NAME: ["TRUMODE", "TRUMODE"],
+    COMPANY_NAME: ["AquariusOS", "AquariusOS"],
     LOADING: ["Loading...", "载入中..."],
     NEW_MESSAGE: ["New Message", "新消息"],
     LOGIN: ["Login", "登录"],
@@ -28,14 +28,7 @@ export default {
         `Sorry, we failed to connect to server, or server has internal errors. Please refresh the page, or check the Internet connection, if it doesn't work, please contact Henry.`,
         "很抱歉, 连接服务器失败了, 或许是服务器上有些错误. 请刷新页面, 或者检查是不是网断了, 如果都不奏效, 请联系Henry"
     ],
-    LOGIN_FAILED_INVALID_INPUT: [
-        "Email or passowrd is empty. Check your input and login again.",
-        "邮箱或密码为空，请检查输入并重试"
-    ],
-    LOGIN_FAILED_INVALID_EMAIL: [
-        "Email format is invalid, please re-check your work email：yourname@trumode.com.cn",
-        "邮箱格式错误，请输入正确的工作邮箱：yourname@trumode.com.cn"
-    ],
+    LOGIN_FAILED_INVALID_INPUT: ["Email or passowrd is empty. Check your input and login again.", "邮箱或密码为空，请检查输入并重试"],
     LOGIN_FAILED_WRONG_PASSWORD: [
         "Account not found or password is incorrect. please double check and try again. If you forget your password, please contact Kivi.",
         "用户名不存在或密码错误，请确认后重试。如果忘记密码，请联系Kivi。"
@@ -44,10 +37,7 @@ export default {
         "Network error has occurred. This may occur when timeout, interrupted connection or unreachable host. Please check the Internet connection.",
         "发生了网络错误。可能是超时，连接被中断，或是无法连接服务器。请检查网络连接。"
     ],
-    LOGIN_FAILED_TOO_MANY_REQUESTS: [
-        "Too many unsuccessful login attempts. Please try again later.",
-        "登陆失败次数过多，为了保护账户，请稍后再试"
-    ],
+    LOGIN_FAILED_TOO_MANY_REQUESTS: ["Too many unsuccessful login attempts. Please try again later.", "登陆失败次数过多，为了保护账户，请稍后再试"],
     LOGIN_FAILED_DISABLED: [
         "This user is been disabled. We can't let this user login right now. If you need help, please contact Kivi.",
         "此用户已被禁用，目前无法正常登陆。如果需要帮助，请联系Kivi。"
@@ -59,7 +49,6 @@ export default {
     WELCOME: ["Welcome", "欢迎"],
     EMAIL: ["Email", "邮箱"],
     PASSWORD: ["Password", "密码"],
-    FORGET_PASSWORD_TIP: ["If you forget password, please ask Kivi for help.", "如果遗忘密码, 请联系Kivi以恢复"],
 
     SEARCH_BAR_PLACEHOLDER: ["Search anything...", "搜索..."],
     SERVER_RUN_ON: ["Server address", "服务器地址"],
@@ -78,7 +67,6 @@ export default {
     CHANGE_DESKTOP_BACKGROUND: ["Change Desktop Background", "更改桌面背景"],
     LAUNCHPAD: "Launchpad",
 
-    // Trumode Universal
     NAME: ["Name", "姓名"],
     ENG_FN: ["First Name", "First Name"],
     ENG_MN: ["Middle Name", "Middle Name"],

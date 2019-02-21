@@ -9,11 +9,11 @@ export default {
     messageCloseDelay: 4000,
 
     // Email title prefix
-    mailPrefix: "[Trumode.app]",
+    mailPrefix: "[AquariusOS]",
 
     // Contact if user has a problem like account or usage help
-    serviceName: "Kivi",
-    serviceEmail: "kivi@trumode.com.cn",
+    serviceName: "Service",
+    serviceEmail: "Service@xyzhu.me",
 
     // Contact if user encounter a bug or tech help, development advice
     techSupportName: "Henry",

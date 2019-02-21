@@ -1,12 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import {
-    appWindowActivate,
-    appClose,
-    launchPadControl,
-    logout
-} from "../actions";
+import { appWindowActivate, appClose, launchPadControl, logout } from "../actions";
 import hotkeys from "hotkeys-js";
 import { Meteor } from "meteor/meteor";
 
@@ -16,9 +11,6 @@ class HotKeysWrapper extends React.Component {
     }
 
     componentDidMount() {
-        // hotkeys("*", (event, handler) => {
-        //     console.log(event);
-        // });
         // Open Launcher
         hotkeys("cmd+l,ctrl+l,f1", (event, handler) => {
             event.preventDefault();
@@ -53,10 +45,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(
-        { appWindowActivate, appClose, launchPadControl, logout },
-        dispatch
-    );
+    return bindActionCreators({ appWindowActivate, appClose, launchPadControl, logout }, dispatch);
 }
 
 export default connect(

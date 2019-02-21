@@ -14,9 +14,13 @@ class CustomerRelationshipManager extends Component {
 
     render() {
         return (
-            <Window appProps={this.props.appProps} width={360}>
+            <Window appProps={this.props.appProps} width={800} height={600}>
                 <div className="window-content">
-                    <h2>Empty App</h2>
+                    <div className="app-template-fill">
+                        <img src={this.constructor.appStaticProps.icon} />
+                        <h1>Customer Relationship Manager</h1>
+                        <h2>Managing all company's relationships and interactions with customers and potential customers, as well as manufacturers.</h2>
+                    </div>
                 </div>
             </Window>
         );

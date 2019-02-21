@@ -22,7 +22,6 @@ class VirtualDataLayer extends React.Component {
                     .find()
                     .fetch()
             );
-            console.warn("myEmployeeInfo: " + (window.performance.now() - start).toFixed(2) + " ms");
         });
         Tracker.autorun(() => {
             let start = window.performance.now();
@@ -57,7 +56,6 @@ class VirtualDataLayer extends React.Component {
                     .find()
                     .fetch()
             );
-            console.warn("allEmployeesInfo: " + (window.performance.now() - start).toFixed(2) + " ms");
         });
     }
 

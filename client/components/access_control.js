@@ -10,30 +10,23 @@ import { R } from "../resources_feeder";
 import Avatar from "./user_avatar";
 import { Tracker } from "meteor/tracker";
 
-import {
-    clearMsg,
-    logout,
-    serverLogout,
-    bindUserInfo,
-    bindEmployeesInfo,
-    throwMsg,
-    changeLanguageLocal,
-    appLaunch,
-    systemControl
-} from "../actions";
+import { clearMsg, logout, serverLogout, bindUserInfo, bindEmployeesInfo, throwMsg, changeLanguageLocal, appLaunch, systemControl } from "../actions";
 import { generateEmailLinkToService, getLocalCollection } from "../utils";
 
 class AccessControl extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: "",
-            password: "",
+            email: "tester@xyzhu.me",
+            password: "Xyzhu_8888",
             processing: false
         };
     }
 
     componentDidMount() {
+        // Demo only
+        if (Meteor.settings.public.demo) this.props.throwMsg(R.Msg("DEMO_WELCOME"));
+
         Tracker.autorun(() => {
             // Server logout
             if (this.props.system.loginFlag && !Meteor.userId()) {
@@ -85,25 +78,28 @@ class AccessControl extends React.Component {
                         this.handleLoginError({ error: 1001 });
                         return;
                     }
-
-                    // Login successful
-                    localStorage.setItem(
-                        "lastLoginUser",
-                        JSON.stringify({
-                            nickname: employee.nickname,
-                            avatar: employee.avatar,
-                            email: employee.email,
-                            desktop: _.get(employee, "preferences.desktop", null)
-                        })
-                    );
-                    this.props.throwMsg(
-                        R.Msg("LOGIN_SUCCESSFUL", {
-                            username: employee.nickname
-                        })
-                    );
+                    this.handleLoginSuccessful(employee);
                 });
             }
         });
+    };
+
+    handleLoginSuccessful = employee => {
+        localStorage.setItem(
+            "lastLoginUser",
+            JSON.stringify({
+                nickname: employee.nickname,
+                avatar: employee.avatar,
+                email: employee.email,
+                desktop: _.get(employee, "preferences.desktop", null)
+            })
+        );
+        this.props.throwMsg(
+            R.Msg("LOGIN_SUCCESSFUL", {
+                username: employee.nickname
+            })
+        );
+        this.props.appLaunch("welcome");
     };
 
     handleLoginError = error => {
@@ -135,10 +131,7 @@ class AccessControl extends React.Component {
         this.props.throwMsg(
             R.Msg("LOGIN_FAILED", {
                 content,
-                moreUri: generateEmailLinkToService(
-                    "登录失败请求帮助",
-                    `账户: ${this.state.email}%0D%0A错误信息: ${content}`
-                ),
+                moreUri: generateEmailLinkToService("登录失败请求帮助", `账户: ${this.state.email}%0D%0A错误信息: ${content}`),
                 moreButton: "Email"
             })
         );
@@ -150,8 +143,6 @@ class AccessControl extends React.Component {
         this.props.changeLanguageLocal(newLan);
     }
 
-    handleSwitchUser = () => {};
-
     lockScreenComponentStyle = offset => {
         return {
             position: "absolute",
@@ -162,11 +153,7 @@ class AccessControl extends React.Component {
     renderLockScreen(user) {
         return (
             <div id="access-control">
-                <UI.Dialog
-                    PaperProps={{ id: "lockscreen-paper" }}
-                    open={Meteor.userId() ? false : true}
-                    disablePortal={true}
-                >
+                <UI.Dialog PaperProps={{ id: "lockscreen-paper" }} open={Meteor.userId() ? false : true} disablePortal={true}>
                     <Avatar style={this.lockScreenComponentStyle(-180)} d={120} user={user} round />
                     <div
                         style={{
@@ -268,12 +255,7 @@ class AccessControl extends React.Component {
                         <UI.DialogTitle id="login-dialog-title">
                             <div className="flex-between">
                                 <Str WELCOME />
-                                <UI.IconButton
-                                    size="small"
-                                    component="span"
-                                    disabled={this.state.processing}
-                                    onClick={this.handleLangChange.bind(this)}
-                                >
+                                <UI.IconButton size="small" component="span" disabled={this.state.processing} onClick={this.handleLangChange.bind(this)}>
                                     <UI.Icon>translate</UI.Icon>
                                 </UI.IconButton>
                             </div>
@@ -286,7 +268,7 @@ class AccessControl extends React.Component {
                                 name="email"
                                 label={<Str EMAIL />}
                                 type="email"
-                                placeholder="name@trumode.com.cn"
+                                placeholder="yourname@company.com"
                                 fullWidth
                                 margin="normal"
                                 InputProps={{
@@ -327,7 +309,6 @@ class AccessControl extends React.Component {
                                         </UI.InputAdornment>
                                     )
                                 }}
-                                helperText={<Str FORGET_PASSWORD_TIP />}
                                 onChange={this.handleChange}
                                 value={this.state.password}
                             />

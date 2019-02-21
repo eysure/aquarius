@@ -3,23 +3,24 @@ import * as UI from "@material-ui/core";
 import clientConfig from "../../client_config.js";
 
 import { ResourceFeeder } from "../../resources_feeder";
+const R = new ResourceFeeder(require("./resources/strings"), require("./resources/messages"));
 
 import Window from "../../components/dialog";
 
-class ProductManager extends Component {
+class Manual extends Component {
     static appStaticProps = {
-        appName: ["Product Manager", "产品管理"],
-        icon: "/assets/apps/clothing_label.svg"
+        appName: ["Manual", "使用手册"],
+        icon: "/assets/apps/brochure.svg"
     };
 
     render() {
         return (
-            <Window appProps={this.props.appProps} width={800} height={600}>
+            <Window appProps={this.props.appProps} width={"40vmin"} height={"60vmin"}>
                 <div className="window-content">
                     <div className="app-template-fill">
                         <img src={this.constructor.appStaticProps.icon} />
-                        <h1>Product Manager</h1>
-                        <h2>Management of items sold by the company.</h2>
+                        <h1>Manual</h1>
+                        <h2>Guiding user through using this system, as well as internal apps.</h2>
                     </div>
                 </div>
             </Window>
@@ -27,4 +28,4 @@ class ProductManager extends Component {
     }
 }
 
-export default ProductManager;
+export default Manual;

@@ -8,12 +8,12 @@ Meteor.methods(Methods);
 
 Accounts.onLogin(login => {
     if (login.type === "password") {
-        Collection("LoginLog").insert({ ...login, timesteamp: new Date() });
+        Collection("login_log").insert({ ...login, timesteamp: new Date() });
     }
 });
 
 Accounts.onLoginFailure(login => {
-    Collection("LoginErrorLog").insert({ ...login, timesteamp: new Date() });
+    Collection("login_log_error").insert({ ...login, timesteamp: new Date() });
 });
 
 Meteor.publish("fetchEmployeesInfo", function() {
@@ -28,6 +28,7 @@ Meteor.publish("fetchEmployeesInfo", function() {
                 email: 1,
                 name_cn: 1,
                 fn_en: 1,
+                mn_en: 1,
                 ln_en: 1,
                 mobile: 1,
                 ext: 1,
@@ -50,6 +51,7 @@ Meteor.publish("myEmployeeInfo", function() {
                 email: 1,
                 name_cn: 1,
                 fn_en: 1,
+                mn_en: 1,
                 ln_en: 1,
                 mobile: 1,
                 ext: 1,

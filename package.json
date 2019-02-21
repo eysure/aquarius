@@ -2,7 +2,7 @@
     "name": "aquarius",
     "private": true,
     "scripts": {
-        "start": "meteor run --settings settings.json",
+        "start": "MONGO_URL='mongodb://meteor:Xyzhu_Meteor_Test@18.236.132.190:27017/meteor' meteor run --settings settings.json",
         "debug": "meteor run --inspect --settings settings.json",
         "test": "meteor test --once --driver-package meteortesting:mocha --settings settings.json",
         "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha --settings settings.json",

@@ -125,9 +125,7 @@ class UserCenter extends Component {
                         {getLanguage(this.props.user) ? org.group_name_cn : org.group_name_en}
                         <UI.Icon style={{ fontSize: 20 }}>arrow_right</UI.Icon>
                         {getLanguage(this.props.user) ? org.job_title_cn : org.job_title_en}
-                        <UI.Tooltip title={this.getJobType(org.job_type)[0]}>
-                            {this.getJobType(org.job_type)[1]}
-                        </UI.Tooltip>
+                        <UI.Tooltip title={this.getJobType(org.job_type)[0]}>{this.getJobType(org.job_type)[1]}</UI.Tooltip>
                     </div>
                 </div>
             );
@@ -136,16 +134,11 @@ class UserCenter extends Component {
 
     render() {
         return (
-            <Window appProps={this.props.appProps} width={840} height={720} titleBarStyle="fusion">
+            <Window appProps={this.props.appProps} width={960} height={720} titleBarStyle="fusion">
                 <div className="handle" style={this.sidebarStyle}>
                     <div style={{ height: "36px", outline: "none" }} />
                     <div>
-                        <DropFile
-                            className="drop-file-click"
-                            handleDrop={this.handleAvatarUpload}
-                            style={this.userAvatarStyle}
-                            clickToSelect
-                        >
+                        <DropFile className="drop-file-click" handleDrop={this.handleAvatarUpload} style={this.userAvatarStyle} clickToSelect>
                             <Avatar user={this.props.user} d={120} />
                         </DropFile>
                         <div style={this.userSectionStyle}>
@@ -176,11 +169,7 @@ class UserCenter extends Component {
                     </div>
                     <UI.Divider style={{ margin: "0 16px 0 16px" }} />
                     <UI.MenuList className="unhandle">
-                        <UI.ListItem
-                            button
-                            selected={this.state.selectedTab === TAB_BASIC_INFO}
-                            onClick={e => this.setState({ selectedTab: TAB_BASIC_INFO })}
-                        >
+                        <UI.ListItem button selected={this.state.selectedTab === TAB_BASIC_INFO} onClick={e => this.setState({ selectedTab: TAB_BASIC_INFO })}>
                             <UI.Icon>assignment_ind</UI.Icon>
                             <UI.ListItemText primary={R.Str("BASIC_INFO")} />
                         </UI.ListItem>
@@ -262,11 +251,10 @@ class UserCenter extends Component {
             <div className="panel-container-inner">
                 <div className="panel-title">{R.Str("BASIC_INFO")}</div>
                 <div className="panel">
-                    <PI title={R.Str("EMAIL")} value={this.props.user.email} />
-                    <PI title={R.Str("NAME")} value={this.props.user.name_cn || this.props.user.fn_en} />
                     <PI title={R.Str("ENG_FN")} value={this.props.user.fn_en} span={4} />
                     <PI title={R.Str("ENG_MN")} value={this.props.user.mn_en} span={4} />
                     <PI title={R.Str("ENG_LN")} value={this.props.user.ln_en} span={4} />
+                    <PI title={R.Str("EMAIL")} value={this.props.user.email} />
                     <PI title={R.Str("NICKNAME")} value={this.props.user.nickname} />
                     <PI title={R.Str("MOBILE")} value={this.props.user.mobile} />
                     <PI title={R.Str("EXT")} value={this.props.user.ext} />
@@ -274,20 +262,16 @@ class UserCenter extends Component {
 
                 <div className="panel-title">{R.Str("JOB_INFO")}</div>
                 <div className="panel">
-                    <PI title={R.Str("DEPARTMENT")} value={getLocalCollection("depts").findOne().name[1]} />
-                    <PI title={R.Str("GROUP")} value={this.props.user.ext} />
-                    <PI title={R.Str("JOB_TITLE")} value={this.props.user.ext} />
-                    <PI title={R.Str("JOB_TYPE")} span={6} value={this.props.user.ext} />
-                    <PI title={R.Str("TIME_START")} span={6} value={this.props.user.ext} />
+                    <PI title={R.Str("DEPARTMENT")} />
+                    <PI title={R.Str("GROUP")} />
+                    <PI title={R.Str("JOB_TITLE")} />
+                    <PI title={R.Str("JOB_TYPE")} span={6} />
+                    <PI title={R.Str("TIME_START")} span={6} />
                 </div>
 
                 <div className="panel-title">{R.Str("HISTORY_JOB_INFO")}</div>
                 <div className="panel">
-                    <PI
-                        title={R.Str("SEE_HISTORY_JOB_INFO")}
-                        button
-                        value={<i className="material-icons">open_in_new</i>}
-                    />
+                    <PI title={R.Str("SEE_HISTORY_JOB_INFO")} button value={<i className="material-icons">open_in_new</i>} />
                 </div>
             </div>
         );

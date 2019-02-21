@@ -1,10 +1,16 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import * as UI from "@material-ui/core";
-import Str from "../../components/string_component";
 
 import Window from "../../components/dialog";
 import OrderList from "./order_list";
 import OrderDetail from "./order_detail";
+
+import { throwMsg } from "../../actions";
+
+import { ResourceFeeder } from "../../resources_feeder";
+export const R = new ResourceFeeder(require("./resources/strings"), require("./resources/messages"));
 
 class OrderManager extends Component {
     static appStaticProps = {
@@ -47,20 +53,15 @@ class OrderManager extends Component {
         });
     };
 
+    componentDidMount = () => {
+        this.props.throwMsg(R.Msg("APP_NOT_READY"));
+    };
+
     render() {
         return (
             <Window appProps={this.props.appProps} titleBarStyle="fusion" width="80vw" height="80vh">
-                <UI.DialogContent
-                    className="no-padding"
-                    onMouseMove={this.adjustWidthMove}
-                    onMouseUp={this.adjustWidthEnd}
-                >
-                    <UI.Drawer
-                        className="dark"
-                        variant="permanent"
-                        anchor="left"
-                        PaperProps={{ style: this.sidebarStyle }}
-                    >
+                <UI.DialogContent className="no-padding" onMouseMove={this.adjustWidthMove} onMouseUp={this.adjustWidthEnd}>
+                    <UI.Drawer className="dark" variant="permanent" anchor="left" PaperProps={{ style: this.sidebarStyle }}>
                         <div className="handle" style={{ height: "36px" }} />
 
                         <UI.ListItem
@@ -72,11 +73,9 @@ class OrderManager extends Component {
                             }
                         >
                             <UI.ListItemIcon>
-                                <UI.Icon>
-                                    <Str SALES_ORDER_ICON />
-                                </UI.Icon>
+                                <UI.Icon>{R.Str("SALES_ORDER_ICON")}</UI.Icon>
                             </UI.ListItemIcon>
-                            <UI.ListItemText primary={<Str SALES_ORDER />} />
+                            <UI.ListItemText primary={R.Str("SALES_ORDER")} />
                             <UI.Icon>{this.state.salesOrderGroupOpen ? "expand_less" : "expand_more"}</UI.Icon>
                         </UI.ListItem>
 
@@ -86,25 +85,25 @@ class OrderManager extends Component {
                                     <UI.ListItemIcon>
                                         <UI.Icon>select_all</UI.Icon>
                                     </UI.ListItemIcon>
-                                    <UI.ListItemText primary={<Str ALL_ORDERS />} />
+                                    <UI.ListItemText primary={R.Str("ALL_ORDERS")} />
                                 </UI.ListItem>
                                 <UI.ListItem button className="li-nested">
                                     <UI.ListItemIcon>
                                         <UI.Icon>assignment_ind</UI.Icon>
                                     </UI.ListItemIcon>
-                                    <UI.ListItemText primary={<Str MY_ORDERS />} />
+                                    <UI.ListItemText primary={R.Str("MY_ORDERS")} />
                                 </UI.ListItem>
                                 <UI.ListItem button className="li-nested">
                                     <UI.ListItemIcon>
                                         <UI.Icon>assignment</UI.Icon>
                                     </UI.ListItemIcon>
-                                    <UI.ListItemText primary={<Str GROUP_ORDERS />} />
+                                    <UI.ListItemText primary={R.Str("GROUP_ORDERS")} />
                                 </UI.ListItem>
                                 <UI.ListItem button className="li-nested">
                                     <UI.ListItemIcon>
                                         <UI.Icon>star</UI.Icon>
                                     </UI.ListItemIcon>
-                                    <UI.ListItemText primary={<Str BOOKMARK_ORDERS />} />
+                                    <UI.ListItemText primary={R.Str("BOOKMARK_ORDERS")} />
                                 </UI.ListItem>
                             </UI.List>
                         </UI.Collapse>
@@ -118,11 +117,9 @@ class OrderManager extends Component {
                             }
                         >
                             <UI.ListItemIcon>
-                                <UI.Icon>
-                                    <Str PURCHASE_ORDER_ICON />
-                                </UI.Icon>
+                                <UI.Icon>{R.Str("PURCHASE_ORDER_ICON")}</UI.Icon>
                             </UI.ListItemIcon>
-                            <UI.ListItemText primary={<Str PURCHASE_ORDER />} />
+                            <UI.ListItemText primary={R.Str("PURCHASE_ORDER")} />
                             <UI.Icon>{this.state.purchaseOrderGroupOpen ? "expand_less" : "expand_more"}</UI.Icon>
                         </UI.ListItem>
 
@@ -130,21 +127,27 @@ class OrderManager extends Component {
                             <UI.List className="list-nested">
                                 <UI.ListItem button className="li-nested">
                                     <UI.ListItemIcon>
-                                        <UI.Icon>apps</UI.Icon>
+                                        <UI.Icon>select_all</UI.Icon>
                                     </UI.ListItemIcon>
-                                    <UI.ListItemText primary="Inbox" />
+                                    <UI.ListItemText primary={R.Str("ALL_ORDERS")} />
                                 </UI.ListItem>
                                 <UI.ListItem button className="li-nested">
                                     <UI.ListItemIcon>
-                                        <UI.Icon>apps</UI.Icon>
+                                        <UI.Icon>assignment_ind</UI.Icon>
                                     </UI.ListItemIcon>
-                                    <UI.ListItemText primary="Inbox" />
+                                    <UI.ListItemText primary={R.Str("MY_ORDERS")} />
                                 </UI.ListItem>
                                 <UI.ListItem button className="li-nested">
                                     <UI.ListItemIcon>
-                                        <UI.Icon>apps</UI.Icon>
+                                        <UI.Icon>assignment</UI.Icon>
                                     </UI.ListItemIcon>
-                                    <UI.ListItemText primary="Inbox" />
+                                    <UI.ListItemText primary={R.Str("GROUP_ORDERS")} />
+                                </UI.ListItem>
+                                <UI.ListItem button className="li-nested">
+                                    <UI.ListItemIcon>
+                                        <UI.Icon>star</UI.Icon>
+                                    </UI.ListItemIcon>
+                                    <UI.ListItemText primary={R.Str("BOOKMARK_ORDERS")} />
                                 </UI.ListItem>
                             </UI.List>
                         </UI.Collapse>
@@ -187,16 +190,12 @@ class OrderManager extends Component {
                                 backgroundColor: "#F5F4F6",
                                 borderRadius: "0 6px 6px 0",
                                 left: `${this.state.sidebarWidth + this.state.secondarySidebarWidth + 1}px`,
-                                width: `calc(100% - ${this.state.sidebarWidth +
-                                    this.state.secondarySidebarWidth +
-                                    1}px)`,
+                                width: `calc(100% - ${this.state.sidebarWidth + this.state.secondarySidebarWidth + 1}px)`,
                                 border: "0"
                             }
                         }}
                     >
-                        <OrderDetail
-                            width={`calc(100% - ${this.state.sidebarWidth + this.state.secondarySidebarWidth + 1}px)`}
-                        />
+                        <OrderDetail width={`calc(100% - ${this.state.sidebarWidth + this.state.secondarySidebarWidth + 1}px)`} />
                     </UI.Drawer>
                 </UI.DialogContent>
             </Window>
@@ -204,4 +203,13 @@ class OrderManager extends Component {
     }
 }
 
-export default OrderManager;
+const mapStateToProps = state => ({
+    user: state.user
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators({ throwMsg }, dispatch);
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(OrderManager);
