@@ -20,10 +20,19 @@ class AboutSystem extends Component {
 
     render() {
         return (
-            <Window appProps={this.props.appProps} width={360}>
-                <div className="window-content">
-                    <h1 style={{ textAlign: "center", padding: "120px 0" }}>AquariusOS</h1>
-                    <UI.Typography variant="caption">{R.Str("VERSION") + ": " + clientConfig.version}</UI.Typography>
+            <Window appProps={this.props.appProps} width={360} titleBarStyle="fusion" className="handle">
+                <div
+                    style={{
+                        padding: "64px 32px",
+                        display: "flex",
+                        flexDirection: "column",
+                        height: "100%",
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}
+                >
+                    <img style={{ textAlign: "center", width: "240px", marginBottom: "16px" }} src="/assets/os_logo2.png" />
+                    <UI.Typography variant="caption">{R.Str("VERSION") + " " + clientConfig.version}</UI.Typography>
                     <UI.Typography variant="caption">{R.Str("COPY_RIGHT")}</UI.Typography>
                 </div>
             </Window>

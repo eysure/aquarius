@@ -2,18 +2,19 @@
     "name": "aquarius",
     "private": true,
     "scripts": {
-        "start": "MONGO_URL='mongodb://meteor:Xyzhu_Meteor_Test@18.236.132.190:27017/meteor' meteor run --settings settings.json",
-        "debug": "meteor run --inspect --settings settings.json",
-        "test": "meteor test --once --driver-package meteortesting:mocha --settings settings.json",
-        "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha --settings settings.json",
-        "visualize": "meteor --production --extra-packages bundle-visualizer --settings settings.json",
-        "build": "meteor build --settings settings.json"
+        "start": "MONGO_URL='mongodb://meteor:Xyzhu_Meteor_Test@35.165.210.104:27017/aquarius_demo' meteor run",
+        "debug": "meteor run --inspect",
+        "test": "meteor test --once --driver-package meteortesting:mocha",
+        "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
+        "visualize": "meteor --production --extra-packages bundle-visualizer",
+        "build": "MONGO_URL='mongodb://meteor:Xyzhu_Meteor_Test@35.165.210.104:27017/aquarius_demo' meteor build"
     },
     "dependencies": {
         "@babel/runtime": "^7.1.5",
         "@material-ui/core": "^3.9.2",
         "@material-ui/icons": "^3.0.2",
         "ali-oss": "^6.1.0",
+        "axios": "^0.18.0",
         "bcrypt": "^3.0.4",
         "bufferutil": "^4.0.1",
         "hotkeys-js": "^3.4.4",

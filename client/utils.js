@@ -60,18 +60,18 @@ export function getLocalCollection(string) {
 }
 
 export function oss(...paths) {
-    let { ossBucket, ossRegion } = Meteor.settings.public;
+    let { ossBucket, ossRegion } = clientConfig;
     return [`https://${ossBucket}.${ossRegion}.aliyuncs.com`, ...paths].join("/");
 }
 
 export function fileUploadVerify(file, throwMsg = null, R = null) {
     let ext = file.name.split(".").pop();
-    if (!Meteor.settings.public.acceptableFileFormat.includes(ext)) {
+    if (!clientConfig.acceptableFileFormat.includes(ext)) {
         if (throwMsg) {
             throwMsg(
                 R.Msg("FILE_UPLOAD_FAILED_FORMAT", {
                     ext,
-                    acceptableFileFormat: Meteor.settings.public.acceptableFileFormat.join(", ")
+                    acceptableFileFormat: clientConfig.acceptableFileFormat.join(", ")
                 })
             );
         }
@@ -80,12 +80,12 @@ export function fileUploadVerify(file, throwMsg = null, R = null) {
             error: "FILE_UPLOAD_FAILED_FORMAT"
         };
     }
-    if (file.size > Meteor.settings.public.maxFileSize * 1024 * 1024) {
+    if (file.size > clientConfig.maxFileSize * 1024 * 1024) {
         if (throwMsg) {
             throwMsg(
                 R.Msg("FILE_UPLOAD_FAILED_SIZE", {
                     fileSize: (file.size / 1048576).toFixed(2),
-                    maxFileSize: Meteor.settings.public.maxFileSize
+                    maxFileSize: clientConfig.maxFileSize
                 })
             );
         }

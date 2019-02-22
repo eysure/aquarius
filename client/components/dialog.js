@@ -49,6 +49,7 @@ class Window extends Component {
         classNames.push(windowStatus);
         classNames.push(isActive ? "active" : "inactive");
         classNames.push(this.props.titleBarStyle || "default"); // [none, fusion, (default)]
+        classNames.push(this.props.className);
 
         // Titlebar className
         let titlebarClassNames = ["titlebar"];
@@ -71,7 +72,7 @@ class Window extends Component {
                     height: this.state.height,
                     filter: `blur(${this.props.system.blurScreen || 0}px)`
                 }}
-                onClose={() => this.props.appClose(appProps.key)}
+                onClose={this.handleClose}
                 onMouseDown={() => {
                     if (!isActive) this.props.appWindowActivate(appProps.key, appProps.option);
                 }}

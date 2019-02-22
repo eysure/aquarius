@@ -10,6 +10,7 @@ import { Meteor } from "meteor/meteor";
 import { Accounts } from "meteor/accounts-base";
 import { throwMsg } from "../../actions";
 import PI from "../../components/panel_item";
+import clientConfig from "../../client_config";
 
 import { R } from "./";
 
@@ -65,10 +66,10 @@ class AccountSecurityTab extends React.Component {
         }
 
         // Demo only
-        // if (Meteor.settings.public.demo) {
-        //     this.props.throwMsg(R.Msg("DEMO_CANT_CHANGE_PASSWORD"));
-        //     return;
-        // }
+        if (clientConfig.demo) {
+            this.props.throwMsg(R.Msg("DEMO_CANT_CHANGE_PASSWORD"));
+            return;
+        }
 
         Accounts.changePassword(currentPassword, newPassword, error => {
             if (error) {

@@ -1,6 +1,6 @@
 export default {
     // Version of the system
-    version: "0.1.0",
+    version: "0.1.2",
 
     // available languages
     languages: ["en-US", "zh-CN"],
@@ -17,5 +17,11 @@ export default {
 
     // Contact if user encounter a bug or tech help, development advice
     techSupportName: "Henry",
-    techSupportEmail: "eysure@gmail.com"
+    techSupportEmail: "eysure@gmail.com",
+
+    demo: true,
+    ossBucket: "trumode-app-us",
+    ossRegion: "oss-us-west-1",
+    maxFileSize: 10,
+    acceptableFileFormat: ["jpg", "jpeg", "png", "gif"]
 };

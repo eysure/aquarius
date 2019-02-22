@@ -26,6 +26,9 @@ const styles = {
         position: "fixed",
         boxShadow: "none",
         transition: "300ms all",
+        MozUserSelect: "none",
+        WebkitUserSelect: "none",
+        MsUserSelect: "none",
         userSelect: "none",
         overflow: "hidden"
     },
@@ -150,7 +153,7 @@ class MainFrame extends React.Component {
                                     });
                                 }}
                             >
-                                <img src="/menubar-icon.svg" />
+                                <img style={{ height: "22px", width: "22px" }} src="/assets/os_logo_white.png" />
                             </UI.Button>
                             <UI.Button className="main-toolbar-button-bold" color="inherit">
                                 {this.toolBarTitle()}

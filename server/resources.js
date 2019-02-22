@@ -21,9 +21,12 @@ export function Collection(collection) {
  */
 const ossAuth = Collection("system").findOne({ key: "ossAuth" }, { fields: { _id: 0, region: 1, bucket: 1, accessKeyId: 1, accessKeySecret: 1 } });
 if (!ossAuth) {
-    throw "OSS Auth is not found in system collection! please check the MongoDB connection!";
+    console.error("OSS Auth is not found in system collection! please check the MongoDB connection!");
 }
 
 export function oss() {
+    if (!ossAuth) {
+        return null;
+    }
     return new OSS(ossAuth);
 }

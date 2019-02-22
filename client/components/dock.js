@@ -33,6 +33,9 @@ const dockStyle = {
     padding: 8,
     paddingBottom: 0,
     boxSizing: "border-box",
+    MozUserSelect: "none",
+    WebkitUserSelect: "none",
+    MsUserSelect: "none",
     userSelect: "none",
     display: "flex",
     transition: "300ms all",
@@ -78,13 +81,7 @@ class Dock extends React.Component {
                     bottom: this.props.system.dockHide ? "-6vh" : "0"
                 }}
             >
-                <FlipMove
-                    id="dock"
-                    enterAnimation="none"
-                    leaveAnimation="none"
-                    onContextMenu={this.onContextMenu}
-                    style={dockStyle}
-                >
+                <FlipMove id="dock" enterAnimation="none" leaveAnimation="none" onContextMenu={this.onContextMenu} style={dockStyle}>
                     <DockItem
                         id="di-launcher"
                         key="launcher"

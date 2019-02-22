@@ -1,7 +1,6 @@
 /*
     Note: This class is created for React to load data from Meteor at the beginning of the initialization.
 */
-
 import React from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";

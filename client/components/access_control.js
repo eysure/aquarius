@@ -25,7 +25,7 @@ class AccessControl extends React.Component {
 
     componentDidMount() {
         // Demo only
-        if (Meteor.settings.public.demo) this.props.throwMsg(R.Msg("DEMO_WELCOME"));
+        if (clientConfig.demo) this.props.throwMsg(R.Msg("DEMO_WELCOME"));
 
         Tracker.autorun(() => {
             // Server logout
@@ -66,6 +66,7 @@ class AccessControl extends React.Component {
         this.setState({ processing: true });
 
         Meteor.loginWithPassword(email, password, error => {
+            this.setState({ processing: false });
             if (error) this.handleLoginError(error);
             else {
                 if (this.state.switchUser) this.setState({ switchUser: false });

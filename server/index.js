@@ -1,20 +1,61 @@
 import { Meteor } from "meteor/meteor";
 import { Accounts } from "meteor/accounts-base";
-import _ from "lodash";
 import * as Methods from "./methods";
-import { Collection } from "./resources";
+import Publishing from "./publishing";
+import { Collection, oss } from "./resources";
+import Errors from "./errors";
 
+async function listBuckets(client) {
+    try {
+        let result = await client.listBuckets();
+        return result;
+    } catch (err) {
+        return err;
+    }
+}
+
+/**
+ * System Check
+ */
+systemCheck = () => {
+    let myErrors = [];
+
+    // Check users collection
+    let userCount = Meteor.users.find().count();
+    if (userCount === 0) {
+        myErrors.push(Errors[1001]);
+    }
+
+    // Check oss
+    let client = oss();
+    if (!client) {
+        myErrors.push(Errors[1002]);
+    }
+
+    listBuckets(client).then(res => {
+        if (res.code) console.error("OSS Error: " + res.code);
+    });
+
+    return myErrors;
+};
+
+console.log("┌─────────────────────┐\n│   Server Started!   │\n└─────────────────────┘");
+let myErrors = systemCheck();
+if (myErrors.length !== 0) {
+    console.error(`System initialization check has ${myErrors.length} error(s), server cannot start.`);
+    for (let i in myErrors) {
+        console.error(myErrors[i].code + ":\t" + myErrors[i].reason);
+    }
+    process.exit(-1);
+}
+
+// Register methods
 Meteor.methods(Methods);
 
-Accounts.onLogin(login => {
-    if (login.type === "password") {
-        Collection("login_log").insert({ ...login, timesteamp: new Date() });
-    }
-});
-
-Accounts.onLoginFailure(login => {
-    Collection("login_log_error").insert({ ...login, timesteamp: new Date() });
-});
+// Publish
+// for (let key in Publishing) {
+//     Meteor.publish(key, Publishing[key]);
+// }
 
 Meteor.publish("fetchEmployeesInfo", function() {
     if (!this.userId) return null;
@@ -28,7 +69,6 @@ Meteor.publish("fetchEmployeesInfo", function() {
                 email: 1,
                 name_cn: 1,
                 fn_en: 1,
-                mn_en: 1,
                 ln_en: 1,
                 mobile: 1,
                 ext: 1,
@@ -51,7 +91,6 @@ Meteor.publish("myEmployeeInfo", function() {
                 email: 1,
                 name_cn: 1,
                 fn_en: 1,
-                mn_en: 1,
                 ln_en: 1,
                 mobile: 1,
                 ext: 1,
@@ -90,8 +129,12 @@ Meteor.publish("allEmployeesInfo", function() {
     ];
 });
 
-getEmailById = userId => {
-    let user = Meteor.users.findOne({ _id: userId });
-    if (!user) return null;
-    return user.emails[0].address;
-};
+// Account log
+Accounts.onLogin(login => {
+    if (login.type === "password") {
+        Collection("login_log").insert({ ...login, timesteamp: new Date() });
+    }
+});
+Accounts.onLoginFailure(login => {
+    Collection("login_log_error").insert({ ...login, timesteamp: new Date() });
+});

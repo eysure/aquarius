@@ -16,6 +16,9 @@ const styles = {
         width: "100%",
         height: "100%",
         backgroundColor: "rgba(0, 0, 0, 0.36)",
+        MozUserSelect: "none",
+        WebkitUserSelect: "none",
+        MsUserSelect: "none",
         userSelect: "none",
         overflow: "hidden"
     },
@@ -141,7 +144,6 @@ class Launchpad extends React.Component {
                         }}
                     >
                         <div className="launchpad-item-container" style={launchpadGridStyle}>
-                            <AppLaunchpadItem appKey="welcome" />
                             <AppLaunchpadItem appKey="order_manager" />
                             <AppLaunchpadItem appKey="crm" />
                             <AppLaunchpadItem appKey="product_manager" />
@@ -151,6 +153,7 @@ class Launchpad extends React.Component {
                             <AppLaunchpadItem appKey="app_manager" />
                             <AppLaunchpadItem appKey="search" />
                             <AppLaunchpadItem appKey="manual" />
+                            <AppLaunchpadItem appKey="welcome" />
                         </div>
                     </div>
                     <div style={styles.slide}>slide 3</div>

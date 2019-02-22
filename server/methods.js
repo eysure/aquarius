@@ -2,6 +2,7 @@ import _ from "lodash";
 import uuidv4 from "uuid/v4";
 import { Collection, oss } from "./resources";
 import { Accounts } from "meteor/accounts-base";
+import sys_errors from "./errors";
 
 getEmailById = userId => {
     let user = Meteor.users.findOne({ _id: userId });
@@ -53,6 +54,8 @@ export function testEmployeeExist() {
 
 export function uploadDesktop(fileInfo, fileData) {
     if (!this.userId) return null;
+    let client = oss();
+    if (!client) return null;
 
     let email = getEmailById(this.userId);
     let employee = Collection("employees").findOne({ email });
@@ -64,7 +67,6 @@ export function uploadDesktop(fileInfo, fileData) {
 
     let relPath = uuidv4() + "." + fileInfo.name.split(".").pop();
 
-    let client = oss();
     let path = prefix + relPath;
 
     async function deleteFile() {
@@ -93,6 +95,8 @@ export function uploadDesktop(fileInfo, fileData) {
 
 export function uploadAvatar(fileInfo, fileData) {
     if (!this.userId) return null;
+    let client = oss();
+    if (!client) return null;
 
     let email = getEmailById(this.userId);
     let employee = Collection("employees").findOne({ email });
@@ -104,7 +108,6 @@ export function uploadAvatar(fileInfo, fileData) {
 
     let relPath = uuidv4() + "." + fileInfo.name.split(".").pop();
 
-    let client = oss();
     let path = prefix + relPath;
 
     async function deleteFile() {
