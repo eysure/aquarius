@@ -1,21 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as UI from "@material-ui/core";
-import ReactJson from "react-json-view";
+import { Tooltip } from "@material-ui/core";
 import _ from "lodash";
-import DropFile from "./drop_file";
-import { Meteor } from "meteor/meteor";
 import FlipMove from "react-flip-move";
 
 import { getAppName } from "../app_utils";
 
 import { appLaunch, appClose, appConfig, launchPadControl, appWindowActivate } from "../actions";
-import { oss, fileUploadVerify } from "../utils";
-import { R } from "../resources_feeder";
 
 const dockContainerStyle = {
-    height: "6vh",
+    height: 80,
     position: "fixed",
     bottom: 0,
     width: "100%",
@@ -26,6 +21,7 @@ const dockContainerStyle = {
 };
 
 const dockStyle = {
+    height: "100%",
     background: "rgba(0,0,0,0.5)",
     border: "1px solid rgba(0,0,0,0.6)",
     borderBottom: 0,
@@ -44,7 +40,6 @@ const dockStyle = {
 
 const dockItemStyle = {
     color: "white",
-    fontFamily: "San Francisco",
     height: "100%",
     width: "100%",
     display: "flex",
@@ -78,7 +73,7 @@ class Dock extends React.Component {
                 id="dock-container"
                 style={{
                     ...dockContainerStyle,
-                    bottom: this.props.system.dockHide ? "-6vh" : "0"
+                    transform: this.props.system.dockHide ? "translate(0,80px)" : "translate(0,0)"
                 }}
             >
                 <FlipMove id="dock" enterAnimation="none" leaveAnimation="none" onContextMenu={this.onContextMenu} style={dockStyle}>
@@ -139,7 +134,7 @@ class DockItem extends React.Component {
     dockItemRef = React.createRef();
     render() {
         return (
-            <UI.Tooltip title={this.props.title} placement="top">
+            <Tooltip title={this.props.title} placement="top">
                 <div id={this.props.id} ref={this.dockItemRef} style={dockItemStyle} onClick={this.props.onClick}>
                     <img style={dockItemImageStyle} src={this.props.img} />
                     <div
@@ -149,7 +144,7 @@ class DockItem extends React.Component {
                         }}
                     />
                 </div>
-            </UI.Tooltip>
+            </Tooltip>
         );
     }
 
