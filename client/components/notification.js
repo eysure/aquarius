@@ -76,7 +76,7 @@ class Notif extends React.Component {
                         ) : null}
                         {this.props.hideClose ? null : (
                             <UI.IconButton key="close" aria-label="Close" color="inherit" style={{ padding: "4px" }} onClick={this.handleClose}>
-                                <UI.Icon>close</UI.Icon>
+                                <i className="material-icons">close</i>
                             </UI.IconButton>
                         )}
                     </div>

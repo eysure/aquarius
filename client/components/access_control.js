@@ -198,7 +198,7 @@ class AccessControl extends React.Component {
                                         aria-label="login-btn"
                                         onClick={e => this.handleSubmit(e, user.email)}
                                     >
-                                        <UI.Icon>play_circle_outline</UI.Icon>
+                                        <i className="material-icons">play_circle_outline</i>
                                     </UI.IconButton>
                                 </UI.InputAdornment>
                             }
@@ -223,7 +223,7 @@ class AccessControl extends React.Component {
                             }}
                             onClick={() => this.setState({ switchUser: true })}
                         >
-                            <UI.Icon>code</UI.Icon>
+                            <i className="material-icons">code</i>
                             <br />
                             <Str SWITCH_USER />
                         </UI.Button>
@@ -257,7 +257,7 @@ class AccessControl extends React.Component {
                             <div className="flex-between">
                                 <Str WELCOME />
                                 <UI.IconButton size="small" component="span" disabled={this.state.processing} onClick={this.handleLangChange.bind(this)}>
-                                    <UI.Icon>translate</UI.Icon>
+                                    <i className="material-icons">translate</i>
                                 </UI.IconButton>
                             </div>
                         </UI.DialogTitle>
@@ -275,7 +275,7 @@ class AccessControl extends React.Component {
                                 InputProps={{
                                     startAdornment: (
                                         <UI.InputAdornment position="start">
-                                            <UI.Icon>email</UI.Icon>
+                                            <i className="material-icons">email</i>
                                         </UI.InputAdornment>
                                     )
                                 }}
@@ -294,7 +294,7 @@ class AccessControl extends React.Component {
                                 InputProps={{
                                     startAdornment: (
                                         <UI.InputAdornment position="start">
-                                            <UI.Icon>lock</UI.Icon>
+                                            <i className="material-icons">lock</i>
                                         </UI.InputAdornment>
                                     ),
                                     endAdornment: (
@@ -305,7 +305,7 @@ class AccessControl extends React.Component {
                                                 aria-label="login-btn"
                                                 onClick={this.handleSubmit.bind(this)}
                                             >
-                                                <UI.Icon>play_circle_outline</UI.Icon>
+                                                <i className="material-icons">play_circle_outline</i>
                                             </UI.IconButton>
                                         </UI.InputAdornment>
                                     )

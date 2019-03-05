@@ -65,7 +65,7 @@ export default {
     INVALID_DATE: ["Invalid date", "请输入正确的日期"],
     REFRESH: ["Refresh", "刷新"],
     CHANGE_DESKTOP_BACKGROUND: ["Change Desktop Background", "更改桌面背景"],
-    LAUNCHPAD: "Launchpad",
+    LAUNCHPAD: ["Launchpad", "Launchpad"],
 
     NAME: ["Name", "姓名"],
     ENG_FN: ["First Name", "First Name"],

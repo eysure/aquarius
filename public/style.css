@@ -88,7 +88,7 @@
 
 @font-face {
     font-family: "San Francisco";
-    font-weight: normal;
+    font-weight: 400;
     src: url("./sanfranciscodisplay/sanfranciscodisplay-medium.woff2");
 }
 
@@ -108,11 +108,12 @@
     src: url("./sanfranciscodisplay/sanfranciscodisplay-bold.woff2");
 }
 
+i,
 .material-icons {
     font-family: "Material Icons";
     font-weight: normal;
     font-style: normal;
-    font-size: 1rem;
+    font-size: 1.5rem;
     line-height: 1;
     letter-spacing: normal;
     text-transform: none;
@@ -202,19 +203,6 @@ form a {
 .badge-danger {
     background: red;
     color: white;
-}
-
-.menu-item-selected {
-    background: #0277bd !important;
-    /* lightBlue 800 */
-}
-
-.menu-item-selected span {
-    color: white !important;
-}
-
-span {
-    transition: 300ms;
 }
 
 .text-field-group {
@@ -673,24 +661,6 @@ span {
     padding: 0;
     text-align: right;
     color: black;
-}
-
-.main-toolbar-button {
-    font-family: "San Francisco", serif;
-    font-weight: 300 !important;
-    padding: 0 8px !important;
-    height: 100% !important;
-    border-radius: 0 !important;
-    text-transform: none !important;
-}
-
-.main-toolbar-button-bold {
-    font-family: "San Francisco", serif;
-    font-weight: 400 !important;
-    padding: 0 12px !important;
-    height: 100% !important;
-    border-radius: 0 !important;
-    text-transform: none !important;
 }
 
 .first-class-overlap {

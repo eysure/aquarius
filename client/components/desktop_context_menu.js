@@ -9,18 +9,10 @@ import AppMenuItem from "./app_menu_item";
 class DesktopContextMenu extends Component {
     render() {
         return (
-            <div
-                id="desktop-context-menu"
-                style={{ pointerEvents: "all", zIndex: 1400 }}
-                onClick={this.props.onClose}
-                onBlur={this.props.onCLose}
-            >
-                <UI.ListItem
-                    button
-                    onClick={e => this.props.launchPadControl(true)}
-                >
+            <div id="desktop-context-menu" style={{ pointerEvents: "all", zIndex: 1400 }} onClick={this.props.onClose} onBlur={this.props.onCLose}>
+                <UI.ListItem button onClick={e => this.props.launchPadControl(true)}>
                     <UI.ListItemIcon>
-                        <UI.Icon>view_comfy</UI.Icon>
+                        <i className="material-icons">view_comfy</i>
                     </UI.ListItemIcon>
                     <UI.ListItemText primary={<Str LAUNCHPAD />} />
                 </UI.ListItem>

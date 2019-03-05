@@ -17,7 +17,7 @@ class AppTabDrawer extends Component {
             return (
                 <UI.ListItem key={tab.tabKey} button selected={false} onClick={() => this.handleTabSwitch(tab.tabKey)}>
                     <UI.ListItemIcon>
-                        <UI.Icon>{getTabIcon(appStaticProps.appKey, tab.tabKey, this.props.user)}</UI.Icon>
+                        <i className="material-icons">{getTabIcon(appStaticProps.appKey, tab.tabKey, this.props.user)}</i>
                     </UI.ListItemIcon>
                     <UI.ListItemText>{getTabName(appStaticProps.appKey, tab.tabKey, this.props.user)}</UI.ListItemText>
                 </UI.ListItem>

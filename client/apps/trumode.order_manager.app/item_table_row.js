@@ -30,7 +30,7 @@ class ItemTableRow extends React.Component {
                 {this.props.editMode ? (
                     <UI.TableCell className="order-detail-item-button-cell">
                         <UI.IconButton color="secondary" onClick={() => this.props.deleteItem(item.item_no)}>
-                            <UI.Icon>remove_circle</UI.Icon>
+                            <i className="material-icons">remove_circle</i>
                         </UI.IconButton>
                     </UI.TableCell>
                 ) : null}

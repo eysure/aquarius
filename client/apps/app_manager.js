@@ -23,14 +23,7 @@ class AppManager extends Component {
         return (
             <Window appProps={this.props.appProps} width={360}>
                 <UI.DialogContent className="no-padding">
-                    <UI.List
-                        component="nav"
-                        subheader={
-                            <UI.ListSubheader component="div">
-                                {this.props.apps.length} app(s) running
-                            </UI.ListSubheader>
-                        }
-                    >
+                    <UI.List component="nav" subheader={<UI.ListSubheader component="div">{this.props.apps.length} app(s) running</UI.ListSubheader>}>
                         {this.renderAppList()}
                     </UI.List>
                 </UI.DialogContent>
@@ -53,24 +46,15 @@ class AppManager extends Component {
                     <UI.ListItemIcon>
                         {appStaticProps.materialIcon ? (
                             <UI.Avatar>
-                                <UI.Icon>{appStaticProps.icon}</UI.Icon>
+                                <i className="material-icons">{appStaticProps.icon}</i>
                             </UI.Avatar>
                         ) : (
-                            <img
-                                style={{ width: "40px", height: "40px" }}
-                                alt={getAppName(app.key, this.props.user)}
-                                src={appStaticProps.icon}
-                            />
+                            <img style={{ width: "40px", height: "40px" }} alt={getAppName(app.key, this.props.user)} src={appStaticProps.icon} />
                         )}
                     </UI.ListItemIcon>
                     <UI.ListItemText
                         primary={getAppName(app.key, this.props.user)}
-                        secondary={
-                            app.key +
-                            " : " +
-                            app.status +
-                            (app.isActive ? " active" : " inactive")
-                        }
+                        secondary={app.key + " : " + app.status + (app.isActive ? " active" : " inactive")}
                     />
                     <UI.ListItemSecondaryAction>
                         {_.get(app, "option.isSystem", false) ? (
@@ -82,7 +66,7 @@ class AppManager extends Component {
                                     this.props.appClose(app.key);
                                 }}
                             >
-                                <UI.Icon>close</UI.Icon>
+                                <i className="material-icons">close</i>
                             </UI.IconButton>
                         )}
                     </UI.ListItemSecondaryAction>

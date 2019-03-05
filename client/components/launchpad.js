@@ -1,8 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as UI from "@material-ui/core";
-import LaunchpadItem from "./launchpad_item";
 import AppLaunchpadItem from "./app_launchpad_item";
 
 import { appLaunch, launchPadControl } from "../actions";

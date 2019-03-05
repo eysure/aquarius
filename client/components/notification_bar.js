@@ -48,7 +48,7 @@ class NotificationBar extends Component {
                 style={{
                     position: "absolute",
                     padding: 32,
-                    paddingTop: this.props.system.menuBarHide ? 32 : 68,
+                    paddingTop: 68,
                     right: 0,
                     height: "100%",
                     width: "100%",
@@ -67,14 +67,7 @@ class NotificationBar extends Component {
     renderNotifications() {
         return _.map(this.props.notifications, notif => {
             if (notif.new) {
-                return (
-                    <Notif
-                        key={notif.key}
-                        _key={notif.key}
-                        {...notif}
-                        closeMsg={this.props.closeMsg}
-                    />
-                );
+                return <Notif key={notif.key} _key={notif.key} {...notif} closeMsg={this.props.closeMsg} />;
             }
         });
     }

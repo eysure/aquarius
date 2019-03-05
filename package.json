@@ -2,12 +2,12 @@
     "name": "aquarius",
     "private": true,
     "scripts": {
-        "start": "MONGO_URL='mongodb://meteor:Xyzhu_Meteor_Test@35.165.210.104:27017/aquarius_demo' meteor run",
+        "start": "MONGO_URL=mongodb://meteor:Xyzhu_Meteor_Test@35.165.210.104:27017/aquarius_demo meteor run",
         "debug": "meteor run --inspect",
         "test": "meteor test --once --driver-package meteortesting:mocha",
         "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
         "visualize": "meteor --production --extra-packages bundle-visualizer",
-        "build": "MONGO_URL='mongodb://meteor:Xyzhu_Meteor_Test@35.165.210.104:27017/aquarius_demo' meteor build"
+        "build": "meteor build ~ --architecture os.linux.x86_64"
     },
     "dependencies": {
         "@babel/runtime": "^7.1.5",
@@ -23,7 +23,6 @@
         "meteor-node-stubs": "^0.4.1",
         "prop-types": "^15.7.1",
         "react": "^16.8.1",
-        "react-avatar-editor": "^11.0.6",
         "react-dom": "^16.8.1",
         "react-flip-move": "^3.0.3",
         "react-hot-keys": "^1.2.2",

@@ -170,7 +170,7 @@ class UserCenter extends Component {
                     <UI.Divider style={{ margin: "0 16px 0 16px" }} />
                     <UI.MenuList className="unhandle">
                         <UI.ListItem button selected={this.state.selectedTab === TAB_BASIC_INFO} onClick={e => this.setState({ selectedTab: TAB_BASIC_INFO })}>
-                            <UI.Icon>assignment_ind</UI.Icon>
+                            <i className="material-icons">assignment_ind</i>
                             <UI.ListItemText primary={R.Str("BASIC_INFO")} />
                         </UI.ListItem>
                         <UI.ListItem
@@ -182,7 +182,7 @@ class UserCenter extends Component {
                                 })
                             }
                         >
-                            <UI.Icon>vpn_key</UI.Icon>
+                            <i className="material-icons">vpn_key</i>
                             <UI.ListItemText primary={R.Str("ACCOUNT_SECURITY")} />
                         </UI.ListItem>
                     </UI.MenuList>

@@ -170,7 +170,7 @@ class OrderDetail extends Component {
             <div>
                 <UI.Tooltip title={R.Str("DELETE")} enterDelay={200}>
                     <UI.Button color="secondary" aria-label="Delete" style={toolbarButtonStyle} onClick={this.handleDelete}>
-                        <UI.Icon>delete</UI.Icon>
+                        <i className="material-icons">delete</i>
                     </UI.Button>
                 </UI.Tooltip>
                 <UI.Popover
@@ -192,12 +192,12 @@ class OrderDetail extends Component {
                 </UI.Popover>
                 <UI.Tooltip title={R.Str("CANCEL")} enterDelay={200}>
                     <UI.Button aria-label="Cancel" style={toolbarButtonStyle} onClick={this.handleCancel}>
-                        <UI.Icon>clear</UI.Icon>
+                        <i className="material-icons">clear</i>
                     </UI.Button>
                 </UI.Tooltip>
                 <UI.Tooltip title={R.Str("SAVE")} enterDelay={200}>
                     <UI.Button aria-label="Save" style={toolbarButtonStyle} onClick={this.handleSave}>
-                        <UI.Icon>save</UI.Icon>
+                        <i className="material-icons">save</i>
                     </UI.Button>
                 </UI.Tooltip>
             </div>
@@ -209,17 +209,17 @@ class OrderDetail extends Component {
             <div>
                 <UI.Tooltip title={R.Str("BOOKMARK")} enterDelay={200}>
                     <UI.Button aria-label="Bookmark" style={toolbarButtonStyle} onClick={this.handleBookMark}>
-                        <UI.Icon>star_border</UI.Icon>
+                        <i className="material-icons">star_border</i>
                     </UI.Button>
                 </UI.Tooltip>
                 <UI.Tooltip title={R.Str("PRINT")} enterDelay={200}>
                     <UI.Button aria-label="Print" style={toolbarButtonStyle} onClick={this.handlePrint}>
-                        <UI.Icon>print</UI.Icon>
+                        <i className="material-icons">print</i>
                     </UI.Button>
                 </UI.Tooltip>
                 <UI.Tooltip title={R.Str("EDIT")} enterDelay={200}>
                     <UI.Button aria-label="Edit" style={toolbarButtonStyle} onClick={this.handleEditModeOn}>
-                        <UI.Icon>edit</UI.Icon>
+                        <i className="material-icons">edit</i>
                     </UI.Button>
                 </UI.Tooltip>
             </div>
@@ -364,7 +364,7 @@ class OrderDetail extends Component {
                             {this.state.editMode ? (
                                 <UI.TableCell className="order-detail-item-button-cell">
                                     <UI.IconButton color="primary" onClick={this.addItem}>
-                                        <UI.Icon>add_circle</UI.Icon>
+                                        <i className="material-icons">add_circle</i>
                                     </UI.IconButton>
                                 </UI.TableCell>
                             ) : null}
