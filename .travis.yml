@@ -1,0 +1,20 @@
+sudo: required
+
+language: node_js
+
+node_js:
+  - "stable"
+
+before_script:
+  # Install meteor
+  - curl https://install.meteor.com | /bin/sh
+  # Add meteor to path (instead of asking for sudo in the Travis container)
+  # We can then use the faster container infrastructure - http://docs.travis-ci.com/user/workers/container-based-infrastructure/
+  - export PATH=$HOME/.meteor:$PATH
+
+cache:
+  directories:
+    - node_modules
+
+script:
+  - meteor build
