@@ -6,17 +6,15 @@ export default class Launchpad extends React.Component {
     state = {
         index: 0,
         isViewPortVertical: false,
-        canDrag: true
+        isItemHovering: false
     };
 
     launchpadRef = React.createRef();
-
     swipeableViewsRef = React.createRef();
 
     pointerMoved = [null, null];
 
     onTouchStart = e => {
-        console.log("start");
         if (e.button === 1) {
             this.close();
             return;
@@ -25,11 +23,9 @@ export default class Launchpad extends React.Component {
         this.pointerMoved[0] = e.touches ? [e.touches[0].pageX, e.touches[0].pageY] : [e.clientX, e.clientY];
     };
     onTouchMove = e => {
-        console.log("move");
         this.pointerMoved[1] = [e.touches[0].pageX, e.touches[0].pageY];
     };
     onTouchEnd = e => {
-        console.log("end");
         if (!this.pointerMoved[0]) return;
         if (e.button === 1) return;
         if (e.clientX || e.clientY) this.pointerMoved[1] = [e.clientX, e.clientY];
@@ -39,7 +35,7 @@ export default class Launchpad extends React.Component {
         }
         let dist = Math.pow(this.pointerMoved[0][0] - this.pointerMoved[1][0], 2) + Math.pow(this.pointerMoved[0][1] - this.pointerMoved[1][1], 2);
         if (dist < 36) {
-            this.close();
+            if (!this.state.isItemHovering) this.close();
         }
     };
 
@@ -73,10 +69,14 @@ export default class Launchpad extends React.Component {
         return pageList;
     };
 
+    itemHovering = hovering => {
+        this.setState({ isItemHovering: hovering });
+    };
+
     renderLaunchpadItems = items => {
         if (!items || items.length === 0) return null;
         return items.map(item => {
-            return <LaunchpadItem key={item.appKey} {...item} />;
+            return <LaunchpadItem key={item.appKey} {...item} itemHovering={this.itemHovering} close={this.close} />;
         });
     };
 
@@ -112,14 +112,13 @@ export default class Launchpad extends React.Component {
                 <SwipeableViews
                     ref={this.swipeableViewsRef}
                     id="launchpad-carousel"
-                    enableMouseEvents
+                    enableMouseEvents={!this.state.isItemHovering}
                     resistance
                     index={this.state.index}
                     onChangeIndex={index => this.setState({ index })}
                 >
                     {this.renderLaunchpadPages()}
                 </SwipeableViews>
-                <div id="launchpad-search">Search</div>
                 <div id="launchpad-navigator">{this.renderLaunchpadNavigator()}</div>
             </div>
         );

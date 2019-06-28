@@ -45,13 +45,12 @@ class MainFrame extends Component {
             {
                 title: <img src="/assets/os_logo_white.png" />,
                 submenu: [
+                    getAppShortCut("about_system", this),
+                    { divider: true },
                     getAppShortCut("preference", this),
                     { divider: true },
-                    { title: "System Preference..." },
-                    { title: "App Store..." },
-                    { divider: true },
                     { title: "Recent Items", submenu: [] },
-                    { title: "Force Quit..." },
+                    getAppShortCut("app_manager", this),
                     { divider: true },
                     {
                         title: R.Str("LOGOUT_WITH_NAME", { user: this.props.user.fn_en }),

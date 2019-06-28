@@ -39,18 +39,6 @@
     top: 8vh;
 }
 
-#launchpad-search {
-    visibility: hidden;
-    position: fixed;
-    overflow: hidden;
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    top: 36px;
-    height: 16px;
-}
-
 #launchpad-navigator {
     /* visibility: hidden; */
     position: fixed;
@@ -132,11 +120,32 @@
     }
 }
 
+@keyframes launchpadOpen {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(2);
+        opacity: 0.5;
+    }
+}
+
+.launchpad-open {
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: launchpadOpen;
+    animation-name: launchpadOpen;
+    animation-duration: 150ms;
+}
+
 .launchpad-enter {
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
     -webkit-animation-name: launchpadFadeIn;
     animation-name: launchpadFadeIn;
+    animation-duration: 150ms;
 }
 
 .launchpad-close {
@@ -144,4 +153,61 @@
     animation-fill-mode: both;
     -webkit-animation-name: launchpadFadeOut;
     animation-name: launchpadFadeOut;
+    animation-duration: 150ms;
+}
+
+.launchpad-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    border-radius: 0.6vh;
+    margin: 2vh;
+    transition: 200ms;
+}
+
+.launchpad-item:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.launchpad-item-icon {
+    height: 9vmin;
+    width: 9vmin;
+    filter: drop-shadow(0.1vmin 0.1vmin 0.5vmin rgba(0, 0, 0, 0.2));
+    border-radius: 1vmin;
+    transition: 100ms;
+    pointer-events: none;
+}
+
+.launchpad-item-title {
+    font-size: 1vmin;
+    text-shadow: 0.1vmin 0.1vmin 0.4vmin black;
+    font-weight: 400;
+    margin-top: 0.5vmin;
+    min-height: 1.5vmin;
+}
+
+.launchpad-item-subtitle {
+    font-size: 1vmin;
+    text-shadow: 0.1vmin 0.1vmin 0.4vmin black;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 400;
+    margin-top: 0.5vmin;
+    min-height: 1.5vmin;
+}
+
+.launchpad-item-badge {
+    position: absolute;
+    transform: translate(4vmin, -4vmin);
+    background: rgba(255, 0, 0, 0.8);
+    border-radius: 1.5vmin;
+    filter: drop-shadow(0 0 0.2vmin rgba(0, 0, 0, 0.5));
+    min-width: 3vmin;
+    min-height: 3vmin;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2vmin;
+    font-weight: 400;
 }

@@ -9,7 +9,8 @@ export default class MenuBar extends Component {
             <div
                 id="menu-bar"
                 style={{
-                    transform: this.props.hide ? "translate(0,-24px)" : "translate(0,0)"
+                    transform: this.props.hide ? "translate(0,-24px)" : "translate(0,0)",
+                    ...this.props.style
                 }}
                 onContextMenu={e => e.preventDefault()}
             >

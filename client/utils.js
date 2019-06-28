@@ -115,3 +115,17 @@ export function upload(file, methodName, args = null, beforeUpload, callback) {
         );
     };
 }
+
+export function animate(item, callback, ...animationClass) {
+    if (!item) {
+        console.error("Item is not exist");
+        return;
+    }
+    let eventListener = () => {
+        item.classList.remove(...animationClass);
+        if (callback) callback();
+        item.removeEventListener("animationend", eventListener);
+    };
+    item.addEventListener("animationend", eventListener);
+    item.classList.add(...animationClass);
+}
