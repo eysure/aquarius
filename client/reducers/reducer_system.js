@@ -34,12 +34,10 @@ export default function(state = { ...defaultState }, action) {
         case ACTION.SYSTEM_CONTROL: {
             return { ...state, ...action.payload.system };
         }
-        case ACTION.LAUNCH_PAD_CONTROL: {
+        case ACTION.LAUNCHPAD_CONTROL: {
             return {
                 ...state,
-                launchpadStatus: action.payload.data.launchpadStatus,
-                menuBarHide: action.payload.data.launchpadStatus,
-                blurScreen: action.payload.data.launchpadStatus ? 30 : 0
+                launchpadStatus: action.payload.data.launchpadStatus
             };
         }
         default:

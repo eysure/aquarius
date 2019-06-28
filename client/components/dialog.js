@@ -69,8 +69,7 @@ class Window extends Component {
                     top: this.state.top,
                     left: this.state.left,
                     width: this.state.width,
-                    height: this.state.height,
-                    filter: `blur(${this.props.system.blurScreen || 0}px)`
+                    height: this.state.height
                 }}
                 onClose={this.handleClose}
                 onMouseDown={() => {

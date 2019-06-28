@@ -1,20 +1,20 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as UI from "@material-ui/core";
-import ReactJson from "react-json-view";
 import _ from "lodash";
-import DropFile from "./drop_file";
+import DropFile from "./DropFile";
 import { Meteor } from "meteor/meteor";
 
-import DesktopContextMenu from "../components/desktop_context_menu";
+import Menu from "./Menus";
 import { throwMsg, appWindowActivate, launchPadControl } from "../actions";
 import { oss, fileUploadVerify, upload } from "../utils";
 import { R } from "../resources_feeder";
 
+import * as ACTION from "../actions";
+
 const desktopMainStyle = {
     width: "100%",
-    height: "calc(100% - 36px)",
+    height: "calc(100% - 24px)",
     color: "white",
     position: "fixed",
     bottom: 0,
@@ -31,33 +31,7 @@ const desktopImageStyle = {
 };
 
 class Desktop extends Component {
-    state = {
-        contextMenuOpen: false,
-        contextMenuX: 0,
-        contextMenuY: 0,
-        backgroundUrl: null
-    };
-
-    onContextMenu = e => {
-        e.preventDefault();
-        this.setState({
-            contextMenuOpen: true,
-            contextMenuX: e.clientX,
-            contextMenuY: e.clientY
-        });
-    };
-
-    onContextMenuClose = () => {
-        this.setState({
-            contextMenuOpen: false
-        });
-    };
-
-    onMouseUp = e => {
-        if (e.button === 0) {
-            this.onContextMenuClose();
-        }
-    };
+    state = {};
 
     onMouseDown = e => {
         switch (e.button) {
@@ -68,40 +42,62 @@ class Desktop extends Component {
             case 1: {
                 this.props.launchPadControl(true);
             }
-            case 2: {
-                this.onContextMenuClose();
-            }
         }
     };
 
+    onContextMenu = e => {
+        e.preventDefault();
+        this.setState({
+            desktopContextMenu: true,
+            contextMenuX: e.clientX,
+            contextMenuY: e.clientY
+        });
+    };
+
     renderContextMenu() {
+        let contextMenu = [
+            {
+                title: R.Str("LAUNCHPAD"),
+                extra: "⌘L",
+                onClick: () => {
+                    this.props.launchPadControl(true);
+                }
+            },
+            {
+                title: R.Str("SEARCH"),
+                onClick: () => {
+                    this.props.launchPadControl(true);
+                },
+                submenu: [
+                    { title: "test" },
+                    { title: "test 2" },
+                    { title: "test 3", submenu: [{ title: "test 4" }] },
+                    { title: "test 5", submenu: [{ title: "test 6" }] }
+                ]
+            },
+            { divider: true }
+        ];
+
+        // Recently used apps
+        contextMenu.push({ title: R.Str("RECENTLY_USED_APPS"), isTitle: true });
+        contextMenu.push({ title: R.Str("NONE"), isTitle: true });
+        contextMenu.push({ divider: true });
+
+        contextMenu.push({
+            title: R.Str("LOGOUT_WITH_NAME", { user: this.props.user.fn_en }),
+            extra: "⌘⎋",
+            onClick: () => Meteor.logout(error => this.props.logout(error))
+        });
+
         return (
-            <UI.Popover
-                id="desktop-context-menu"
-                open={this.state.contextMenuOpen}
-                onClose={this.onContextMenuClose}
-                anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "left"
-                }}
-                transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left"
-                }}
-                anchorReference="anchorPosition"
-                anchorPosition={{
-                    top: this.state.contextMenuY,
-                    left: this.state.contextMenuX
-                }}
-                transitionDuration={{
-                    enter: 100,
-                    exit: 200
-                }}
-                disablePortal={true}
-                style={{ pointerEvents: "none" }}
-            >
-                <DesktopContextMenu onClose={this.onContextMenuClose} />
-            </UI.Popover>
+            <Menu
+                context={this}
+                name="desktopContextMenu"
+                x={this.state.contextMenuX}
+                y={this.state.contextMenuY}
+                content={contextMenu}
+                emptyMenuText={R.Str("EMPTY_MENU")}
+            />
         );
     }
 
@@ -122,6 +118,7 @@ class Desktop extends Component {
             },
             (err, res) => {
                 if (err) {
+                    console.error(err);
                 } else {
                     // change localStorage
                     let employee = this.props.user;
@@ -155,35 +152,22 @@ class Desktop extends Component {
                     src={url}
                     style={{
                         ...desktopImageStyle,
-                        filter: `blur(${this.props.system.blurScreen}px)`,
-                        transition: "300ms"
+                        filter: `blur(${this.props.system.blurScreen}px)`
                     }}
                 />
-                <div
-                    id="desktop"
-                    style={desktopMainStyle}
-                    onContextMenu={this.onContextMenu}
-                    onMouseUp={this.onMouseUp}
-                    onMouseDown={this.onMouseDown}
-                >
-                    <DropFile handleDrop={this.handleDesktopUpload} style={desktopMainStyle} />
+                <div id="desktop" style={desktopMainStyle} onContextMenu={this.onContextMenu} onMouseDown={this.onMouseDown}>
+                    <DropFile disableLandingArea handleDrop={this.handleDesktopUpload} style={desktopMainStyle} />
                 </div>
                 {this.renderContextMenu()}
             </div>
         );
     }
 
-    renderStateDebugger() {
-        return <ReactJson src={this.props.allStates} theme="monokai" />;
-    }
-
     // Priority: user's preference > lastLoginUser > default
     getBackgroundRelUrl() {
         return (
             "assets/user/desktop/" +
-            (_.get(this.props.user, "preferences.desktop", null) ||
-                _.get(JSON.parse(localStorage.getItem("lastLoginUser")), "desktop", null) ||
-                "default.jpg")
+            (_.get(this.props.user, "preferences.desktop", null) || _.get(JSON.parse(localStorage.getItem("lastLoginUser")), "desktop", null) || "default.jpg")
         );
     }
 }
@@ -193,7 +177,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ throwMsg, appWindowActivate, launchPadControl }, dispatch);
+    return bindActionCreators({ throwMsg, appWindowActivate, launchPadControl, logout: ACTION.logout }, dispatch);
 }
 
 export default connect(

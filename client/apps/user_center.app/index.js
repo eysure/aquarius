@@ -12,7 +12,7 @@ import AccountSecurityTab from "./tab_account_security";
 import { ResourceFeeder } from "../../resources_feeder";
 import Avatar from "../../components/user_avatar";
 import PI from "../../components/panel_item";
-import DropFile from "../../components/drop_file";
+import DropFile from "../../components/DropFile";
 import { fileUploadVerify, upload, oss, getLocalCollection } from "../../utils";
 
 export const R = new ResourceFeeder(require("./resources/strings"), require("./resources/messages"));

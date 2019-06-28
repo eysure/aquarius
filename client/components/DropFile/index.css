@@ -1,0 +1,14 @@
+.drop-file-landing-area {
+    margin: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    transition: all 200ms ease 0s;
+    pointer-events: none;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    backdrop-filter: blur(30px);
+}

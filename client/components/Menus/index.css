@@ -1,0 +1,201 @@
+/* Aquarius Menu CSS */
+ul.menu {
+    box-sizing: content-box;
+    color: rgba(255, 255, 255, 1);
+    background: rgba(54, 54, 54, 0.7);
+    position: fixed;
+    z-index: 2000;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.52), inset 0 0 0 0.5px rgba(255, 255, 255, 0.28);
+    -webkit-backdrop-filter: blur(17px);
+    -moz-backdrop-filter: blur(17px);
+    -ms-backdrop-filter: blur(17px);
+    backdrop-filter: blur(17px);
+    margin: 0;
+    padding: 4px 0;
+    list-style-type: none;
+
+    font-size: 14px;
+    font-family: "San Francisco", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    font-weight: 500;
+
+    left: 0;
+    top: 0;
+}
+
+ul.menu.drop-down {
+    border-top: 0;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.52), inset 0 -1px 0 0.5px rgba(255, 255, 255, 0.28);
+}
+
+li.menu-item {
+    height: 19px;
+    padding: 0 12px 0 6px;
+    margin: 0;
+    cursor: default;
+    user-select: none;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+li.menu-item.disabled {
+    color: rgba(255, 255, 255, 0.28);
+}
+
+li.menu-item.title {
+    color: rgba(255, 255, 255, 0.28);
+}
+
+li.menu-item .menu-item-main {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+li.menu-item .menu-item-prefix {
+    width: 11px;
+    height: 100%;
+    margin-right: 4px;
+    font-size: 11px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+li.menu-item .menu-item-extra {
+    height: 100%;
+    margin-left: 18px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+li.menu-item i {
+    font-size: 12px;
+    display: contents;
+}
+
+li.menu-item.active {
+    background: #3890fa;
+}
+
+li.menu-item:hover {
+    background: #3890fa;
+}
+
+li.menu-item.title:hover {
+    background: none;
+}
+
+li.menu-item.disabled:hover {
+    background: none;
+}
+
+li.menu-divider {
+    height: 12px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+li.menu-divider hr {
+    margin: 0;
+    height: 2px;
+    width: 100%;
+    border: 0;
+    background: rgba(255, 255, 255, 0.28);
+}
+
+div.menu-back-drop {
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* Animation */
+@-webkit-keyframes blink {
+    from,
+    25%,
+    to {
+        background-color: rgba(56, 144, 250, 0);
+    }
+
+    0%,
+    50%,
+    100% {
+        background-color: rgba(56, 144, 250, 1);
+    }
+}
+
+@keyframes blink {
+    from,
+    25%,
+    to {
+        background-color: rgba(56, 144, 250, 0);
+    }
+
+    0%,
+    50%,
+    100% {
+        background-color: rgba(56, 144, 250, 1);
+    }
+}
+
+@-webkit-keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+.menu-item-click {
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: blink;
+    animation-name: blink;
+    -webkit-animation-duration: 250ms;
+    animation-duration: 250ms;
+}
+
+.menu-fade-out {
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: fadeOut;
+    animation-name: fadeOut;
+    -webkit-animation-duration: 200ms;
+    animation-duration: 200ms;
+    -webkit-animation-delay: 100ms;
+    animation-delay: 100ms;
+}
+
+.menu-fade-out-direct {
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: fadeOut;
+    animation-name: fadeOut;
+    -webkit-animation-duration: 200ms;
+    animation-duration: 200ms;
+}

@@ -1,0 +1,147 @@
+/* Aquarius Launchpad Style */
+#launchpad {
+    font-family: "San Francisco";
+    font-weight: 300;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.36);
+    -webkit-backdrop-filter: blur(40px);
+    backdrop-filter: blur(40px);
+    user-select: none;
+    overflow: hidden;
+    -webkit-animation-duration: 200ms;
+    animation-duration: 200ms;
+}
+
+#launchpad-carousel {
+    width: 100%;
+    height: 100%;
+    color: white;
+    margin: 0;
+    overflow: hidden;
+}
+
+.launchpad-page {
+    height: 100%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 100;
+}
+
+.launchpad-grid {
+    display: grid;
+    grid-auto-rows: 16vmin;
+    position: absolute;
+    top: 8vh;
+}
+
+#launchpad-search {
+    visibility: hidden;
+    position: fixed;
+    overflow: hidden;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    top: 36px;
+    height: 16px;
+}
+
+#launchpad-navigator {
+    /* visibility: hidden; */
+    position: fixed;
+    overflow: hidden;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    bottom: 140px;
+    height: 16px;
+}
+
+.launchpad-navigator-button {
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    margin: 6px;
+    transition: 400ms;
+}
+
+.launchpad-navigator-button.active {
+    background: rgba(255, 255, 255, 1);
+}
+
+.laucnhpad-item > div {
+    pointer-events: none;
+}
+
+.laucnhpad-item > img {
+    pointer-events: none;
+}
+
+@-webkit-keyframes launchpadFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(1.05);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes launchpadFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(1.05);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@-webkit-keyframes launchpadFadeOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(1.05);
+        opacity: 0.01;
+    }
+}
+
+@keyframes launchpadFadeOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(1.05);
+        opacity: 0.01;
+    }
+}
+
+.launchpad-enter {
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: launchpadFadeIn;
+    animation-name: launchpadFadeIn;
+}
+
+.launchpad-close {
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: launchpadFadeOut;
+    animation-name: launchpadFadeOut;
+}

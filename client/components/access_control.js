@@ -17,8 +17,8 @@ class AccessControl extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: "tester@xyzhu.me",
-            password: "Xyzhu_8888",
+            email: "tester@xyzhu.me", // Demo Only
+            password: "Xyzhu_8888", // Demo Only
             processing: false
         };
     }

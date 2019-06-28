@@ -38,11 +38,6 @@
     src: url("./fonts/Roboto-Bold.ttf");
 }
 @font-face {
-    font-family: "San Serif";
-    font-weight: 700;
-    src: url("./fonts/Roboto-Bold.ttf");
-}
-@font-face {
     font-family: "Serif";
     font-weight: 300;
     src: url("./fonts/FrankRuhlLibre-Light.ttf");
@@ -68,44 +63,76 @@
     src: url("./fonts/FrankRuhlLibre-Black.ttf");
 }
 
-/** Ultra Light */
-
-@font-face {
-    font-family: "San Francisco";
-    font-weight: 100;
-    src: url("./sanfranciscodisplay/sanfranciscodisplay-ultralight.woff2") format("woff2");
-}
-
 /** Thin */
 
 @font-face {
     font-family: "San Francisco";
+    font-weight: 100;
+    src: url("./sanfranciscodisplay/sanfranciscodisplay-thin-webfont.woff2") format("woff2");
+}
+
+/** Ultra Light */
+
+@font-face {
+    font-family: "San Francisco";
     font-weight: 200;
-    src: url("./sanfranciscodisplay/sanfranciscodisplay-thin.woff2");
+    src: url("./sanfranciscodisplay/sanfranciscodisplay-ultralight-webfont.woff2") format("woff2");
+}
+
+/** Light */
+
+@font-face {
+    font-family: "San Francisco";
+    font-weight: 300;
+    src: url("./sanfranciscodisplay/sanfranciscodisplay-light-webfont.woff2") format("woff2");
+}
+
+/** Regular */
+
+@font-face {
+    font-family: "San Francisco";
+    font-weight: 400;
+    src: url("./sanfranciscodisplay/sanfranciscodisplay-regular-webfont.woff2") format("woff2");
 }
 
 /** Medium */
 
 @font-face {
     font-family: "San Francisco";
-    font-weight: 400;
-    src: url("./sanfranciscodisplay/sanfranciscodisplay-medium.woff2");
+    font-weight: 500;
+    src: url("./sanfranciscodisplay/sanfranciscodisplay-medium-webfont.woff2") format("woff2");
 }
 
 /** Semi Bold */
 
 @font-face {
     font-family: "San Francisco";
-    font-weight: 500;
-    src: url("./sanfranciscodisplay/sanfranciscodisplay-semibold.woff2");
+    font-weight: 600;
+    src: url("./sanfranciscodisplay/sanfranciscodisplay-semibold-webfont.woff2") format("woff2");
 }
 
 /** Bold */
 
 @font-face {
     font-family: "San Francisco";
-    font-weight: bold;
-    src: url("./sanfranciscodisplay/sanfranciscodisplay-bold.woff2");
+    font-weight: 700;
+    src: url("./sanfranciscodisplay/sanfranciscodisplay-bold-webfont.woff2") format("woff2");
+}
+
+/** Heavy */
+
+@font-face {
+    font-family: "San Francisco";
+    font-weight: 800;
+    src: url("./sanfranciscodisplay/sanfranciscodisplay-heavy-webfont.woff2") format("woff2");
+}
+
+/** Black */
+
+@font-face {
+    font-family: "San Francisco";
+    font-weight: 900;
+    src: url("./sanfranciscodisplay/sanfranciscodisplay-black-webfont.woff2") format("woff2");
 }
 
 i,

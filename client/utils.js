@@ -2,7 +2,6 @@ import { Meteor } from "meteor/meteor";
 import clientConfig from "./client_config";
 import { Mongo } from "meteor/mongo";
 import MESSAGES from "./resources/messages";
-import VDL from "./components/virtual_data_layer";
 
 export function generateEmailLink(receiver, subject, body) {
     return `mailto:${receiver}?subject=${clientConfig.mailPrefix} ${subject}&body=${body}`;

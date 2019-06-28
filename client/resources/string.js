@@ -9,6 +9,7 @@ export default {
     NEW_MESSAGE: ["New Message", "新消息"],
     LOGIN: ["Login", "登录"],
     LOGOUT: ["Logout", "注销"],
+    LOGOUT_WITH_NAME: ["Log Out ${user}...", "注销 ${user}..."],
     SWITCH_USER: ["Switch User", "切换用户"],
     ENTER_PASSWORD: ["Enter Password", "输入密码"],
     DONE: ["DONE", "完成"],
@@ -81,5 +82,17 @@ export default {
     JOB_TITLE: ["Job Title", "职称"],
     TIME_START: ["Start From", "开始时间"],
     TIME_END: ["Time End", "结束时间"],
-    JOB_TYPE: ["Job Type", "工作性质"]
+    JOB_TYPE: ["Job Type", "工作性质"],
+
+    EMPTY_MENU: ["<Empty Menu>", "<空>"],
+    RECENTLY_USED_APPS: ["Recently Used Apps", "常用应用"],
+    NONE: ["None", "无"],
+    SEARCH: ["Search", "搜索"],
+
+    // Menu Bar Menu
+    FILE: ["File", "文件"],
+    EDIT: ["Edit", "编辑"],
+    VIEW: ["View", "视图"],
+    WINDOW: ["Window", "窗口"],
+    HELP: ["Help", "帮助"]
 };

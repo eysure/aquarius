@@ -19,7 +19,7 @@ export default {
     techSupportName: "Henry",
     techSupportEmail: "eysure@gmail.com",
 
-    demo: true,
+    // demo: true,
     ossBucket: "trumode-app-us",
     ossRegion: "oss-us-west-1",
     maxFileSize: 10,

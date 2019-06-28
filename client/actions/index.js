@@ -19,7 +19,7 @@ export const CLOSE_MSG = "CLOSE_MSG";
 export const CLEAR_MSG = "CLEAR_MSG";
 export const CHANGE_LANGUAGE_LOCAL = "CHANGE_LANGUAGE_LOCAL";
 export const SYSTEM_CONTROL = "SYSTEM_CONTROL";
-export const LAUNCH_PAD_CONTROL = "LAUNCH_PAD_CONTROL";
+export const LAUNCHPAD_CONTROL = "LAUNCHPAD_CONTROL";
 
 export const APP_LAUNCH = "APP_LAUNCH";
 export const APP_CLOSE = "APP_CLOSE";
@@ -111,9 +111,7 @@ export function systemControl(system) {
 export function throwMsg(msg, args = null) {
     // TODO: Back compatible, no longer support in next version
     if (typeof msg === "string" || msg instanceof String) {
-        console.warn(
-            "Deprecated: Throw a message by key in action function is deprecated and no longer support in next version"
-        );
+        console.warn("Deprecated: Throw a message by key in action function is deprecated and no longer support in next version");
         msg = getMsg(msg, args);
     }
 
@@ -184,7 +182,7 @@ export function appLaunch(appKey, startOption = null) {
 
 export function launchPadControl(status) {
     return {
-        type: LAUNCH_PAD_CONTROL,
+        type: LAUNCHPAD_CONTROL,
         payload: {
             data: {
                 launchpadStatus: status

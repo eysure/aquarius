@@ -4,16 +4,13 @@ import { getLanguage } from "./components/string_component";
 import AppList from "./app_list";
 import _ from "lodash";
 
-const parameterCss =
-    "color: #ffe250; background-color: #382800; padding: 2px; border-radius: 2px";
+const parameterCss = "color: #ffe250; background-color: #382800; padding: 2px; border-radius: 2px";
 
 export function getAppWithKey(appKey) {
     let app = AppList[appKey];
     if (!app) {
         console.error(
-            "Can't find app with appKey: %c" +
-                appKey +
-                "%c in AppList, are you forget to add to list, or are you typo the appKey?",
+            "Can't find app with appKey: %c" + appKey + "%c in AppList, are you forget to add to list, or are you typo the appKey?",
             parameterCss,
             null
         );
@@ -25,13 +22,7 @@ export function getAppWithKey(appKey) {
 export function getAppStaticProps(appKey) {
     let app = getAppWithKey(appKey);
     if (!app) {
-        console.error(
-            "Can't find appStaticProps in app with appKey: %c" +
-                appKey +
-                "%c, because app cannot be found.",
-            parameterCss,
-            null
-        );
+        console.error("Can't find appStaticProps in app with appKey: %c" + appKey + "%c, because app cannot be found.", parameterCss, null);
         return null;
     }
 
@@ -39,9 +30,7 @@ export function getAppStaticProps(appKey) {
 
     if (!appStaticProps)
         console.error(
-            "Can't find appStaticProps in app with appKey: %c" +
-                appKey +
-                "%c, are you forget to put appStaticProps in your app?",
+            "Can't find appStaticProps in app with appKey: %c" + appKey + "%c, are you forget to put appStaticProps in your app?",
             parameterCss,
             null
         );
@@ -60,13 +49,7 @@ export function getAppIcon(appKey, userProps, size, style = null) {
     return appStaticProps.materialIcon ? (
         <Icon style={{ ...style, fontSize: size }}>{appStaticProps.icon}</Icon>
     ) : (
-        <img
-            alt={getAppName(appKey, userProps)}
-            className="img-icon"
-            style={{ width: size, height: size }}
-            src={appStaticProps.icon}
-            draggable={false}
-        />
+        <img alt={getAppName(appKey, userProps)} className="img-icon" style={{ width: size, height: size }} src={appStaticProps.icon} draggable={false} />
     );
 }
 
@@ -74,11 +57,7 @@ export function getTabProps(appKey, tabKey) {
     let appStaticProps = getAppStaticProps(appKey);
     if (!appStaticProps) {
         console.error(
-            "When getting tab props with tabKey %c" +
-                tabKey +
-                "%c, can't find appStaticProps in app with appKey: %c" +
-                appKey +
-                "%c, see error msg above?",
+            "When getting tab props with tabKey %c" + tabKey + "%c, can't find appStaticProps in app with appKey: %c" + appKey + "%c, see error msg above?",
             parameterCss,
             null,
             parameterCss,
@@ -120,12 +99,24 @@ export function getTabIcon(appKey, tabKey, userProps) {
     return tabProps.materialIcon ? (
         <Icon>{getTabProps(appKey, tabKey).icon}</Icon>
     ) : (
-        <img
-            alt={getTabName(appKey, tabKey, userProps)}
-            className="img-icon"
-            src={getTabProps(appKey, tabKey).icon}
-        />
+        <img alt={getTabName(appKey, tabKey, userProps)} className="img-icon" src={getTabProps(appKey, tabKey).icon} />
     );
+}
+
+/**
+ * Get the short cut of an app
+ * @param {string} appKey: provide appKey
+ * @param {Component} context: React component context, use to get local string and start the app
+ */
+export function getAppShortCut(appKey, context) {
+    let name = getAppName(appKey, context.props.user);
+    let icon = getAppStaticProps(appKey).icon;
+    return {
+        appKey: appKey,
+        title: name,
+        icon: icon,
+        onClick: () => context.props.appLaunch(appKey)
+    };
 }
 
 /**

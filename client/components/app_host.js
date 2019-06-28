@@ -53,7 +53,7 @@ class AppHost extends Component {
                 id="app-host"
                 className="first-class-overlap"
                 style={{
-                    height: `calc(100% - ${this.props.system.menuBarHide ? "0px" : "36px"})`,
+                    height: `calc(100% - ${this.props.system.menuBarHide ? "0px" : "24px"})`,
                     transition: "300ms"
                 }}
             >
