@@ -1,0 +1,90 @@
+#dock-container {
+    height: 80px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    transition: 300ms all;
+    pointer-events: none;
+}
+
+#dock {
+    color: white;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.6);
+    border-bottom: 0;
+    border-radius: 6px 6px 0 0;
+    padding: 8px;
+    padding-bottom: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -moz-user-select: noen;
+    display: flex;
+    transition: 300ms all;
+    pointer-events: all;
+    justify-content: center;
+    align-items: center;
+}
+
+.dock-item {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 4px;
+    transition: 300ms;
+}
+
+.dock-item-image {
+    height: calc(100% - 1.3vh);
+    width: auto;
+}
+
+.dock-item-indicator {
+    background: rgba(255, 255, 255, 0.7);
+    width: 0.3vh;
+    height: 0.3vh;
+    margin: 0.5vh;
+    border-radius: 50%;
+    box-sizing: border-box;
+    transition: 750ms;
+}
+
+@keyframes dockItemEnter {
+    0% {
+        transform: scale(0) translate(0, 0);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(0.5) translate(0, -60px);
+    }
+
+    100% {
+        transform: scale(1) translate(0, 0);
+        opacity: 1;
+    }
+}
+
+.dock-item-enter {
+    -webkit-animation: dockItemEnter 750ms ease-out both;
+    animation: dockItemEnter 750ms ease-out both;
+}
+
+@keyframes dockItemLeave {
+    0% {
+        transform: scale(1);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 1;
+    }
+}
+
+.dock-item-leave {
+    -webkit-animation: dockItemLeave 300ms ease-in both;
+    animation: dockItemLeave 300ms ease-in both;
+}

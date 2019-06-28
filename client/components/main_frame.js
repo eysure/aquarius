@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import MenuBar from "./MenuBar/menu_bar";
 import Launchpad from "./Launchpad/launchpad";
-import Dock from "./dock";
+import Dock from "./Dock";
 
 import { R } from "../resources_feeder";
 import { getActiveApp, getAppName, getAppShortCut } from "../app_utils";
@@ -59,8 +59,7 @@ class MainFrame extends Component {
                     }
                 ]
             },
-            { title: "AquariusOS", submenu: [] },
-            { title: "Application Menu", submenu: [] },
+            { title: this.toolBarTitle(), submenu: [] },
             {
                 title: R.Str("FILE"),
                 submenu: [
@@ -135,7 +134,8 @@ class MainFrame extends Component {
 
 const mapStateToProps = state => ({
     system: state.system,
-    user: state.user
+    user: state.user,
+    apps: state.apps
 });
 
 const mapDispatchToProps = dispatch => {

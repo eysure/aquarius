@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-
 import MenuBarMenu from "./menu_bar_menu";
-import MenuBarExtra from "./menu_bar_extra";
 
 export default class MenuBar extends Component {
     render() {
