@@ -8,29 +8,18 @@ import { ResourceFeeder } from "../../resources_feeder";
 const R = new ResourceFeeder(require("./resources/strings"), require("./resources/messages"));
 import SwipeableViews from "react-swipeable-views";
 
-import Window from "../../components/dialog";
+import Window from "../../components/Window";
 import { Divider } from "@material-ui/core";
 
 class Welcome extends Component {
     state = { index: 0 };
-    static appStaticProps = {
-        appName: ["Welcome", "欢迎"],
-        icon: "/assets/apps/cardiology.svg"
-    };
 
     render() {
         return (
-            <Window
-                appProps={this.props.appProps}
-                width={"80vmin"}
-                height={"60vmin"}
-                titleBarStyle={"fusion"}
-                className="handle"
-                style={{ minWidth: 800, minHeight: 600 }}
-            >
+            <Window key="Main" _key="Main" width={"80vmin"} height={"60vmin"} appKey={this.props.appKey}>
                 <SwipeableViews
                     id="welcome-carousel"
-                    className="carousel"
+                    className="carousel handle"
                     resistance
                     index={this.state.index}
                     onChangeIndex={index => this.setState({ index })}
@@ -96,12 +85,7 @@ class Welcome extends Component {
             <div style={{ height: "100%", padding: "32px 64px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
                 <span style={{ fontSize: "8rem" }}>👨🏻‍💻</span>
                 <h1 style={{ fontSize: "2rem" }}>And more cool features are comming soon!</h1>
-                <UI.Button
-                    variant="outlined"
-                    color="primary"
-                    style={{ width: "50%", margin: "32px" }}
-                    onClick={e => this.props.appClose(this.props.appProps.key)}
-                >
+                <UI.Button variant="outlined" color="primary" style={{ width: "50%", margin: "32px" }} onClick={e => this.props.appClose(this.props.appKey)}>
                     Enjoy
                 </UI.Button>
                 <p style={{ fontSize: "1rem", fontWeight: 300, width: "80%", position: "absolute", bottom: "32px", color: "grey" }}>
@@ -128,6 +112,13 @@ mapStateToProps = state => {
 };
 
 mapDispatchToProps = dispatch => bindActionCreators({ appClose }, dispatch);
+
+Welcome.manifest = {
+    appKey: "welcome",
+    appName: ["Welcome", "欢迎"],
+    icon: "/assets/apps/cardiology.svg",
+    menubar: [{ title: "test" }]
+};
 
 export default connect(
     mapStateToProps,

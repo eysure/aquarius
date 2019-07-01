@@ -13,20 +13,28 @@ import Welcome from "./apps/welcome.app";
 import OrderManager from "./apps/trumode.order_manager.app";
 import Contacts from "./apps/trumode.contacts.app";
 import CustomerRelationshipManager from "./apps/trumode.crm.app";
-import ProductManager from "./apps/trumode.product_mamager.app";
+import ProductManager from "./apps/trumode.product_manager.app";
 
-export default {
-    about_system: AboutSystem,
-    admin: Admin,
-    app_manager: AppManager,
-    debugger: Debugger,
-    preference: Preference,
-    search: Search,
-    manual: Manual,
-    welcome: Welcome,
-    user_center: UserCenter,
-    order_manager: OrderManager,
-    contacts: Contacts,
-    crm: CustomerRelationshipManager,
-    product_manager: ProductManager
-};
+const INSTALLED_APPS = [
+    AboutSystem,
+    Admin,
+    AppManager,
+    Debugger,
+    Contacts,
+    Preference,
+    Search,
+    UserCenter,
+    Manual,
+    Welcome,
+    OrderManager,
+    CustomerRelationshipManager,
+    ProductManager
+];
+
+let installedAppsMap = {};
+INSTALLED_APPS.map(APP => {
+    let appKey = APP.manifest.appKey;
+    installedAppsMap[appKey] = APP;
+});
+
+export default installedAppsMap;

@@ -6,7 +6,7 @@ import DropFile from "./DropFile";
 import { Meteor } from "meteor/meteor";
 
 import Menu from "./Menus";
-import { throwMsg, appWindowActivate, launchPadControl } from "../actions";
+import { throwMsg, appWindowActivate, launchPadControl, activateWindow } from "../actions";
 import { oss, fileUploadVerify, upload } from "../utils";
 import { R } from "../resources_feeder";
 
@@ -36,11 +36,12 @@ class Desktop extends Component {
     onMouseDown = e => {
         switch (e.button) {
             case 0: {
-                this.props.appWindowActivate(null);
+                this.props.activateWindow(null);
                 break;
             }
             case 1: {
                 this.props.launchPadControl(true);
+                break;
             }
         }
     };
@@ -177,7 +178,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ throwMsg, appWindowActivate, launchPadControl, logout: ACTION.logout }, dispatch);
+    return bindActionCreators({ throwMsg, appWindowActivate, launchPadControl, logout: ACTION.logout, activateWindow }, dispatch);
 }
 
 export default connect(

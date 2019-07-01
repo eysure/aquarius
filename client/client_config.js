@@ -1,6 +1,6 @@
 export default {
     // Version of the system
-    version: "0.1.2",
+    version: "0.2.0",
 
     // available languages
     languages: ["en-US", "zh-CN"],

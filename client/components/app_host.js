@@ -2,46 +2,38 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import _ from "lodash";
-import SwipeableViews from "react-swipeable-views";
 import { appClose, throwMsg } from "../actions";
 import { getAppWithKey } from "../app_utils";
-import AppShell from "./app_shell";
+import Application from "./Application";
 import { R } from "../resources_feeder";
 
 class AppHost extends Component {
     render() {
         if (!Meteor.userId()) return "";
 
-        const apps = _.map(this.props.apps, appInState => {
+        const apps = _.map(this.props.apps, app => {
             try {
-                if (appInState.status >= 1) {
-                    let thisApp = getAppWithKey(appInState.key);
-                    if (!thisApp) {
+                if (app.status >= 1) {
+                    let appClass = getAppWithKey(app.appKey);
+                    if (!appClass) {
                         this.props.throwMsg(
                             R.Msg("APP_LAUNCH_FAILED", {
-                                msgContent: "No appKey found in appList." + appInState.key
+                                msgContent: "No appKey found in appList." + app.appKey
                             })
                         );
-                        this.props.appClose(appInState.key);
+                        this.props.appClose(app.appKey);
                     }
 
-                    return (
-                        <AppShell key={appInState.key}>
-                            {React.createElement(thisApp, {
-                                key: appInState.key,
-                                appProps: {
-                                    appStaticProps: thisApp.appStaticProps,
-                                    key: appInState.key,
-                                    isActive: appInState.isActive,
-                                    option: appInState.option,
-                                    status: appInState.status
-                                },
-                                onClose: () => {
-                                    this.props.appClose(appInState.key);
-                                }
-                            })}
-                        </AppShell>
-                    );
+                    // Let React to inflate the app
+                    let appInstance = React.createElement(appClass, {
+                        manifest: appClass.manifest,
+                        appKey: app.appKey,
+                        isActive: app.isActive,
+                        option: app.option,
+                        status: app.status
+                    });
+
+                    return <Application key={app.appKey}>{appInstance}</Application>;
                 }
             } catch (e) {
                 console.error(e);
@@ -57,7 +49,10 @@ class AppHost extends Component {
                     transition: "300ms"
                 }}
             >
+                <div id="back-group" />
                 {apps}
+                <div id="normal-group" />
+                <div id="front-group" />
             </div>
         );
     }
@@ -65,7 +60,6 @@ class AppHost extends Component {
 
 function mapStateToProps(state) {
     return {
-        user: state.user,
         apps: state.apps,
         system: state.system
     };

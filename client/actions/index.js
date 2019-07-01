@@ -22,6 +22,7 @@ export const SYSTEM_CONTROL = "SYSTEM_CONTROL";
 export const LAUNCHPAD_CONTROL = "LAUNCHPAD_CONTROL";
 
 export const APP_LAUNCH = "APP_LAUNCH";
+export const APP_LAUNCH_DEPRECATED = "APP_LAUNCH_DEPRECATED";
 export const APP_CLOSE = "APP_CLOSE";
 export const APP_WINDOW_ACTIVATE = "APP_WINDOW_ACTIVATE";
 export const APP_CONFIG = "APP_CONFIG";
@@ -31,6 +32,10 @@ export const DELETE_SALES_ORDER = "DELETE_SALES_ORDER";
 
 export const BIND_COLLECTION = "BIND_COLLECTION";
 export const BIND_COLLECTIONS = "BIND_COLLECTIONS";
+
+export const REGISTER_WINDOW = "REGISTER_WINDOW";
+export const ACTIVATE_WINDOW = "ACTIVATE_WINDOW";
+export const UNREGISTER_WINDOW = "UNREGISTER_WINDOW";
 
 export function logout(error = null, option = null) {
     let msg = error ? R.Msg("LOGOUT_ERR", { error }) : R.Msg("LOGOUT_OK");
@@ -151,10 +156,21 @@ export function changeLanguageLocal(language) {
     };
 }
 
+export function launchPadControl(status) {
+    return {
+        type: LAUNCHPAD_CONTROL,
+        payload: {
+            data: {
+                launchpadStatus: status
+            }
+        }
+    };
+}
+
 /**
  * Launcher to launch an Application
  */
-export function appLaunch(appKey, startOption = null) {
+export function appLaunch(appKey, option = null) {
     // Validate app before launch to avoid error
     let report = validateAppWithKey(appKey);
     if (!report.result) {
@@ -174,48 +190,37 @@ export function appLaunch(appKey, startOption = null) {
     return {
         type: APP_LAUNCH,
         payload: {
-            key: appKey,
-            startOption
+            appKey,
+            option
         }
     };
 }
 
-export function launchPadControl(status) {
-    return {
-        type: LAUNCHPAD_CONTROL,
-        payload: {
-            data: {
-                launchpadStatus: status
-            }
-        }
-    };
-}
-
-export function appClose(key, option = null) {
+export function appClose(appKey, option = null) {
     return {
         type: APP_CLOSE,
         payload: {
-            key,
+            appKey,
             option
         }
     };
 }
 
-export function appWindowActivate(key, option) {
+export function appWindowActivate(appKey, option) {
     return {
         type: APP_WINDOW_ACTIVATE,
         payload: {
-            key,
+            appKey,
             option
         }
     };
 }
 
-export function appConfig(key, configuration) {
+export function appConfig(appKey, configuration) {
     return {
         type: APP_CONFIG,
         payload: {
-            key,
+            appKey,
             configuration
         }
     };
@@ -235,5 +240,36 @@ export function bindCollections(collections) {
     return {
         type: BIND_COLLECTIONS,
         payload: collections
+    };
+}
+
+export function registerWindow(windowKey, window, appKey) {
+    return {
+        type: REGISTER_WINDOW,
+        payload: {
+            windowKey,
+            window,
+            appKey
+        }
+    };
+}
+
+export function activateWindow(windowKey, appKey) {
+    return {
+        type: ACTIVATE_WINDOW,
+        payload: {
+            windowKey,
+            appKey
+        }
+    };
+}
+
+export function unregisterWindow(windowKey, appKey) {
+    return {
+        type: UNREGISTER_WINDOW,
+        payload: {
+            windowKey,
+            appKey
+        }
     };
 }

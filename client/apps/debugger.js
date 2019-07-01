@@ -1,21 +1,23 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import Window from "../components/dialog";
+import { getAppName } from "../app_utils";
+
+import Window from "../components/Window";
 import ReactJson from "react-json-view";
 
 class Debugger extends Component {
-    static appStaticProps = {
-        appName: ["Debugger", "调试器"],
-        icon: "/assets/apps/ant.svg",
-        defaultOption: {
-            alwaysOnFront: true
-        }
-    };
-
     render() {
         return (
-            <Window appProps={this.props.appProps} width={720} height={480} style={{ backgroundColor: "RGB(39,40,34)", border: "none" }}>
+            <Window
+                key="Main"
+                _key="Main"
+                appKey={this.props.appKey}
+                width={800}
+                height={600}
+                titlebar={getAppName("debugger", this.props.allStates.user)}
+                theme="dark"
+            >
                 <ReactJson
                     style={{
                         fontFamily: "menlo",
@@ -37,6 +39,15 @@ function mapStateToProps(state) {
         allStates: state
     };
 }
+
+Debugger.manifest = {
+    appKey: "debugger",
+    appName: ["Debugger", "调试器"],
+    icon: "/assets/apps/ant.svg",
+    defaultOption: {
+        alwaysOnFront: true
+    }
+};
 
 export default connect(
     mapStateToProps,

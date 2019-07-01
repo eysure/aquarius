@@ -7,17 +7,14 @@ import PI from "../../components/panel_item";
 import _ from "lodash";
 import Avatar from "../../components/user_avatar";
 
+import Window from "../../components/Window";
+
 import { ResourceFeeder } from "../../resources_feeder";
 
-import Window from "../../components/dialog";
 import { R } from "../../resources_feeder";
+import { getAppName } from "../../app_utils.js";
 
 class Contacts extends Component {
-    static appStaticProps = {
-        appName: ["Contacts", "联系人"],
-        icon: "/assets/apps/contacts.svg"
-    };
-
     computeOrganization = employee => {
         let { db } = this.props;
 
@@ -71,7 +68,15 @@ class Contacts extends Component {
 
     render() {
         return (
-            <Window appProps={this.props.appProps} width={1000} height={800} toolbar={this.toolbar}>
+            <Window
+                key="Main"
+                _key="Main"
+                width={900}
+                height={600}
+                appKey={this.props.appKey}
+                titlebar={getAppName("trumode.contacts", this.props.user)}
+                toolbar={this.toolbar}
+            >
                 <div className="panel-container">
                     <div className="panel-container-inner" style={{ maxWidth: 1600 }}>
                         <div className="panel" style={{ gridColumnGap: 0 }}>
@@ -109,6 +114,12 @@ function mapStateToProps(state) {
         db: state.db
     };
 }
+
+Contacts.manifest = {
+    appKey: "trumode.contacts",
+    appName: ["Contacts", "联系人"],
+    icon: "/assets/apps/contacts.svg"
+};
 
 export default connect(
     mapStateToProps,

@@ -22,7 +22,7 @@ export default class MenuItem extends Component {
                 onBlur={this.handleBlur}
             >
                 <div className="menu-item-main">
-                    <span className="menu-item-prefix">{this.props.check ? <i>✓</i> : ""}</span>
+                    <span className="menu-item-prefix">{this.props.prefix ? <i>{this.props.prefix}</i> : ""}</span>
                     <span className="menu-item-text">{this.props.title}</span>
                 </div>
                 <div className="menu-item-extra">{this.props.submenu != null ? <i>▶</i> : this.props.extra}</div>

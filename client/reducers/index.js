@@ -7,11 +7,13 @@ import SystemReducer from "./reducer_system";
 import UserReducer from "./reducer_user";
 import CompanyReducer from "./reducer_company";
 import DebugReducer from "./reducer_debug";
-import AppsReducer from "./reducer_apps";
+import ApplicationsReducer from "./reducer_apps";
 import CollectionsReducer from "./reducer_collections";
+import WindowsReducer from "./reducer_windows";
 
 const rootReducer = combineReducers({
-    apps: AppsReducer,
+    apps: ApplicationsReducer,
+    windows: WindowsReducer,
     company: CompanyReducer,
     debug: DebugReducer,
     notifications: NotificationsReducer,

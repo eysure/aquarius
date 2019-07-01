@@ -1,27 +1,60 @@
 import React from "react";
-import App from "../components/app_shell";
-import * as UI from "@material-ui/core";
+import _ from "lodash";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as Action from "../actions";
+import uuidv4 from "uuid/v4";
 
-import Window from "../components/dialog";
+import Window from "../components/Window";
 
 class Admin extends React.Component {
-    static appStaticProps = {
-        appName: ["Admin", "管理员"],
-        materialIcon: true,
-        icon: "trip_origin"
+    state = {
+        window: 0
+    };
+
+    window = context => {
+        let res = [];
+        for (let i = 0; i < this.state.window; i++) {
+            let key = `sub${i + 1}`;
+            res.push(
+                <Window key={key} _key={key} width={400} height={300} appKey={this.props.appKey} theme="dark" titlebar={key}>
+                    <div className="handle" style={{ width: "100%", height: "100%" }}>
+                        {context.props.user.fn_en}
+                    </div>
+                </Window>
+            );
+        }
+        return res;
     };
 
     render() {
         return (
-            <Window appProps={this.props.appProps} width={840} height={720} aria-labelledby="admin">
-                <UI.DialogTitle>AquariusOS Admin Page</UI.DialogTitle>
-            </Window>
+            <>
+                <Window key="Main" _key="Main" width={400} height={300} appKey={this.props.appKey} theme="dark" titlebar="Main">
+                    <div className="handle" style={{ width: "100%", height: "100%" }}>
+                        {this.props.user.fn_en}
+                        <button onClick={() => this.setState({ window: this.state.window + 1 })}>add</button>
+                    </div>
+                </Window>
+                {this.window(this)}
+            </>
         );
-    }
-
-    componentDidMount() {
-        throw Error("Just an error");
     }
 }
 
-export default Admin;
+const mapStateToProps = state => ({
+    user: state.user
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(Action, dispatch);
+
+Admin.manifest = {
+    appKey: "admin",
+    appName: ["Admin", "管理员"],
+    icon: "/assets/apps/chauffeur.svg"
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Admin);

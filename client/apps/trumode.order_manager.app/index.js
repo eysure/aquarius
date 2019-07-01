@@ -3,9 +3,10 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as UI from "@material-ui/core";
 
-import Window from "../../components/dialog";
 import OrderList from "./order_list";
 import OrderDetail from "./order_detail";
+
+import Window from "../../components/Window";
 
 import { throwMsg } from "../../actions";
 
@@ -13,11 +14,6 @@ import { ResourceFeeder } from "../../resources_feeder";
 export const R = new ResourceFeeder(require("./resources/strings"), require("./resources/messages"));
 
 class OrderManager extends Component {
-    static appStaticProps = {
-        appName: ["Order Manager", "订单管理"],
-        icon: "/assets/apps/documents.svg"
-    };
-
     state = {
         sidebarWidth: 240,
         secondarySidebarWidth: 360,
@@ -59,7 +55,7 @@ class OrderManager extends Component {
 
     render() {
         return (
-            <Window appProps={this.props.appProps} titleBarStyle="fusion" width="80vw" height="80vh">
+            <Window key="Main" _key="Main" width="80vw" height="80vh" appKey={this.props.appKey} theme="dark">
                 <UI.DialogContent className="no-padding" onMouseMove={this.adjustWidthMove} onMouseUp={this.adjustWidthEnd}>
                     <UI.Drawer className="dark" variant="permanent" anchor="left" PaperProps={{ style: this.sidebarStyle }}>
                         <div className="handle" style={{ height: "36px" }} />
@@ -208,6 +204,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({ throwMsg }, dispatch);
+
+OrderManager.manifest = {
+    appKey: "trumode.order_manager",
+    appName: ["Order Manager", "订单管理"],
+    icon: "/assets/apps/documents.svg"
+};
 
 export default connect(
     mapStateToProps,

@@ -63,6 +63,57 @@ const gridTarget = interact.createSnapGrid({
     y: 1
 });
 
+interact(".draggable")
+    .draggable({
+        allowFrom: ".window-titlebar,.handle",
+        ignoreFrom: ".unhandle",
+        restrict: {
+            restriction: "parent",
+            elementRect: { top: 0, left: 1, bottom: 0, right: 0 }
+        },
+        snap: { targets: [gridTarget] }
+    })
+    .on("dragmove", function(event) {
+        var target = event.target,
+            x = (parseInt(target.getAttribute("data-x")) || 0) + event.dx,
+            y = (parseInt(target.getAttribute("data-y")) || 0) + event.dy;
+
+        target.style.webkitTransform = target.style.transform = "translate(" + x + "px, " + y + "px)";
+
+        target.setAttribute("data-x", x);
+        target.setAttribute("data-y", y);
+    });
+
+interact(".resizable")
+    .resizable({
+        edges: {
+            top: ".interactive-uu",
+            left: ".interactive-ll",
+            bottom: ".interactive-dd",
+            right: ".interactive-rr"
+        },
+        restrictEdges: {
+            outer: "parent"
+        },
+        snap: { targets: [gridTarget] }
+    })
+    .on("resizemove", function(event) {
+        var target = event.target,
+            x = parseInt(target.getAttribute("data-x")) || 0,
+            y = parseInt(target.getAttribute("data-y")) || 0;
+
+        target.style.width = event.rect.width + "px";
+        target.style.height = event.rect.height + "px";
+
+        x += event.deltaRect.left;
+        y += event.deltaRect.top;
+
+        target.style.webkitTransform = target.style.transform = "translate(" + x + "px," + y + "px)";
+
+        target.setAttribute("data-x", x);
+        target.setAttribute("data-y", y);
+    });
+
 interact(".rnd")
     .draggable({
         allowFrom: ".handle",

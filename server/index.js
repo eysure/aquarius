@@ -43,6 +43,7 @@ console.log("┌─────────────────────�
 let myErrors = systemCheck();
 if (myErrors.length !== 0) {
     console.error(`System initialization check has ${myErrors.length} error(s), server cannot start.`);
+    console.error(`Check if you are using the Meteor Internal MongoDB, change to the outer MongoDB if possible.`);
     for (let i in myErrors) {
         console.error(myErrors[i].code + ":\t" + myErrors[i].reason);
     }
@@ -102,31 +103,45 @@ Meteor.publish("myEmployeeInfo", function() {
     );
 });
 
-Meteor.publish("allEmployeesInfo", function() {
+Meteor.publish("deptsInfo", function() {
+    if (!this.userId) return null;
+    return [Collection("depts").find()];
+});
+
+Meteor.publish("groupsInfo", function() {
+    if (!this.userId) return null;
+    return [Collection("depts_groups").find()];
+});
+
+Meteor.publish("allEmployeesBasicInfo", function() {
     if (!this.userId) return null;
 
-    return [
-        Collection("employees").find(
-            { hide: { $exists: false }, status: 1 },
-            {
-                fields: {
-                    _id: 1,
-                    nickname: 1,
-                    email: 1,
-                    name_cn: 1,
-                    fn_en: 1,
-                    ln_en: 1,
-                    mobile: 1,
-                    ext: 1,
-                    avatar: 1
-                }
+    return Collection("employees").find(
+        { hide: { $exists: false }, status: 1 },
+        {
+            fields: {
+                _id: 1,
+                nickname: 1,
+                email: 1,
+                name_cn: 1,
+                fn_en: 1,
+                ln_en: 1,
+                mobile: 1,
+                ext: 1,
+                avatar: 1
             }
-        ),
-        Collection("employees_assign").find({ time_end: { $exists: false } }),
-        Collection("depts").find(),
-        Collection("depts_groups").find(),
-        Collection("job_title").find()
-    ];
+        }
+    );
+});
+
+Meteor.publish("allEmployeesAssign", function() {
+    if (!this.userId) return null;
+    return Collection("employees_assign").find({ time_end: { $exists: false } });
+});
+
+Meteor.publish("jobTitleInfo", function() {
+    if (!this.userId) return null;
+    return Collection("job_title").find();
 });
 
 // Account log

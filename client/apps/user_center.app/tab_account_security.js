@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import _ from "lodash";
-import Str, { getStr } from "../../components/string_component";
 
 import * as UI from "@material-ui/core";
 

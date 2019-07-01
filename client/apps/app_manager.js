@@ -8,20 +8,12 @@ import _ from "lodash";
 
 import { appClose, appWindowActivate } from "../actions";
 
-import Window from "../components/dialog";
+import Window from "../components/Window";
 
 class AppManager extends Component {
-    static appStaticProps = {
-        appName: ["App Manager", "应用管理器"],
-        icon: "/assets/apps/storyboard.svg",
-        defaultOption: {
-            alwaysOnFront: true
-        }
-    };
-
     render() {
         return (
-            <Window appProps={this.props.appProps} width={360}>
+            <Window key="Main" _key="Main" appKey={this.props.appKey} titlebar={getAppName("app_manager", this.props.user)}>
                 <UI.DialogContent className="no-padding">
                     <UI.List component="nav" subheader={<UI.ListSubheader component="div">{this.props.apps.length} app(s) running</UI.ListSubheader>}>
                         {this.renderAppList()}
@@ -33,28 +25,28 @@ class AppManager extends Component {
 
     renderAppList() {
         return _.map(this.props.apps, app => {
-            let appStaticProps = app.appStaticProps;
+            let manifest = app.manifest;
 
             return (
                 <UI.ListItem
                     button
-                    key={app.key}
+                    key={app.appKey}
                     onClick={() => {
-                        this.props.appWindowActivate(app.key, app.option);
+                        this.props.appWindowActivate(app.appKey, app.option);
                     }}
                 >
                     <UI.ListItemIcon>
-                        {appStaticProps.materialIcon ? (
+                        {manifest.materialIcon ? (
                             <UI.Avatar>
-                                <i className="material-icons">{appStaticProps.icon}</i>
+                                <i className="material-icons">{manifest.icon}</i>
                             </UI.Avatar>
                         ) : (
-                            <img style={{ width: "40px", height: "40px" }} alt={getAppName(app.key, this.props.user)} src={appStaticProps.icon} />
+                            <img style={{ width: "40px", height: "40px" }} alt={getAppName(app.appKey, this.props.user)} src={manifest.icon} />
                         )}
                     </UI.ListItemIcon>
                     <UI.ListItemText
-                        primary={getAppName(app.key, this.props.user)}
-                        secondary={app.key + " : " + app.status + (app.isActive ? " active" : " inactive")}
+                        primary={getAppName(app.appKey, this.props.user)}
+                        secondary={app.appKey + " : " + app.status + (app.isActive ? " active" : " inactive")}
                     />
                     <UI.ListItemSecondaryAction>
                         {_.get(app, "option.isSystem", false) ? (
@@ -63,7 +55,7 @@ class AppManager extends Component {
                             <UI.IconButton
                                 aria-label="close this App"
                                 onClick={() => {
-                                    this.props.appClose(app.key);
+                                    this.props.appClose(app.appKey);
                                 }}
                             >
                                 <i className="material-icons">close</i>
@@ -86,6 +78,15 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({ appClose, appWindowActivate }, dispatch);
 }
+
+AppManager.manifest = {
+    appKey: "app_manager",
+    appName: ["App Manager", "应用管理器"],
+    icon: "/assets/apps/storyboard.svg",
+    defaultOption: {
+        alwaysOnFront: true
+    }
+};
 
 export default connect(
     mapStateToProps,

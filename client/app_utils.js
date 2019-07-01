@@ -6,6 +6,10 @@ import _ from "lodash";
 
 const parameterCss = "color: #ffe250; background-color: #382800; padding: 2px; border-radius: 2px";
 
+export function getInstalledApps() {
+    return AppList;
+}
+
 export function getAppWithKey(appKey) {
     let app = AppList[appKey];
     if (!app) {
@@ -14,50 +18,46 @@ export function getAppWithKey(appKey) {
             parameterCss,
             null
         );
+        return null;
     }
 
     return app;
 }
 
-export function getAppStaticProps(appKey) {
+export function getAppManifest(appKey) {
     let app = getAppWithKey(appKey);
-    if (!app) {
-        console.error("Can't find appStaticProps in app with appKey: %c" + appKey + "%c, because app cannot be found.", parameterCss, null);
-        return null;
-    }
+    if (!app) return null;
 
-    let appStaticProps = app.appStaticProps;
-
-    if (!appStaticProps)
-        console.error(
-            "Can't find appStaticProps in app with appKey: %c" + appKey + "%c, are you forget to put appStaticProps in your app?",
-            parameterCss,
-            null
-        );
-    return appStaticProps;
+    let manifest = app.manifest;
+    if (!manifest) console.error("Can't find manifest in app with appKey: %c" + appKey + "%c, are you forget to put manifest in your app?", parameterCss, null);
+    return manifest;
 }
 
 export function getAppName(appKey, userProps) {
-    let appStaticProps = getAppStaticProps(appKey);
-    if (!appStaticProps) return appKey;
-    return appStaticProps.appName[getLanguage(userProps)];
+    if (!appKey) {
+        console.error("appKey is not provided");
+        return null;
+    }
+    let manifest = getAppManifest(appKey);
+    if (!manifest) return appKey;
+    return manifest.appName[getLanguage(userProps)];
 }
 
 export function getAppIcon(appKey, userProps, size, style = null) {
-    let appStaticProps = getAppStaticProps(appKey);
-    if (!appStaticProps) return null;
-    return appStaticProps.materialIcon ? (
-        <Icon style={{ ...style, fontSize: size }}>{appStaticProps.icon}</Icon>
+    let manifest = getAppManifest(appKey);
+    if (!manifest) return null;
+    return manifest.materialIcon ? (
+        <Icon style={{ ...style, fontSize: size }}>{manifest.icon}</Icon>
     ) : (
-        <img alt={getAppName(appKey, userProps)} className="img-icon" style={{ width: size, height: size }} src={appStaticProps.icon} draggable={false} />
+        <img alt={getAppName(appKey, userProps)} className="img-icon" style={{ width: size, height: size }} src={manifest.icon} draggable={false} />
     );
 }
 
 export function getTabProps(appKey, tabKey) {
-    let appStaticProps = getAppStaticProps(appKey);
-    if (!appStaticProps) {
+    let manifest = getAppManifest(appKey);
+    if (!manifest) {
         console.error(
-            "When getting tab props with tabKey %c" + tabKey + "%c, can't find appStaticProps in app with appKey: %c" + appKey + "%c, see error msg above?",
+            "When getting tab props with tabKey %c" + tabKey + "%c, can't find manifest in app with appKey: %c" + appKey + "%c, see error msg above?",
             parameterCss,
             null,
             parameterCss,
@@ -66,17 +66,13 @@ export function getTabProps(appKey, tabKey) {
         return null;
     }
 
-    let tabProps = _.find(appStaticProps.tabs, tab => {
+    let tabProps = _.find(manifest.tabs, tab => {
         return tab.tabKey === tabKey;
     });
 
     if (!tabProps)
         console.error(
-            "Can't find tab with tabKey: %c" +
-                tabKey +
-                "%c in app: %c" +
-                appKey +
-                "%c, are you forget to add tab to appStaticProps.tabs, or have typo in tabKey?",
+            "Can't find tab with tabKey: %c" + tabKey + "%c in app: %c" + appKey + "%c, are you forget to add tab to manifest.tabs, or have typo in tabKey?",
             parameterCss,
             null,
             parameterCss,
@@ -110,7 +106,7 @@ export function getTabIcon(appKey, tabKey, userProps) {
  */
 export function getAppShortCut(appKey, context) {
     let name = getAppName(appKey, context.props.user);
-    let icon = getAppStaticProps(appKey).icon;
+    let icon = getAppManifest(appKey).icon;
     return {
         appKey: appKey,
         title: name,
@@ -120,8 +116,8 @@ export function getAppShortCut(appKey, context) {
 }
 
 /**
- * Validate app with key. Use before launch app or get app's static props(App.appStaticProps)
- * validation goes through app itself, then appStaticProps, then appName
+ * Validate app with key. Use before launch app or get app's static props(App.manifest)
+ * validation goes through app itself, then manifest, then appName
  * @param {string} appKey - provide appKey.
  *
  * @example
@@ -132,10 +128,10 @@ export function getAppShortCut(appKey, context) {
  * // { result: false, reason: 1, description: "app cannot be found with request appKey" }
  *
  * validateAppWithKey("no_static_props");
- * // { result: false, reason: 2, description: "can't find appStaticProps in app"}
+ * // { result: false, reason: 2, description: "can't find manifest in app"}
  *
  * validateAppWithKey("no_app_name");
- * // { result: false, reason: 3, description: "Can't find appName in appStaticProps"}
+ * // { result: false, reason: 3, description: "Can't find appName in manifest"}
  *
  * @returns {object} Return a result object with boolean result, reason and description
  */
@@ -149,21 +145,21 @@ export function validateAppWithKey(appKey) {
         };
     }
 
-    let appStaticProps = App.appStaticProps;
-    if (!appStaticProps) {
+    let manifest = App.manifest;
+    if (!manifest) {
         return {
             result: false,
             reason: 2,
-            description: "Can't find appStaticProps in App"
+            description: "Can't find manifest in App"
         };
     }
 
-    let appName = appStaticProps.appName;
+    let appName = manifest.appName;
     if (!appName) {
         return {
             result: false,
             reason: 3,
-            description: "Can't find appName in appStaticProps"
+            description: "Can't find appName in manifest"
         };
     }
 
@@ -171,9 +167,9 @@ export function validateAppWithKey(appKey) {
 }
 
 export function getActiveApp(apps) {
-    if (apps === null || apps.length === 0) return null;
-    for (let app of apps) {
-        if (app.isActive) return app;
+    if (apps === null) return null;
+    for (let appKey in apps) {
+        if (apps[appKey].isActive) return apps[appKey];
     }
     return null;
 }

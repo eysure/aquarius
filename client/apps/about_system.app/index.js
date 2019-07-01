@@ -5,14 +5,9 @@ import clientConfig from "../../client_config.js";
 import { ResourceFeeder } from "../../resources_feeder";
 const R = new ResourceFeeder(require("./resources/strings"), require("./resources/messages"));
 
-import Window from "../../components/dialog";
+import Window from "../../components/Window";
 
 class AboutSystem extends Component {
-    static appStaticProps = {
-        appName: ["About System", "关于系统"],
-        icon: "/assets/apps/ramdac.svg"
-    };
-
     state = {
         clientConfigOpen: false,
         serverConfigOpen: false
@@ -20,13 +15,14 @@ class AboutSystem extends Component {
 
     render() {
         return (
-            <Window appProps={this.props.appProps} width={360} titleBarStyle="fusion" className="handle">
+            <Window key="Main" _key="Main" y="20vh" appKey={this.props.appKey}>
                 <div
+                    className="handle"
                     style={{
-                        padding: "64px 32px",
+                        padding: "64px 64px",
                         display: "flex",
                         flexDirection: "column",
-                        height: "100%",
+                        height: "calc(100% - 128px)",
                         justifyContent: "center",
                         alignItems: "center"
                     }}
@@ -39,5 +35,11 @@ class AboutSystem extends Component {
         );
     }
 }
+
+AboutSystem.manifest = {
+    appKey: "about_system",
+    appName: ["About System", "关于系统"],
+    icon: "/assets/apps/ramdac.svg"
+};
 
 export default AboutSystem;

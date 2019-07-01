@@ -1,5 +1,5 @@
 /*
-    Note: This class is created for React to load data from Meteor at the beginning of the initialization.
+    Note: This class is created for React to lively load data from Meteor at the beginning of the initialization.
 */
 import React from "react";
 import { bindActionCreators } from "redux";
@@ -10,52 +10,44 @@ import { getLocalCollection } from "../utils";
 
 import * as Action from "../actions";
 
+Meteor.subscribe("myEmployeeInfo");
+// Meteor.subscribe("allEmployeesInfo");
+
 class VirtualDataLayer extends React.Component {
+    /**
+     * Subscribe to a Meteor Publisher
+     * and bind the related update collection to reducer storage
+     */
+    subscribeAndBind = (pubName, collections) => {
+        Tracker.autorun(() => {
+            Meteor.subscribe(pubName);
+            if (collections instanceof Array) {
+                for (let collection of collections) {
+                    this.props.bindCollection(
+                        collection,
+                        getLocalCollection(collection)
+                            .find()
+                            .fetch()
+                    );
+                }
+            } else {
+                this.props.bindCollection(
+                    collections,
+                    getLocalCollection(collections)
+                        .find()
+                        .fetch()
+                );
+            }
+        });
+    };
+
     componentDidMount() {
-        Tracker.autorun(() => {
-            let start = window.performance.now();
-            Meteor.subscribe("myEmployeeInfo");
-            this.props.bindCollection(
-                "employees",
-                getLocalCollection("employees")
-                    .find()
-                    .fetch()
-            );
-        });
-        Tracker.autorun(() => {
-            let start = window.performance.now();
-            Meteor.subscribe("allEmployeesInfo");
-            this.props.bindCollection(
-                "employees",
-                getLocalCollection("employees")
-                    .find()
-                    .fetch()
-            );
-            this.props.bindCollection(
-                "employees_assign",
-                getLocalCollection("employees_assign")
-                    .find()
-                    .fetch()
-            );
-            this.props.bindCollection(
-                "depts",
-                getLocalCollection("depts")
-                    .find()
-                    .fetch()
-            );
-            this.props.bindCollection(
-                "depts_groups",
-                getLocalCollection("depts_groups")
-                    .find()
-                    .fetch()
-            );
-            this.props.bindCollection(
-                "job_title",
-                getLocalCollection("job_title")
-                    .find()
-                    .fetch()
-            );
-        });
+        this.subscribeAndBind("myEmployeeInfo", "employees");
+        this.subscribeAndBind("allEmployeesBasicInfo", "employees");
+        this.subscribeAndBind("allEmployeesAssign", "employees_assign");
+        this.subscribeAndBind("deptsInfo", "depts");
+        this.subscribeAndBind("groupsInfo", "depts_groups");
+        this.subscribeAndBind("jobTitleInfo", "job_title");
     }
 
     render() {

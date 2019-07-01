@@ -1,15 +1,14 @@
 import React, { Component } from "react";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+
 import * as UI from "@material-ui/core";
 import Str from "../components/string_component";
 
-import Window from "../components/dialog";
+import Window from "../components/Window";
+import { getAppName } from "../app_utils";
 
 class Search extends Component {
-    static appStaticProps = {
-        appName: ["Search", "搜索"],
-        icon: "/assets/apps/binoculars.svg"
-    };
-
     constructor() {
         super();
         this.state = {
@@ -50,23 +49,11 @@ class Search extends Component {
 
     render() {
         return (
-            <Window
-                appProps={this.props.appProps}
-                width={480}
-                onClose={this.props.onClose}
-                aria-labelledby="search"
-                titleBarStyle="none"
-            >
+            <Window key="Main" _key="Main" appKey={this.props.appKey} y={"10vh"} width={600} noControl>
                 <UI.Icon style={this.searchBarIcon}>search</UI.Icon>
                 <UI.DialogContent className="handle no-padding">
                     <div style={this.searchBarContainer}>
-                        <input
-                            className="unhandle"
-                            autoFocus
-                            onChange={this.handleKey.bind(this)}
-                            value={this.state.searchInput}
-                            style={this.searchBarInput}
-                        />
+                        <input className="unhandle" autoFocus onChange={this.handleKey.bind(this)} value={this.state.searchInput} style={this.searchBarInput} />
                     </div>
                     <UI.Divider />
                     <div>
@@ -83,4 +70,23 @@ class Search extends Component {
     }
 }
 
-export default Search;
+Search.manifest = {
+    appKey: "search",
+    appName: ["Search", "搜索"],
+    icon: "/assets/apps/binoculars.svg"
+};
+
+const mapStateToProps = state => {
+    return {
+        user: state.user
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return bindActionCreators({}, dispatch);
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Search);

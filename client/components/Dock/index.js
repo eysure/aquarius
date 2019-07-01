@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import _ from "lodash";
@@ -9,6 +9,7 @@ import { getAppName } from "../../app_utils";
 import { appLaunch, appClose, appConfig, launchPadControl, appWindowActivate } from "../../actions";
 
 import DockItem from "./dock_item";
+import { WINDOW_STATUS_MIN, WINDOW_STATUS_NORMAL } from "../Window";
 
 class Dock extends React.Component {
     render() {
@@ -20,14 +21,14 @@ class Dock extends React.Component {
                     enterAnimation={null}
                     leaveAnimation={null}
                     onContextMenu={this.onContextMenu}
-                    style={{ width: (this.props.apps.length + 1) * 72 }}
+                    style={{ width: (Object.keys(this.props.apps).length + 1) * 72 }}
                 >
                     <DockItem
                         id="di-launchpad"
                         key="launchpad"
                         img="/assets/apps/rocket.svg"
                         title="Launchpad"
-                        onClick={e => this.props.launchPadControl(!this.props.system.launchpadStatus)}
+                        onClick={() => this.props.launchPadControl(!this.props.system.launchpadStatus)}
                     />
                     {this.renderDockItems()}
                 </FlipMove>
@@ -37,43 +38,30 @@ class Dock extends React.Component {
 
     renderDockItems() {
         return _.map(this.props.apps, app => {
-            return <AppDockItem key={app.key} app={app} />;
-        });
-    }
-
-    onContextMenu = e => {
-        e.preventDefault();
-        // Context menu
-    };
-}
-
-const AppDockItem = connect(
-    null,
-    dispatch => bindActionCreators({ appClose, appWindowActivate, appConfig }, dispatch)
-)(
-    class extends React.Component {
-        render() {
-            let app = this.props.app;
             return (
                 <DockItem
-                    id={"di-" + app.key}
-                    key={app.key}
-                    onClick={this.handleAppDockItemClick}
-                    title={getAppName(app.key)}
-                    img={app.appStaticProps.icon}
+                    id={"di-" + app.appKey}
+                    key={app.appKey}
+                    onClick={() => this.handleDockItemClick(app)}
+                    title={getAppName(app.appKey, this.props.user)}
+                    img={app.manifest.icon}
                     open={app.isActive}
                 />
             );
-        }
-
-        handleAppDockItemClick = e => {
-            let app = this.props.app;
-            if (app.status === 2) {
-                this.props.appConfig(app.key, { status: 1 }); // Make the window to the normal size
-            } else this.props.appWindowActivate(app.key);
-        };
+        });
     }
-);
+
+    handleDockItemClick = app => {
+        if (app.status === WINDOW_STATUS_MIN) {
+            this.props.appConfig(app.appKey, { status: WINDOW_STATUS_NORMAL }); // Make the window to the normal size
+        } else this.props.appWindowActivate(app.appKey);
+    };
+
+    onContextMenu = e => {
+        e.preventDefault();
+        console.log("TODO: Dock context menu");
+    };
+}
 
 function mapStateToProps(state) {
     return {
@@ -84,7 +72,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ appLaunch, appClose, appConfig, launchPadControl }, dispatch);
+    return bindActionCreators({ appLaunch, appClose, appConfig, launchPadControl, appWindowActivate }, dispatch);
 }
 
 export default connect(

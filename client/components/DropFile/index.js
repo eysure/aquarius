@@ -79,6 +79,7 @@ class DropFile extends Component {
         return (
             <div className={this.props.clickToSelect ? "drop-file-clickable" : null} style={this.props.style} ref={this.dropRef} onClick={this.handleClick}>
                 <input ref={this.inputRef} type="file" style={{ display: "none" }} multiple={this.props.multiple} />
+                {this.props.children}
                 {!this.props.disableLandingArea && <div className="drop-file-landing-area" style={{ ...this.props.landingAreaStyle, ...landingAreaStyle }} />}
             </div>
         );
