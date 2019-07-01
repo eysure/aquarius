@@ -10,6 +10,12 @@ export const WINDOW_STATUS_NORMAL = 1;
 export const WINDOW_STATUS_MIN = 2;
 export const WINDOW_STATUS_MAX = 3;
 
+export const WINDOW_PRIORITY_TOP = 5;
+export const WINDOW_PRIORITY_HIGH = 4;
+export const WINDOW_PRIORITY_NORMAL = 3;
+export const WINDOW_PRIORITY_LOW = 2;
+export const WINDOW_PRIORITY_BOTTOM = 1;
+
 class Window extends Component {
     state = {
         open: true,
@@ -136,6 +142,8 @@ class Window extends Component {
         if (!this.state.isActive) classList.push("inactive");
         if (this.props.theme) classList.push(this.props.theme);
 
+        // Priority className
+
         return (
             <div
                 ref={this.windowRef}
@@ -164,14 +172,39 @@ class Window extends Component {
 
     handleMouseDown = e => {
         if (this.windowRef.current && !this.state.isActive) {
-            // Active window
             this.props.activateWindow(this.props._key, this.props.appKey);
-
-            // Move the window to the top TODO to the specific group
-            let window = this.windowRef.current;
-            let insertPlace = document.getElementById("normal-group");
-            window.parentNode.insertBefore(window, insertPlace);
+            this.restoreWindowPosition();
         }
+    };
+
+    // Move the window to the top TODO to the specific group
+    restoreWindowPosition = () => {
+        let window = this.windowRef.current;
+
+        let group = "normal-group";
+        switch (this.props.windowPriority) {
+            case WINDOW_PRIORITY_BOTTOM:
+                group = "bottom-group";
+                break;
+            case WINDOW_PRIORITY_LOW:
+                group = "low-group";
+                break;
+            case WINDOW_PRIORITY_NORMAL:
+                group = "normal-group";
+                break;
+            case WINDOW_PRIORITY_HIGH:
+                group = "high-group";
+                break;
+            case WINDOW_PRIORITY_TOP:
+                group = "top-group";
+                break;
+            default:
+                console.error("Invalid window priority value:", this.props.windowPriority);
+                break;
+        }
+
+        let insertPlace = document.getElementById(group);
+        window.parentNode.insertBefore(window, insertPlace);
     };
 
     handleClose = e => {
@@ -275,6 +308,8 @@ class Window extends Component {
             left: this.props.x || `calc(50% - ${div.offsetWidth / 2}px)`
         });
 
+        this.restoreWindowPosition();
+
         // Hotkeys
         hotkeys("cmd+enter,ctrl+enter", (event, handler) => {
             event.preventDefault();
@@ -307,9 +342,7 @@ class Window extends Component {
     };
 }
 
-const mapStateToProps = state => ({
-    user: state.user
-});
+const mapStateToProps = state => ({});
 
 const mapDispatchToProps = dispatch =>
     bindActionCreators(
@@ -373,5 +406,8 @@ Window.defaultProps = {
     noControl: false,
 
     // Customize window content style
-    contentStyle: null
+    contentStyle: null,
+
+    // Window's priority render on screen
+    windowPriority: WINDOW_PRIORITY_NORMAL
 };

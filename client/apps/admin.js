@@ -5,21 +5,31 @@ import { bindActionCreators } from "redux";
 import * as Action from "../actions";
 import uuidv4 from "uuid/v4";
 
-import Window from "../components/Window";
+import Window, { WINDOW_PRIORITY_HIGH } from "../components/Window";
 
 class Admin extends React.Component {
     state = {
-        window: 0
+        window: 1
     };
 
-    window = context => {
+    windows = context => {
         let res = [];
         for (let i = 0; i < this.state.window; i++) {
             let key = `sub${i + 1}`;
             res.push(
-                <Window key={key} _key={key} width={400} height={300} appKey={this.props.appKey} theme="dark" titlebar={key}>
+                <Window
+                    key={key}
+                    _key={key}
+                    width={400}
+                    height={300}
+                    appKey={context.props.appKey}
+                    theme="dark"
+                    windowPriority={WINDOW_PRIORITY_HIGH}
+                    toolbar="Toolbar"
+                >
                     <div className="handle" style={{ width: "100%", height: "100%" }}>
                         {context.props.user.fn_en}
+                        <button onClick={() => context.setState({ window: context.state.window + 1 })} />
                     </div>
                 </Window>
             );
@@ -28,17 +38,7 @@ class Admin extends React.Component {
     };
 
     render() {
-        return (
-            <>
-                <Window key="Main" _key="Main" width={400} height={300} appKey={this.props.appKey} theme="dark" titlebar="Main">
-                    <div className="handle" style={{ width: "100%", height: "100%" }}>
-                        {this.props.user.fn_en}
-                        <button onClick={() => this.setState({ window: this.state.window + 1 })}>add</button>
-                    </div>
-                </Window>
-                {this.window(this)}
-            </>
-        );
+        return this.windows(this);
     }
 }
 

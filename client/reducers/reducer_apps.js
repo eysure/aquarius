@@ -11,25 +11,6 @@ function extend(obj, src) {
     return obj;
 }
 
-function initializeAppGroup() {
-    return {
-        alwaysOnBackGroup: [],
-        normalGroup: [],
-        alwaysOnFrontGroup: []
-    };
-}
-
-function pushApp(app, appGroup) {
-    if (_.get(app, "option.alwaysOnBack")) appGroup.alwaysOnBackGroup.push(app);
-    else if (_.get(app, "option.alwaysOnFront")) appGroup.alwaysOnFrontGroup.push(app);
-    else appGroup.normalGroup.push(app);
-    return appGroup;
-}
-
-function concatAppGroup(appGroup) {
-    return appGroup.alwaysOnBackGroup.concat(appGroup.normalGroup, appGroup.alwaysOnFrontGroup);
-}
-
 export default function(state = {}, action) {
     switch (action.type) {
         // Launch an App

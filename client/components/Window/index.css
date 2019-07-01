@@ -168,7 +168,7 @@
     border-radius: 6px;
     box-sizing: border-box;
     background-clip: content-box;
-    overflow: hidden;
+    overflow: visible;
 
     -webkit-backdrop-filter: blur(30px);
     -moz-backdrop-filter: blur(30px);
@@ -225,6 +225,7 @@
     justify-content: center;
     align-items: center;
     cursor: default;
+    border-radius: 6px 6px 0 0;
 }
 
 .window.light .window-titlebar {
@@ -319,6 +320,7 @@
     left: 0px;
     font-weight: 800;
     font-size: 14px;
+    transform: translate(0.5px, 0);
 }
 .btn-min {
     color: #995700;
@@ -333,6 +335,7 @@
     left: 0px;
     font-weight: 800;
     font-size: 14px;
+    transform: translate(0.5px, 0);
 }
 .btn-max {
     color: #006400;
@@ -347,6 +350,7 @@
     left: 0px;
     font-weight: 800;
     font-size: 14px;
+    transform: translate(0.5px, 0);
 }
 .window.max .btn-max:hover:after {
     content: " \2212";

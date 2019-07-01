@@ -64,7 +64,7 @@ class MainFrame extends Component {
                 }
 
                 windowMenu.push({
-                    title: w,
+                    title: windows[w].props.titlebar || w,
                     prefix: prefix,
                     onClick
                 });

@@ -33,7 +33,11 @@ class AppHost extends Component {
                         status: app.status
                     });
 
-                    return <Application key={app.appKey}>{appInstance}</Application>;
+                    return (
+                        <Application key={app.appKey} appKey={app.appKey} app={app} appInstance={appInstance} windows={this.props.windows[app.appKey]}>
+                            {appInstance}
+                        </Application>
+                    );
                 }
             } catch (e) {
                 console.error(e);
@@ -49,10 +53,12 @@ class AppHost extends Component {
                     transition: "300ms"
                 }}
             >
-                <div id="back-group" />
-                {apps}
+                <div id="bottom-group" />
+                <div id="low-group" />
                 <div id="normal-group" />
-                <div id="front-group" />
+                <div id="high-group" />
+                <div id="top-group" />
+                {apps}
             </div>
         );
     }
@@ -61,7 +67,8 @@ class AppHost extends Component {
 function mapStateToProps(state) {
     return {
         apps: state.apps,
-        system: state.system
+        system: state.system,
+        windows: state.windows
     };
 }
 

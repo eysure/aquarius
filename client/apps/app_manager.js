@@ -8,12 +8,18 @@ import _ from "lodash";
 
 import { appClose, appWindowActivate } from "../actions";
 
-import Window from "../components/Window";
+import Window, { WINDOW_PRIORITY_TOP } from "../components/Window";
 
 class AppManager extends Component {
     render() {
         return (
-            <Window key="Main" _key="Main" appKey={this.props.appKey} titlebar={getAppName("app_manager", this.props.user)}>
+            <Window
+                key="Main"
+                _key="Main"
+                appKey={this.props.appKey}
+                titlebar={getAppName("app_manager", this.props.user)}
+                windowPriority={WINDOW_PRIORITY_TOP}
+            >
                 <UI.DialogContent className="no-padding">
                     <UI.List component="nav" subheader={<UI.ListSubheader component="div">{this.props.apps.length} app(s) running</UI.ListSubheader>}>
                         {this.renderAppList()}
