@@ -16,7 +16,7 @@ getEmailById = userId => {
 export function getSystemDefaultAuth() {
     let defaultAuth = Collection("system").findOne({ key: "defaultAuth" });
     if (!defaultAuth) {
-        console.error("No system collection founded! Check the connection to MongoCollection database.");
+        console.error("No system default auth founded! Check the connection to MongoCollection database.");
         return null;
     }
     return defaultAuth.value;
@@ -29,28 +29,32 @@ export function getClientOSSInfo() {
 /**
  * Return the current user's employee info.
  */
-export function testEmployeeExist() {
-    if (!this.userId) return null;
+// export function getMyEmployeeInfo() {
+//     if (!this.userId) return null;
 
-    return Collection("employees").findOne(
-        { email: getEmailById(this.userId) },
-        {
-            fields: {
-                _id: 1,
-                nickname: 1,
-                email: 1,
-                name_cn: 1,
-                fn_en: 1,
-                ln_en: 1,
-                mobile: 1,
-                ext: 1,
-                avatar: 1,
-                preferences: 1,
-                status: 1
-            }
-        }
-    );
-}
+//     let employee = Collection("employees").findOne(
+//         { email: getEmailById(this.userId) },
+//         {
+//             fields: {
+//                 _id: 1,
+//                 nickname: 1,
+//                 email: 1,
+//                 name_cn: 1,
+//                 fn_en: 1,
+//                 ln_en: 1,
+//                 mobile: 1,
+//                 ext: 1,
+//                 avatar: 1,
+//                 preferences: 1,
+//                 status: 1
+//             }
+//         }
+//     );
+
+//     employee.auth = getAuth(true);
+
+//     return employee;
+// }
 
 export function uploadDesktop(fileInfo, fileData) {
     if (!this.userId) return null;
@@ -132,4 +136,64 @@ export function uploadAvatar(fileInfo, fileData) {
     }
 
     return put();
+}
+
+// Add Merge rules:
+// - If two auths are numbers, return the larger one
+// - If two auths are arrays, concat them together
+// - If two auths are boolean, return either one is true
+// - If two auths are objects, futher merge them
+function addMerge(objValue, srcValue) {
+    if (_.isArray(objValue)) {
+        return [...new Set([...objValue, ...srcValue])];
+    } else if (_.isNumber(objValue)) {
+        return Math.max(objValue, srcValue);
+    } else if (_.isBoolean(objValue)) {
+        return objValue || srcValue;
+    }
+}
+
+// Overwrite everything, except for the arrays
+function overwrite(objValue, srcValue) {
+    if (_.isArray(objValue)) {
+        return [...new Set([...objValue, ...srcValue])];
+    }
+}
+
+export function getAuth() {
+    let auth = {};
+
+    // First merge the system auth
+    let systemAuth = getSystemDefaultAuth();
+    _.merge(auth, systemAuth);
+
+    // If user is not loged in, or no employees are found, return the systemAuth
+    if (!this.userId) return auth;
+    let employeeInfo = Collection("employees").findOne({ email: getEmailById(this.userId) });
+    if (!employeeInfo) return auth;
+
+    let employeeId = employeeInfo._id;
+    let employeeAssigns = Collection("employees_assign")
+        .find({ user_id: employeeId, time_end: { $exists: false } })
+        .fetch();
+
+    let orgAuth = {};
+    // For each role, overwrite the group auth to the dept auth, then add up all the role's auth
+    for (let assign of employeeAssigns) {
+        let group = Collection("depts_groups").findOne({ _id: assign.group_id });
+        let groupAuth = group.auth || {};
+
+        let dept = Collection("depts").findOne({ _id: group.dept_id });
+        let deptAuth = dept.auth || {};
+
+        _.mergeWith(deptAuth, groupAuth, overwrite);
+        _.mergeWith(orgAuth, deptAuth, addMerge);
+    }
+    _.mergeWith(auth, orgAuth, overwrite);
+
+    // Finally use employee auth to overwrite the auth
+    let employeeAuth = employeeInfo.auth || {};
+    _.mergeWith(auth, employeeAuth, overwrite);
+
+    return auth;
 }

@@ -55,8 +55,8 @@ export default class Launchpad extends React.Component {
         let launchpadGridStyle = {
             gridTemplateColumns: `repeat(${this.state.isViewPortVertical ? 5 : 7}, 16vmin)`
         };
-
         let pageList = [];
+        if (!this.props.items || this.props.items.length === 0) return pageList;
         for (let i = 0; i < this.pages; i++) {
             pageList.push(
                 <div key={`page${i}`} className="launchpad-page">

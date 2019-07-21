@@ -8,10 +8,9 @@ import { validateAppWithKey } from "../app_utils";
 
 export const FETCH_USER_INFO = "FETCH_USER_INFO";
 export const BIND_USER_INFO = "BIND_USER_INFO";
-export const BIND_EMPLOYEES_INFO = "BIND_EMPLOYEES_INFO";
+export const BIND_AUTH = "BIND_AUTH";
 export const GET_USER_DETAIL = "GET_USER_DETAIL";
 export const LOGOUT = "LOGOUT";
-export const SERVER_LOGOUT = "SERVER_LOGOUT";
 export const MENU_ITEMS_FETCH = "MENU_ITEMS_FETCH";
 export const MENU_ITEM_SELECTED = "MENU_ITEM_SELECTED";
 export const INTERNAL_MSG = "INTERNAL_MSG";
@@ -37,48 +36,13 @@ export const REGISTER_WINDOW = "REGISTER_WINDOW";
 export const ACTIVATE_WINDOW = "ACTIVATE_WINDOW";
 export const UNREGISTER_WINDOW = "UNREGISTER_WINDOW";
 
-export function logout(error = null, option = null) {
-    let msg = error ? R.Msg("LOGOUT_ERR", { error }) : R.Msg("LOGOUT_OK");
+export function logout(msg = null) {
+    msg = msg ? msg : R.Msg("LOGOUT_OK");
     return {
         type: LOGOUT,
         payload: {
             data: {
-                msg,
-                ...option
-            }
-        }
-    };
-}
-
-export function serverLogout() {
-    let msg = R.Msg("SERVER_LOG_OUT");
-    return {
-        type: SERVER_LOGOUT,
-        payload: { data: { msg } }
-    };
-}
-
-export function updateSalesOrder() {
-    // TODO: add function
-    return {
-        type: UPDATE_SALES_ORDER,
-        payload: {
-            msg: {
-                title: ["Sales order updated.", "订单已更新"],
-                class: 2
-            }
-        }
-    };
-}
-
-export function deleteSalesOrder() {
-    // TODO: add function
-    return {
-        type: DELETE_SALES_ORDER,
-        payload: {
-            msg: {
-                title: ["Sales order deleted.", "订单已删除"],
-                class: 2
+                msg
             }
         }
     };
@@ -96,10 +60,12 @@ export function bindUserInfo(user) {
     };
 }
 
-export function bindEmployeesInfo(employees) {
+export function bindAuth(auth) {
     return {
-        type: BIND_EMPLOYEES_INFO,
-        payload: { data: employees }
+        type: BIND_AUTH,
+        payload: {
+            auth
+        }
     };
 }
 
@@ -270,6 +236,32 @@ export function unregisterWindow(windowKey, appKey) {
         payload: {
             windowKey,
             appKey
+        }
+    };
+}
+
+export function updateSalesOrder() {
+    // TODO: add function
+    return {
+        type: UPDATE_SALES_ORDER,
+        payload: {
+            msg: {
+                title: ["Sales order updated.", "订单已更新"],
+                class: 2
+            }
+        }
+    };
+}
+
+export function deleteSalesOrder() {
+    // TODO: add function
+    return {
+        type: DELETE_SALES_ORDER,
+        payload: {
+            msg: {
+                title: ["Sales order deleted.", "订单已删除"],
+                class: 2
+            }
         }
     };
 }

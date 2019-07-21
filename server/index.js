@@ -1,7 +1,6 @@
 import { Meteor } from "meteor/meteor";
 import { Accounts } from "meteor/accounts-base";
 import * as Methods from "./methods";
-import Publishing from "./publishing";
 import { Collection, oss } from "./resources";
 import Errors from "./errors";
 
@@ -19,6 +18,12 @@ async function listBuckets(client) {
  */
 systemCheck = () => {
     let myErrors = [];
+
+    // Check System Default Auth
+    let systemDefaultAuth = Methods.getSystemDefaultAuth();
+    if (systemDefaultAuth == null) {
+        myErrors.push(Errors[1000]);
+    }
 
     // Check users collection
     let userCount = Meteor.users.find().count();
@@ -53,33 +58,7 @@ if (myErrors.length !== 0) {
 // Register methods
 Meteor.methods(Methods);
 
-// Publish
-// for (let key in Publishing) {
-//     Meteor.publish(key, Publishing[key]);
-// }
-
-Meteor.publish("fetchEmployeesInfo", function() {
-    if (!this.userId) return null;
-
-    return Collection("employees").find(
-        { status: 1 },
-        {
-            fields: {
-                _id: 1,
-                nickname: 1,
-                email: 1,
-                name_cn: 1,
-                fn_en: 1,
-                ln_en: 1,
-                mobile: 1,
-                ext: 1,
-                avatar: 1,
-                preferences: 1
-            }
-        }
-    );
-});
-
+// User's connected employee's info
 Meteor.publish("myEmployeeInfo", function() {
     if (!this.userId) return null;
 
@@ -97,22 +76,32 @@ Meteor.publish("myEmployeeInfo", function() {
                 ext: 1,
                 avatar: 1,
                 preferences: 1,
-                status: 1
+                status: 1,
+                auth: 1
             }
         }
     );
 });
 
+// Departments info
 Meteor.publish("deptsInfo", function() {
     if (!this.userId) return null;
     return [Collection("depts").find()];
 });
 
+// Department group info
 Meteor.publish("groupsInfo", function() {
     if (!this.userId) return null;
     return [Collection("depts_groups").find()];
 });
 
+// Job title
+Meteor.publish("jobTitleInfo", function() {
+    if (!this.userId) return null;
+    return Collection("job_title").find();
+});
+
+// Basic employees info for Contact use.
 Meteor.publish("allEmployeesBasicInfo", function() {
     if (!this.userId) return null;
 
@@ -134,17 +123,17 @@ Meteor.publish("allEmployeesBasicInfo", function() {
     );
 });
 
+// Currently Assigned employee's job
 Meteor.publish("allEmployeesAssign", function() {
     if (!this.userId) return null;
     return Collection("employees_assign").find({ time_end: { $exists: false } });
 });
 
-Meteor.publish("jobTitleInfo", function() {
-    if (!this.userId) return null;
-    return Collection("job_title").find();
-});
-
 // Account log
+Accounts.config({
+    loginExpirationInDays: 1,
+    forbidClientAccountCreation: true
+});
 Accounts.onLogin(login => {
     if (login.type === "password") {
         Collection("login_log").insert({ ...login, timesteamp: new Date() });

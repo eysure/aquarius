@@ -7,20 +7,24 @@ import { connect } from "react-redux";
 import { Meteor } from "meteor/meteor";
 import { Tracker } from "meteor/tracker";
 import { getLocalCollection } from "../utils";
+import _ from "lodash";
 
 import * as Action from "../actions";
 
-Meteor.subscribe("myEmployeeInfo");
-// Meteor.subscribe("allEmployeesInfo");
-
 class VirtualDataLayer extends React.Component {
+    subscribeAndRun = (pubName, callback) => {
+        Tracker.autorun(() => {
+            Meteor.subscribe(pubName);
+            callback();
+        });
+    };
+
     /**
      * Subscribe to a Meteor Publisher
      * and bind the related update collection to reducer storage
      */
-    subscribeAndBind = (pubName, collections) => {
-        Tracker.autorun(() => {
-            Meteor.subscribe(pubName);
+    subscribeAndBind = (pubName, collections, callback = null) => {
+        this.subscribeAndRun(pubName, () => {
             if (collections instanceof Array) {
                 for (let collection of collections) {
                     this.props.bindCollection(
@@ -38,15 +42,33 @@ class VirtualDataLayer extends React.Component {
                         .fetch()
                 );
             }
+            if (callback) callback();
+        });
+    };
+
+    // Update the auth
+    updateAuth = () => {
+        Meteor.call("getAuth", (err, result) => {
+            if (!_.isEqual(result, this.props.auth)) {
+                this.props.bindAuth(result);
+            }
         });
     };
 
     componentDidMount() {
-        this.subscribeAndBind("myEmployeeInfo", "employees");
+        this.subscribeAndBind("myEmployeeInfo", "employees", () => {
+            this.updateAuth();
+        });
         this.subscribeAndBind("allEmployeesBasicInfo", "employees");
-        this.subscribeAndBind("allEmployeesAssign", "employees_assign");
-        this.subscribeAndBind("deptsInfo", "depts");
-        this.subscribeAndBind("groupsInfo", "depts_groups");
+        this.subscribeAndBind("allEmployeesAssign", "employees_assign", () => {
+            this.updateAuth();
+        });
+        this.subscribeAndBind("deptsInfo", "depts", () => {
+            this.updateAuth();
+        });
+        this.subscribeAndBind("groupsInfo", "depts_groups", () => {
+            this.updateAuth();
+        });
         this.subscribeAndBind("jobTitleInfo", "job_title");
     }
 
@@ -55,10 +77,15 @@ class VirtualDataLayer extends React.Component {
     }
 }
 
+mapStateToProps = state => {
+    return {
+        db: state.db,
+        user: state.user
+    };
+};
+
 export default connect(
-    state => {
-        return state;
-    },
+    mapStateToProps,
     dispatch => {
         return bindActionCreators(Action, dispatch);
     }

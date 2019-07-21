@@ -1,9 +1,13 @@
 import React from "react";
 
 export default function(props) {
+    let classList = ["panel-item"];
+    if (props.onClick) classList.push("button");
+    if (props.className) classList = [...classList, props.className];
+
     return (
         <div
-            className={`panel-item ${props.onClick && "button"} ${props.className}`}
+            className={classList.join(" ")}
             style={{ gridColumn: props.span ? `span ${props.span}` : "span 12", ...props.containerStyle }}
             onClick={props.onClick}
         >
@@ -21,7 +25,7 @@ export default function(props) {
                 />
             ) : (
                 <div className="panel-item-value" style={{ ...props.valueStyle }}>
-                    {props.titleIcon}
+                    {props.titleIcon || props.onClick ? <i className="material-icons">open_in_new</i> : ""}
                     {props.value}
                 </div>
             )}

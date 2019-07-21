@@ -23,13 +23,19 @@ export class Application extends Component {
 
         // If not documentBased, close the app if no windows remains
         if (!manifest.documentBase) {
-            if (Object.keys(windows).length === 0) {
+            if (!windows || Object.keys(windows).length === 0) {
                 this.props.appClose(appKey);
             }
         }
 
         // Deal with application options
         // ...
+
+        // Check if this user has the auth to run this app
+        if (this.props.auth.apps && !this.props.auth.apps.includes(appKey)) {
+            this.props.throwMsg(R.Msg("APPLICATION_PERMISSION_DENIED"));
+            this.props.appClose(appKey);
+        }
     }
 
     // When this app crash, generate the error message and send
@@ -45,7 +51,9 @@ export class Application extends Component {
     }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+    auth: state.auth
+});
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({ throwMsg, appClose }, dispatch);

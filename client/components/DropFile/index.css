@@ -12,3 +12,15 @@
     border-radius: 8px;
     backdrop-filter: blur(30px);
 }
+
+.drop-file-clickable {
+    cursor: pointer;
+}
+
+.drop-file-clickable:hover {
+    filter: brightness(0.8);
+}
+
+.drop-file-clickable:active {
+    filter: brightness(0.6);
+}

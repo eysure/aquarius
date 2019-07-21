@@ -62,7 +62,6 @@ export default function(state = {}, action) {
         }
 
         // When logout, close all apps
-        case ACTION.SERVER_LOGOUT:
         case ACTION.LOGOUT: {
             return {};
         }

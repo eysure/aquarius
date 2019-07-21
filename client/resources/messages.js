@@ -98,5 +98,17 @@ export default {
             "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
         progressBar: true,
         persist: true
+    },
+    NOT_AUTHORIZED_LOGIN: {
+        title: ["Login Permission Denied", "缺少登陆权限"],
+        content: ["You are logged out. Please contact admins for details.", "您已被登出。请与管理员联系。"],
+        class: 5,
+        persist: true
+    },
+    APPLICATION_PERMISSION_DENIED: {
+        title: ["Application Permission Denied", "缺少应用权限"],
+        content: ["You have no authority to use this application, please contact admins for details.", "您无权使用此应用，请与管理员联系"],
+        class: 5,
+        persist: true
     }
 };

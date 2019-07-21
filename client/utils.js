@@ -2,6 +2,8 @@ import { Meteor } from "meteor/meteor";
 import clientConfig from "./client_config";
 import { Mongo } from "meteor/mongo";
 import MESSAGES from "./resources/messages";
+import { R } from "./resources_feeder";
+import _ from "lodash";
 
 export function generateEmailLink(receiver, subject, body) {
     return `mailto:${receiver}?subject=${clientConfig.mailPrefix} ${subject}&body=${body}`;
@@ -63,7 +65,7 @@ export function oss(...paths) {
     return [`https://${ossBucket}.${ossRegion}.aliyuncs.com`, ...paths].join("/");
 }
 
-export function fileUploadVerify(file, throwMsg = null, R = null) {
+export function fileUploadVerify(file, throwMsg = null) {
     let ext = file.name.split(".").pop();
     if (!clientConfig.acceptableFileFormat.includes(ext)) {
         if (throwMsg) {
@@ -128,4 +130,39 @@ export function animate(item, callback, ...animationClass) {
     };
     item.addEventListener("animationend", eventListener);
     item.classList.add(...animationClass);
+}
+
+export function computeJobInfo(user_id, db) {
+    let res = [];
+
+    // Compute the Job assignment info
+    // let assignKey = _.findKey(db.employees_assign, { user_id });
+    for (let assign of db.employees_assign) {
+        if (assign.user_id === user_id && !assign.time_end) {
+            // Get the group info
+            let { group_id, job_title_id, job_type, time_start } = assign;
+            let groupKey = _.findKey(db.depts_groups, { _id: group_id });
+            if (!groupKey) return res;
+            let group = db.depts_groups[groupKey];
+
+            // Get the department info
+            let deptKey = _.findKey(db.depts, { _id: group.dept_id });
+            if (!deptKey) return res;
+            let dept = db.depts[deptKey];
+
+            // Get the job info
+            let jobTitleKey = _.findKey(db.job_title, { _id: job_title_id });
+            if (!jobTitleKey) return res;
+            let jobTitle = db.job_title[jobTitleKey];
+
+            res.push({
+                groupName: R.Trans(group.name),
+                deptName: R.Trans(dept.name),
+                jobTitle: R.Trans(jobTitle.name),
+                jobType: job_type,
+                startTime: new Date(time_start)
+            });
+        }
+    }
+    return res;
 }

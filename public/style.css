@@ -535,29 +535,21 @@ form a {
 }
 
 /* Panel -------------------------------------------------------------------------------------*/
-.panel-container {
-    height: 100%;
-    width: calc(100% - 64px);
-    overflow: auto;
-    background: #d8d8d8;
-    padding: 0 32px;
-}
-.panel-container-inner {
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 1200px;
-    padding: 32px 0;
-}
 .panel-title {
-    color: #5d5d5d;
     margin-bottom: 8px;
     padding-left: 12px;
+    font-weight: 500;
+}
+.light .panel-title {
+    color: #5d5d5d;
+}
+.dark .panel-title {
+    color: #999;
 }
 .panel {
     width: 100%;
-    background: #ddd;
     margin-bottom: 16px;
-    border-radius: 4px;
+    border-radius: 6px;
     box-shadow: 0px 0px 20px 0 rgba(0, 0, 0, 0.1);
     overflow: hidden;
     display: grid;
@@ -565,19 +557,29 @@ form a {
     grid-template-rows: auto;
     grid-gap: 1px;
 }
+.light .panel {
+    background: #f0f0f0;
+}
+.dark .panel {
+    background: #333435;
+}
 .panel-item {
     min-height: 40px;
     box-sizing: border-box;
-    background: #fff;
     position: relative;
     display: flex;
     align-items: center;
     grid-column: span 12;
 }
+.light .panel-item {
+    background: #fff;
+}
+.dark .panel-item {
+    background: #333435;
+}
 .panel-item-title {
     position: absolute;
-    color: #000;
-    user-select: all;
+    user-select: none;
     width: calc(100% - 24px);
     padding: 12px;
     background: none;
@@ -590,7 +592,6 @@ form a {
 }
 .panel-item-value {
     position: absolute;
-    color: #444;
     user-select: all;
     width: calc(100% - 24px);
     padding: 12px;
@@ -620,14 +621,6 @@ form a {
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
-}
-.handle {
-    cursor: auto;
-}
-
-.drop-file-clickable:hover {
-    cursor: pointer;
-    filter: brightness(0.8);
 }
 
 .app-template-fill {
@@ -702,7 +695,6 @@ form a {
 }
 
 a {
-    color: black;
     text-decoration: none;
 }
 

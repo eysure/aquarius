@@ -68,7 +68,8 @@ function mapStateToProps(state) {
     return {
         apps: state.apps,
         system: state.system,
-        windows: state.windows
+        windows: state.windows,
+        auth: state.auth
     };
 }
 

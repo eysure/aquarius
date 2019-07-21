@@ -82,7 +82,7 @@ class AccountSecurityTab extends React.Component {
 
     render() {
         return (
-            <div className="panel-container-inner">
+            <div className="window-content-inner">
                 <div className="panel-title">{R.Str("CHANGE_PASSWORD")}</div>
 
                 <div className="panel">

@@ -104,7 +104,7 @@ class Desktop extends Component {
 
     handleDesktopUpload = e => {
         let file = e[0];
-        if (!fileUploadVerify(file, this.props.throwMsg, R).result) return;
+        if (!fileUploadVerify(file, this.props.throwMsg).result) return;
 
         upload(
             file,

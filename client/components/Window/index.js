@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import _ from "lodash";
@@ -130,10 +131,7 @@ class Window extends Component {
         );
     };
 
-    render() {
-        // Render nothing if not open
-        if (!this.state.open) return null;
-
+    renderWindow = () => {
         // Window className
         let classList = ["window"];
         if (this.state.windowStatus === WINDOW_STATUS_MAX) classList.push("max");
@@ -156,7 +154,7 @@ class Window extends Component {
                     width: this.state.width,
                     height: this.state.height
                 }}
-                onMouseDown={() => this.handleMouseDown()}
+                onMouseDown={this.handleMouseDown}
             >
                 {this.renderHead()}
                 {this.renderContent()}
@@ -164,6 +162,16 @@ class Window extends Component {
                 {!this.props.titlebar && !this.props.toolbar ? this.renderWindowControl() : null}
             </div>
         );
+    };
+
+    render() {
+        // Render nothing if not open
+        if (!this.state.open) return null;
+
+        // return this.renderWindow();
+
+        // Using Portal
+        return ReactDOM.createPortal(this.renderWindow(), document.getElementById("app-host"));
     }
 
     handleActivate = isActive => {
@@ -171,15 +179,20 @@ class Window extends Component {
     };
 
     handleMouseDown = e => {
+        e.stopPropagation();
         if (this.windowRef.current && !this.state.isActive) {
             this.props.activateWindow(this.props._key, this.props.appKey);
             this.restoreWindowPosition();
         }
     };
 
-    // Move the window to the top TODO to the specific group
+    // Move the window to the groups
     restoreWindowPosition = () => {
-        let window = this.windowRef.current;
+        let thisWindow = this.windowRef.current;
+        if (!thisWindow) {
+            console.error("Cannot restore window position, window is not rendered yet.");
+            return;
+        }
 
         let group = "normal-group";
         switch (this.props.windowPriority) {
@@ -204,13 +217,14 @@ class Window extends Component {
         }
 
         let insertPlace = document.getElementById(group);
-        window.parentNode.insertBefore(window, insertPlace);
+        thisWindow.parentNode.insertBefore(thisWindow, insertPlace);
     };
 
     handleClose = e => {
+        if (this.props.onClose) this.props.onClose();
         this.handleActivate(false);
-        this.unregisterWindow();
         this.setState({ open: false });
+        this.unregisterWindow();
     };
 
     handleMin = e => {
@@ -360,9 +374,6 @@ export default connect(
 )(Window);
 
 Window.defaultProps = {
-    // Status of the window
-    open: true,
-
     // Application context which enable this window do context related task
     appKey: null,
 

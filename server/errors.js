@@ -1,4 +1,8 @@
 export default {
+    1000: {
+        code: 1000,
+        reason: "No system default auth founded."
+    },
     1001: {
         code: 1001,
         reason: "No user found in users collection"

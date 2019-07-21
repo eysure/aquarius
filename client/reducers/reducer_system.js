@@ -28,9 +28,6 @@ export default function(state = { ...defaultState }, action) {
                 blurScreen: 30
             };
         }
-        case ACTION.SERVER_LOGOUT: {
-            return { ...state, menuBarHide: true, dockHide: true, blurScreen: 30 };
-        }
         case ACTION.SYSTEM_CONTROL: {
             return { ...state, ...action.payload.system };
         }

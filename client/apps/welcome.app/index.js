@@ -16,7 +16,7 @@ class Welcome extends Component {
 
     render() {
         return (
-            <Window key="Main" _key="Main" width={"80vmin"} height={"60vmin"} appKey={this.props.appKey}>
+            <Window key="Main" _key="Main" width={"80vmin"} height={"60vmin"} appKey={this.props.appKey} canResize={false} canMaximize={false}>
                 <SwipeableViews
                     id="welcome-carousel"
                     className="carousel handle"

@@ -10,42 +10,17 @@ import { R } from "../resources_feeder";
 import Avatar from "./user_avatar";
 import { Tracker } from "meteor/tracker";
 
-import { clearMsg, logout, serverLogout, bindUserInfo, bindEmployeesInfo, throwMsg, changeLanguageLocal, appLaunch, systemControl } from "../actions";
+import { clearMsg, logout, bindUserInfo, throwMsg, changeLanguageLocal, appLaunch, systemControl } from "../actions";
 import { generateEmailLinkToService, getLocalCollection } from "../utils";
 
 class AccessControl extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: "tester@xyzhu.me", // Demo Only
-            password: "Xyzhu_8888", // Demo Only
+            email: "tester@xyzhu.me",
+            password: "Xyzhu_8888",
             processing: false
         };
-    }
-
-    componentDidMount() {
-        // Demo only
-        if (clientConfig.demo) this.props.throwMsg(R.Msg("DEMO_WELCOME"));
-
-        Tracker.autorun(() => {
-            // Server logout
-            if (this.props.system.loginFlag && !Meteor.userId()) {
-                this.props.serverLogout();
-                return;
-            }
-
-            // User login, fetch user's employee info
-            if (Meteor.user()) {
-                // use subscribe to log invalid user out immidiately.
-                let employee = getLocalCollection("employees").findOne({ email: Meteor.user().emails[0].address });
-                if (!employee) return;
-                if (employee.status < 1) {
-                    this.handleLoginError({ error: 1001 });
-                    return;
-                }
-                this.props.bindUserInfo(employee);
-            }
-        });
     }
 
     handleChange = event => {
@@ -66,44 +41,14 @@ class AccessControl extends React.Component {
         this.setState({ processing: true });
 
         Meteor.loginWithPassword(email, password, error => {
-            this.setState({ processing: false });
+            this.setState({ processing: false, password: "" });
             if (error) this.handleLoginError(error);
-            else {
-                if (this.state.switchUser) this.setState({ switchUser: false });
-                Meteor.call("testEmployeeExist", (err, employee) => {
-                    if (!employee) {
-                        this.handleLoginError({ error: 1000 });
-                        return;
-                    }
-                    if (employee.status !== 1) {
-                        this.handleLoginError({ error: 1001 });
-                        return;
-                    }
-                    this.handleLoginSuccessful(employee);
-                });
-            }
+            else this.setState({ switchUser: false });
         });
     };
 
-    handleLoginSuccessful = employee => {
-        localStorage.setItem(
-            "lastLoginUser",
-            JSON.stringify({
-                nickname: employee.nickname,
-                avatar: employee.avatar,
-                email: employee.email,
-                desktop: _.get(employee, "preferences.desktop", null)
-            })
-        );
-        this.props.throwMsg(
-            R.Msg("LOGIN_SUCCESSFUL", {
-                username: employee.nickname
-            })
-        );
-        this.props.appLaunch("welcome");
-    };
-
     handleLoginError = error => {
+        Meteor.logout(error => this.props.logout(error));
         let content = [error.message, error.message];
 
         switch (error.error) {
@@ -123,11 +68,13 @@ class AccessControl extends React.Component {
                 content = R.Str("LOGIN_FAILED_DISABLED");
                 break;
             }
+            case 1002: {
+                content = R.Str("NOT_AUTHORIZED_LOGIN");
+                break;
+            }
             default:
                 break;
         }
-        if (this.state.processing) this.setState({ processing: false, password: "" });
-        if (Meteor.userId()) Meteor.logout(error => this.props.logout(error, { noMsg: true }));
 
         this.props.throwMsg(
             R.Msg("LOGIN_FAILED", {
@@ -151,10 +98,16 @@ class AccessControl extends React.Component {
         };
     };
 
+    openAccessControl = () => {
+        if (!Meteor.userId()) return true;
+
+        return false;
+    };
+
     renderLockScreen(user) {
         return (
             <div id="access-control">
-                <UI.Dialog PaperProps={{ id: "lockscreen-paper" }} open={Meteor.userId() ? false : true} disablePortal={true}>
+                <UI.Dialog PaperProps={{ id: "lockscreen-paper" }} open={this.openAccessControl()} disablePortal={true}>
                     <Avatar style={this.lockScreenComponentStyle(-180)} d={120} user={user} round />
                     <div
                         style={{
@@ -234,7 +187,6 @@ class AccessControl extends React.Component {
     }
 
     render() {
-        if (Meteor.userId()) return null;
         let lastLoginUser = localStorage.getItem("lastLoginUser");
         if (lastLoginUser && !this.state.switchUser) {
             return this.renderLockScreen(JSON.parse(lastLoginUser));
@@ -248,7 +200,7 @@ class AccessControl extends React.Component {
                         elevation: 12,
                         style: { width: "360px" }
                     }}
-                    open={Meteor.userId() ? false : true}
+                    open={this.openAccessControl()}
                     aria-labelledby="login-dialog-title"
                     disablePortal={true}
                 >
@@ -320,6 +272,46 @@ class AccessControl extends React.Component {
             </div>
         );
     }
+
+    componentDidMount() {
+        // Demo only
+        if (clientConfig.demo) {
+            this.props.throwMsg(R.Msg("DEMO_WELCOME"));
+            this.setState({
+                email: "tester@xyzhu.me",
+                password: "Xyzhu_8888"
+            });
+        }
+
+        Tracker.autorun(() => {
+            // Server logout
+            if (this.props.system.loginFlag && !Meteor.userId()) {
+                this.props.logout(R.Msg("SERVER_LOG_OUT"));
+            }
+
+            // User login, fetch user's employee info
+            if (Meteor.user()) {
+                // use subscribe to log invalid user out immidiately.
+                let employee = getLocalCollection("employees").findOne({ email: Meteor.user().emails[0].address });
+                if (!employee) return;
+                if (employee.status < 1) {
+                    this.handleLoginError({ error: 1001 });
+                    return;
+                }
+                this.props.bindUserInfo(employee);
+
+                localStorage.setItem(
+                    "lastLoginUser",
+                    JSON.stringify({
+                        nickname: employee.nickname,
+                        avatar: employee.avatar,
+                        email: employee.email,
+                        desktop: _.get(employee, "preferences.desktop", null)
+                    })
+                );
+            }
+        });
+    }
 }
 
 function mapDispatchToProps(dispatch) {
@@ -327,9 +319,7 @@ function mapDispatchToProps(dispatch) {
         {
             clearMsg,
             logout,
-            serverLogout,
             bindUserInfo,
-            bindEmployeesInfo,
             throwMsg,
             changeLanguageLocal,
             appLaunch,
@@ -340,7 +330,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mapStateToProps(state) {
-    return { user: state.user, system: state.system };
+    return { user: state.user, system: state.system, auth: state.auth };
 }
 
 export default connect(

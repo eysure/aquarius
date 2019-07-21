@@ -15,7 +15,7 @@ class AboutSystem extends Component {
 
     render() {
         return (
-            <Window key="Main" _key="Main" y="20vh" appKey={this.props.appKey}>
+            <Window key="Main" _key="Main" y="20vh" appKey={this.props.appKey} canMaximize={false} canResize={false}>
                 <div
                     className="handle"
                     style={{

@@ -11,8 +11,8 @@ export class ResourceFeeder {
     constructor(strs, msgs = null, isFallbackToSystemResources = true) {
         this.strings = strs ? strs.default : null;
         this.messages = msgs ? msgs.default : null;
-        this.lanIndex = strs ? this.getLanguageIndex(this.strings["LANGUAGES"]) : undefined;
         this.sysLanIndex = this.getLanguageIndex(sysStrings["LANGUAGES"]);
+        this.lanIndex = strs ? this.getLanguageIndex(this.strings["LANGUAGES"]) : this.sysLanIndex;
         this.isFallbackToSystemResources = isFallbackToSystemResources;
     }
 
@@ -90,6 +90,20 @@ export class ResourceFeeder {
             }
         }
         return msg;
+    };
+
+    Trans = strArr => {
+        if (strArr instanceof Array) {
+            if (this.lanIndex >= strArr.length) {
+                console.warn("Resource feeder translator: current language is not support for this string: ", strArr);
+                return strArr[0];
+            } else {
+                return strArr[this.lanIndex];
+            }
+        } else {
+            console.warn("Resource feeder translator accept a non array parameter");
+            return strArr;
+        }
     };
 
     getLanguageIndex = supportedLanguages => {

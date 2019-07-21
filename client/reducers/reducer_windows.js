@@ -41,10 +41,12 @@ export default function(state = {}, action) {
             if (state[appKey]) {
                 delete state[appKey][windowKey];
             }
+            if (!state[appKey] || Object.keys(state[appKey]).length === 0) {
+                delete state[appKey];
+            }
             return { ...state };
         }
         // When logout, close all apps
-        case ACTION.SERVER_LOGOUT:
         case ACTION.LOGOUT: {
             return {};
         }

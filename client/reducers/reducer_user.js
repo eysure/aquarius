@@ -1,4 +1,4 @@
-import { CHANGE_LANGUAGE_LOCAL, BIND_USER_INFO, LOGOUT, SERVER_LOGOUT } from "../actions";
+import { CHANGE_LANGUAGE_LOCAL, BIND_USER_INFO, LOGOUT, BIND_EMPLOYEES_AUTH } from "../actions";
 
 export default function(state = {}, action) {
     switch (action.type) {
@@ -9,7 +9,6 @@ export default function(state = {}, action) {
             state.auth = { ...state.auth, language: action.payload.language };
             return { ...state };
         }
-        case SERVER_LOGOUT:
         case LOGOUT: {
             return {};
         }

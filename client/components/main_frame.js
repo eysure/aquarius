@@ -21,13 +21,13 @@ class MainFrame extends Component {
         fullscreen: false
     };
 
-    // TODO: authority problem
     packLaunchpadApps() {
+        if (!this.props.auth || !this.props.auth.apps) return null;
+
         let launchpadApps = [];
-        let installedApps = getInstalledApps();
-        for (let appKey of Object.keys(installedApps)) {
-            launchpadApps.push(getAppShortCut(appKey, this));
-        }
+        this.props.auth.apps.map(app => {
+            launchpadApps.push(getAppShortCut(app, this));
+        });
         return launchpadApps;
     }
 
@@ -181,6 +181,11 @@ class MainFrame extends Component {
     }
 
     componentDidMount() {
+        // Deal with auto start apps
+        this.props.appLaunch("user_center");
+        this.props.appLaunch("debugger");
+        this.props.appLaunch("admin");
+
         // Open Launcher
         hotkeys("cmd+l,ctrl+l,f1", (event, handler) => {
             event.preventDefault();
@@ -228,7 +233,8 @@ const mapStateToProps = state => ({
     system: state.system,
     user: state.user,
     apps: state.apps,
-    windows: state.windows
+    windows: state.windows,
+    auth: state.auth
 });
 
 const mapDispatchToProps = dispatch => {

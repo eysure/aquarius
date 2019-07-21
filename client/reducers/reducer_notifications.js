@@ -1,4 +1,4 @@
-import { LOGIN, LOGOUT, SERVER_LOGOUT, CLOSE_MSG, CLEAR_MSG } from "../actions";
+import { LOGIN, LOGOUT, CLOSE_MSG, CLEAR_MSG } from "../actions";
 import uuidv4 from "uuid/v4";
 import _ from "lodash";
 

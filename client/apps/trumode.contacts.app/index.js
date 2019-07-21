@@ -11,27 +11,20 @@ import Window from "../../components/Window";
 
 import { ResourceFeeder } from "../../resources_feeder";
 
+import { computeJobInfo } from "../../utils";
+
 import { R } from "../../resources_feeder";
 import { getAppName } from "../../app_utils.js";
 
 class Contacts extends Component {
-    computeOrganization = employee => {
-        let { db } = this.props;
-
-        let assign = _.find(db.employees_assign, { user_id: employee._id });
-        let { group_id, job_title_id, job_type } = assign;
-        let jobTitle = _.find(db.job_title, { _id: job_title_id });
-        let group = _.find(db.depts_groups, { _id: group_id });
-
-        let dept = _.find(db.depts, { _id: group.dept_id });
-        return { deptName: R.Str(dept.name), groupName: R.Str(group.name), jobTitle: R.Str(jobTitle.name), job_type };
-    };
-
     renderList = () => {
         let employees = this.props.db.employees;
         return _.map(employees, employee => {
             // Compute employee's department
-            let { deptName, groupName, jobTitle, job_type } = this.computeOrganization(employee);
+            let jobInfo = computeJobInfo(employee._id, this.props.db);
+            if (!jobInfo || jobInfo.length === 0) return null;
+            jobInfo = jobInfo[0];
+            let { deptName, groupName, jobTitle, jobType } = jobInfo;
 
             return (
                 <React.Fragment key={employee._id}>
@@ -77,16 +70,14 @@ class Contacts extends Component {
                 titlebar={getAppName("trumode.contacts", this.props.user)}
                 toolbar={this.toolbar}
             >
-                <div className="panel-container">
-                    <div className="panel-container-inner" style={{ maxWidth: 1600 }}>
-                        <div className="panel" style={{ gridColumnGap: 0 }}>
-                            <PI title={R.Str("NAME")} value={R.Str("NICKNAME")} span={3} />
-                            <PI title={R.Str("JOB_TITLE")} span={3} />
-                            <PI title={R.Str("EMAIL")} span={3} />
-                            <PI title={R.Str("MOBILE")} span={2} />
-                            <PI title={R.Str("EXT")} span={1} />
-                            {this.renderList()}
-                        </div>
+                <div className="window-content-inner" style={{ maxWidth: 1600 }}>
+                    <div className="panel" style={{ gridColumnGap: 0 }}>
+                        <PI title={R.Str("NAME")} value={R.Str("NICKNAME")} span={3} />
+                        <PI title={R.Str("JOB_TITLE")} span={3} />
+                        <PI title={R.Str("EMAIL")} span={3} />
+                        <PI title={R.Str("MOBILE")} span={2} />
+                        <PI title={R.Str("EXT")} span={1} />
+                        {this.renderList()}
                     </div>
                 </div>
             </Window>

@@ -176,30 +176,34 @@
     backdrop-filter: blur(30px);
 }
 
+.window.inactive {
+    backdrop-filter: blur(0px);
+}
+
 .window.light {
     color: black;
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(240, 240, 240, 0.8);
     border: 1px solid rgba(0, 0, 0, 0.4);
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.15), 0 25px 60px 0 rgba(0, 0, 0, 0.45);
 }
 
 .window.light.inactive {
     color: rgba(0, 0, 0, 0.8);
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(0, 0, 0, 0.5);
     box-shadow: 0px 15px 40px 0px rgba(0, 0, 0, 0.2);
 }
 
 .window.dark {
     color: rgba(255, 255, 255, 1);
-    background: rgba(40, 40, 40, 0.6);
+    background: rgba(40, 40, 40, 0.8);
     border: 1px solid rgba(0, 0, 0, 0.5);
     box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.52), inset 0 0 0 0.5px rgba(255, 255, 255, 0.28);
 }
 
 .window.dark.inactive {
     color: rgba(255, 255, 255, 0.8);
-    background: rgba(40, 40, 40, 0.8);
+    background: rgba(40, 40, 40, 0.9);
     border: 1px solid rgba(0, 0, 0, 0.5);
     box-shadow: 0px 15px 40px 0px rgba(0, 0, 0, 0.2);
 }
@@ -454,4 +458,83 @@
 }
 .window-content.window-content-full {
     height: 100%;
+}
+
+.window-sidebar-container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+    cursor: default;
+}
+
+.window-sidebar {
+    width: 240px;
+    height: 100%;
+    overflow: auto;
+}
+
+.window-content-full .window-sidebar {
+    margin-top: 38px;
+    height: calc(100% - 38px);
+}
+
+.window-sidebar-content {
+    width: calc(100% - 240px);
+    height: 100%;
+    overflow: auto;
+    box-sizing: border-box;
+    border-left: 1px solid;
+}
+
+.window.light .window-sidebar-content {
+    background: #f2f2f6;
+    border-color: #c6c6c7;
+}
+.window.dark .window-sidebar-content {
+    background: #1d1e1f;
+    border-color: black;
+}
+
+.window-sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.window-sidebar li {
+    width: calc(100% - 32px);
+    height: 26px;
+    transition: 100ms;
+    padding: 11px 16px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: left;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.window-sidebar li.active {
+    background: rgba(120, 120, 120, 0.5);
+}
+
+.window-content-inner {
+    width: calc(100% - 80px);
+    margin: 0 40px;
+    padding: 40px 0;
+}
+
+/*
+ * Window widget ------------------------------------------------------------------------------------------------------------------------
+ */
+.empty-page {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 500;
+    opacity: 0.5;
 }

@@ -2,20 +2,19 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import _ from "lodash";
-
 import * as UI from "@material-ui/core";
-
 import { Meteor } from "meteor/meteor";
+
 import { logout, throwMsg } from "../../actions";
+import { upload, fileUploadVerify } from "../../utils";
+import { ResourceFeeder } from "../../resources_feeder";
 
 import AccountBasicTab from "./tab_account_basic";
 import AccountSecurityTab from "./tab_account_security";
 import AccountAdvancedTab from "./tab_account_advanced";
 
-import { ResourceFeeder } from "../../resources_feeder";
 import Avatar from "../../components/user_avatar";
 import DropFile from "../../components/DropFile";
-
 import Window from "../../components/Window";
 
 export const R = new ResourceFeeder(require("./resources/strings"), require("./resources/messages"));
@@ -27,30 +26,6 @@ const TAB_ACCOUNT_ADVANCED = "TAB_ACCOUNT_ADVANCED";
 class UserCenter extends Component {
     state = {
         selectedTab: TAB_ACCOUNT_BASIC
-    };
-
-    sidebarStyle = {
-        position: "absolute",
-        boxSizing: "border-box",
-        borderRight: "1px solid #d6d4d3",
-        borderRadius: "6px 0 0 6px",
-        height: "100%",
-        overflow: "auto",
-        width: "220px"
-    };
-
-    sidebarContentStyle = {
-        position: "absolute",
-        left: "220px",
-        background: "#E0E0E0",
-        borderTopRightRadius: "6px",
-        borderBottomRightRadius: "6px",
-        width: "calc(100% - 220px)",
-        height: "100%",
-        overflow: "auto",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start"
     };
 
     userAvatarStyle = {
@@ -67,28 +42,51 @@ class UserCenter extends Component {
         justifyContent: "center"
     };
 
-    userJobStyle = {
-        display: "flex",
-        flexWrap: "nowrap",
-        justifyContent: "center",
-        margin: 4,
-        fontSize: 0.7 + "em",
-        border: "1px solid darkgrey",
-        borderRadius: 8,
-        alignItems: "center",
-        padding: "4px 8px"
-    };
-
-    userAvatarImageStyle = {
-        height: "100%",
-        width: "100%",
-        objectFit: "contain"
-    };
-
     tabs = {
         TAB_ACCOUNT_BASIC: { name: TAB_ACCOUNT_BASIC, icon: "assignment_ind", tab: <AccountBasicTab /> },
-        TAB_ACCOUNT_SECURITY: { name: TAB_ACCOUNT_SECURITY, icon: "vpn_key", tab: <AccountSecurityTab /> },
         TAB_ACCOUNT_ADVANCED: { name: TAB_ACCOUNT_ADVANCED, icon: "font_download", tab: <AccountAdvancedTab /> }
+    };
+
+    handleAvatarUpload = e => {
+        let file = e[0];
+        if (!fileUploadVerify(file, this.props.throwMsg).result) return;
+
+        upload(
+            file,
+            "uploadAvatar",
+            null,
+            () => {
+                this.props.throwMsg(
+                    R.Msg("FILE_UPLOADING", {
+                        key: "DESKTOP_UPLOAD"
+                    })
+                );
+            },
+            (err, res) => {
+                if (err) {
+                } else {
+                    // change localStorage
+                    let employee = this.props.user;
+                    localStorage.setItem(
+                        "lastLoginUser",
+                        JSON.stringify({
+                            nickname: employee.nickname,
+                            avatar: res,
+                            email: employee.email,
+                            desktop: _.get(employee, "preferences.desktop", "default.jpg")
+                        })
+                    );
+
+                    this.props.throwMsg(
+                        R.Msg("FILE_UPLOADED", {
+                            key: "DESKTOP_UPLOAD"
+                        })
+                    );
+
+                    return true;
+                }
+            }
+        );
     };
 
     renderTabList = tabs => {
@@ -107,43 +105,47 @@ class UserCenter extends Component {
     };
 
     render() {
+        if (_.get(this.props.auth, "change_password")) {
+            this.tabs[TAB_ACCOUNT_SECURITY] = { name: TAB_ACCOUNT_SECURITY, icon: "vpn_key", tab: <AccountSecurityTab /> };
+        }
+
         return (
-            <Window key="Main" _key="Main" width={960} height={720} appKey={this.props.appKey}>
-                <div className="user-center-sidebar handle" style={this.sidebarStyle}>
-                    <div className="user-center-sidebar-user-section" style={{ marginTop: 50 }}>
-                        <DropFile className="drop-file-click" handleDrop={this.handleAvatarUpload} style={this.userAvatarStyle} clickToSelect>
-                            <Avatar user={this.props.user} d={120} />
-                        </DropFile>
-                        <div style={this.userSectionStyle}>
-                            <UI.Typography variant="subheading">{this.props.user.nickname}</UI.Typography>
-                        </div>
-                        <div style={this.userSectionStyle}>
-                            <UI.Typography variant="caption">{this.props.user.email}</UI.Typography>
-                        </div>
-                        <div
-                            style={{
-                                display: "flex",
-                                flexWrap: "nowrap",
-                                justifyContent: "center",
-                                padding: 8
-                            }}
-                        >
-                            <UI.Button
-                                className="unhandle"
-                                size="small"
-                                color="secondary"
-                                onClick={() => {
-                                    Meteor.logout(error => this.props.logout(error));
+            <Window key="Main" _key="Main" width={960} height={720} appKey={this.props.appKey} theme="light">
+                <div className="window-sidebar-container">
+                    <div className="window-sidebar">
+                        <div className="user-center-sidebar-user-section">
+                            <DropFile handleDrop={this.handleAvatarUpload} style={this.userAvatarStyle} clickToSelect>
+                                <Avatar user={this.props.user} d={120} />
+                            </DropFile>
+                            <div style={this.userSectionStyle}>
+                                <UI.Typography variant="subheading">{this.props.user.nickname}</UI.Typography>
+                            </div>
+                            <div style={this.userSectionStyle}>
+                                <UI.Typography variant="caption">{this.props.user.email}</UI.Typography>
+                            </div>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexWrap: "nowrap",
+                                    justifyContent: "center",
+                                    padding: 8
                                 }}
                             >
-                                {R.Str("LOGOUT")}
-                            </UI.Button>
+                                <UI.Button
+                                    className="unhandle"
+                                    size="small"
+                                    color="secondary"
+                                    onClick={() => {
+                                        Meteor.logout(error => this.props.logout(error));
+                                    }}
+                                >
+                                    {R.Str("LOGOUT")}
+                                </UI.Button>
+                            </div>
                         </div>
+                        <UI.MenuList>{this.renderTabList(this.tabs)}</UI.MenuList>
                     </div>
-                    <UI.MenuList className="unhandle">{this.renderTabList(this.tabs)}</UI.MenuList>
-                </div>
-                <div style={this.sidebarContentStyle}>
-                    <div className="panel-container">{this.renderContent(this.tabs)}</div>
+                    <div className="window-sidebar-content">{this.renderContent(this.tabs)}</div>
                 </div>
             </Window>
         );
@@ -156,7 +158,8 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state) {
     return {
-        user: state.user
+        user: state.user,
+        auth: state.auth
     };
 }
 
