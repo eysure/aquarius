@@ -6,9 +6,19 @@ const R = new ResourceFeeder(require("./resources/strings"), require("./resource
 import Window from "../../components/Window/index.js";
 
 class Manual extends Component {
+    state = { open: true };
     render() {
+        if (!this.state.open) return null;
         return (
-            <Window key="Manual" _key="Manual" width={"40vmin"} height={"60vmin"} appKey={this.props.appKey} titlebar="Manual">
+            <Window
+                key="Manual"
+                _key="Manual"
+                width={"40vmin"}
+                height={"60vmin"}
+                appKey={this.props.appKey}
+                titlebar="Manual"
+                onClose={e => this.setState({ open: false })}
+            >
                 <div className="app-template-fill">
                     <img src={this.constructor.manifest.icon} />
                     <h1>Manual</h1>

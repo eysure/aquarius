@@ -17,6 +17,8 @@ import { R } from "../../resources_feeder";
 import { getAppName } from "../../app_utils.js";
 
 class Contacts extends Component {
+    state = { open: true };
+
     renderList = () => {
         let employees = this.props.db.employees;
         return _.map(employees, employee => {
@@ -60,6 +62,7 @@ class Contacts extends Component {
     };
 
     render() {
+        if (!this.state.open) return null;
         return (
             <Window
                 key="Main"
@@ -69,6 +72,7 @@ class Contacts extends Component {
                 appKey={this.props.appKey}
                 titlebar={getAppName("trumode.contacts", this.props.user)}
                 toolbar={this.toolbar}
+                onClose={e => this.setState({ open: false })}
             >
                 <div className="window-content-inner" style={{ maxWidth: 1600 }}>
                     <div className="panel" style={{ gridColumnGap: 0 }}>

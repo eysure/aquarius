@@ -9,13 +9,21 @@ import Window from "../../components/Window";
 
 class AboutSystem extends Component {
     state = {
-        clientConfigOpen: false,
-        serverConfigOpen: false
+        open: true
     };
 
     render() {
+        if (!this.state.open) return null;
         return (
-            <Window key="Main" _key="Main" y="20vh" appKey={this.props.appKey} canMaximize={false} canResize={false}>
+            <Window
+                key="Main"
+                _key="Main"
+                y="20vh"
+                appKey={this.props.appKey}
+                canMaximize={false}
+                canResize={false}
+                onClose={e => this.setState({ open: false })}
+            >
                 <div
                     className="handle"
                     style={{

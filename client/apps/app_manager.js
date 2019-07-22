@@ -11,7 +11,10 @@ import { appClose, appWindowActivate } from "../actions";
 import Window, { WINDOW_PRIORITY_TOP } from "../components/Window";
 
 class AppManager extends Component {
+    state = { open: true };
+
     render() {
+        if (!this.state.open) return null;
         return (
             <Window
                 key="Main"
@@ -19,6 +22,7 @@ class AppManager extends Component {
                 appKey={this.props.appKey}
                 titlebar={getAppName("app_manager", this.props.user)}
                 windowPriority={WINDOW_PRIORITY_TOP}
+                onClose={e => this.setState({ open: false })}
             >
                 <UI.DialogContent className="no-padding">
                     <UI.List component="nav" subheader={<UI.ListSubheader component="div">{this.props.apps.length} app(s) running</UI.ListSubheader>}>

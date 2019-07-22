@@ -16,7 +16,8 @@ export const TAB_SYSTEM_MANAGER = "TAB_SYSTEM_MANAGER";
 
 class Admin extends React.Component {
     state = {
-        selected: null
+        selected: null,
+        open: true
     };
 
     renderSidebar = () => {
@@ -48,9 +49,12 @@ class Admin extends React.Component {
         }
     };
 
+    handleClose = e => {};
+
     render() {
+        if (!this.state.open) return null;
         return (
-            <Window key={"admin"} _key={"admin"} width={800} height={600} appKey={this.props.appKey} theme="dark">
+            <Window key={"admin"} _key={"admin"} width={800} height={600} appKey={this.props.appKey} theme="dark" onClose={e => this.setState({ open: false })}>
                 <div className="window-sidebar-container">
                     <div className="window-sidebar">
                         <ul>{this.renderSidebar()}</ul>

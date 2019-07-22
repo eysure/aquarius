@@ -12,11 +12,21 @@ import Window from "../../components/Window";
 import { Divider } from "@material-ui/core";
 
 class Welcome extends Component {
-    state = { index: 0 };
+    state = { open: true, index: 0 };
 
     render() {
+        if (!this.state.open) return null;
         return (
-            <Window key="Main" _key="Main" width={"80vmin"} height={"60vmin"} appKey={this.props.appKey} canResize={false} canMaximize={false}>
+            <Window
+                key="Main"
+                _key="Main"
+                width={"80vmin"}
+                height={"60vmin"}
+                appKey={this.props.appKey}
+                canResize={false}
+                canMaximize={false}
+                onClose={e => this.setState({ open: false })}
+            >
                 <SwipeableViews
                     id="welcome-carousel"
                     className="carousel handle"

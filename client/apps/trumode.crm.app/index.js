@@ -7,9 +7,12 @@ import { ResourceFeeder } from "../../resources_feeder";
 import Window from "../../components/Window";
 
 class CustomerRelationshipManager extends Component {
+    state = { open: true };
+
     render() {
+        if (!this.state.open) return null;
         return (
-            <Window key="Main" _key="Main" width={800} height={600} appKey={this.props.appKey} titlebar={"CRM"}>
+            <Window key="Main" _key="Main" width={800} height={600} appKey={this.props.appKey} titlebar={"CRM"} onClose={e => this.setState({ open: false })}>
                 <div className="window-content">
                     <div className="app-template-fill">
                         <img src={this.constructor.manifest.icon} />

@@ -7,11 +7,13 @@ import Window, { WINDOW_PRIORITY_HIGH } from "../components/Window";
 import ReactJson from "react-json-view";
 
 class Debugger extends Component {
+    state = { open: true };
     toolbar = () => {
         return null;
     };
 
     render() {
+        if (!this.state.open) return null;
         return (
             <Window
                 key="Main"
@@ -25,6 +27,7 @@ class Debugger extends Component {
                 windowPriority={WINDOW_PRIORITY_HIGH}
                 contentStyle={{ background: "rgba(39, 40, 34, 0.8)" }}
                 toolbar={this.toolbar()}
+                onClose={e => this.setState({ open: false })}
             >
                 <ReactJson
                     style={{

@@ -7,9 +7,20 @@ import { ResourceFeeder } from "../../resources_feeder";
 import Window from "../../components/Window";
 
 class ProductManager extends Component {
+    state = { open: true };
+
     render() {
+        if (!this.state.open) return null;
         return (
-            <Window key="Main" _key="Main" width={800} height={600} appKey={this.props.appKey} titlebar={"Producet Manger"}>
+            <Window
+                key="Main"
+                _key="Main"
+                width={800}
+                height={600}
+                appKey={this.props.appKey}
+                titlebar={"Producet Manger"}
+                onClose={e => this.setState({ open: false })}
+            >
                 <div className="app-template-fill">
                     <img src={this.constructor.manifest.icon} />
                     <h1>Product Manager</h1>

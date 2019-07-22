@@ -11,9 +11,20 @@ import { getAppName } from "../../app_utils";
 const R = new ResourceFeeder(require("./resources/strings"), null);
 
 class Preference extends Component {
+    state = { open: true };
+
     render() {
+        if (!this.state.open) return null;
         return (
-            <Window key="Main" _key="Main" appKey={this.props.appKey} width={800} height={600} titlebar={getAppName("preference", this.props.user)}>
+            <Window
+                key="Main"
+                _key="Main"
+                appKey={this.props.appKey}
+                width={800}
+                height={600}
+                titlebar={getAppName("preference", this.props.user)}
+                onClose={e => this.setState({ open: false })}
+            >
                 <div>Preferences</div>
             </Window>
         );

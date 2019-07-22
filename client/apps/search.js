@@ -12,6 +12,7 @@ class Search extends Component {
     constructor() {
         super();
         this.state = {
+            open: true,
             searchInput: ""
         };
     }
@@ -48,8 +49,9 @@ class Search extends Component {
     }
 
     render() {
+        if (!this.state.open) return null;
         return (
-            <Window key="Main" _key="Main" appKey={this.props.appKey} y={"10vh"} width={600} noControl>
+            <Window key="Main" _key="Main" appKey={this.props.appKey} y={"10vh"} width={600} noControl escToClose onClose={e => this.setState({ open: false })}>
                 <UI.Icon style={this.searchBarIcon}>search</UI.Icon>
                 <UI.DialogContent className="handle no-padding">
                     <div style={this.searchBarContainer}>

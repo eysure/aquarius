@@ -4,7 +4,7 @@ import PI from "../../components/panel_item";
 
 import { R } from "./";
 
-import Window from "../../components/Window";
+import AddUser from "./add_user";
 
 export class UserManager extends Component {
     state = {
@@ -24,20 +24,7 @@ export class UserManager extends Component {
     }
 
     renderNewUserWindow = () => {
-        return (
-            this.state.openNewUserWindow && (
-                <Window
-                    onClose={() => this.setState({ openNewUserWindow: false })}
-                    key={"add_user"}
-                    _key={"add_user"}
-                    width={600}
-                    appKey={this.props.context.props.appKey}
-                    theme="dark"
-                >
-                    <div className="window-content-inner handle">New User</div>
-                </Window>
-            )
-        );
+        return this.state.openNewUserWindow && <AddUser context={this.props.context} onClose={() => this.setState({ openNewUserWindow: false })} />;
     };
 }
 

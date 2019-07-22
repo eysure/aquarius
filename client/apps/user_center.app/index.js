@@ -25,6 +25,7 @@ const TAB_ACCOUNT_ADVANCED = "TAB_ACCOUNT_ADVANCED";
 
 class UserCenter extends Component {
     state = {
+        open: true,
         selectedTab: TAB_ACCOUNT_BASIC
     };
 
@@ -105,12 +106,14 @@ class UserCenter extends Component {
     };
 
     render() {
+        if (!this.state.open) return null;
+
         if (_.get(this.props.auth, "change_password")) {
             this.tabs[TAB_ACCOUNT_SECURITY] = { name: TAB_ACCOUNT_SECURITY, icon: "vpn_key", tab: <AccountSecurityTab /> };
         }
 
         return (
-            <Window key="Main" _key="Main" width={960} height={720} appKey={this.props.appKey} theme="light">
+            <Window key="Main" _key="Main" width={960} height={720} appKey={this.props.appKey} theme="light" onClose={e => this.setState({ open: false })}>
                 <div className="window-sidebar-container">
                     <div className="window-sidebar">
                         <div className="user-center-sidebar-user-section">
@@ -131,16 +134,13 @@ class UserCenter extends Component {
                                     padding: 8
                                 }}
                             >
-                                <UI.Button
-                                    className="unhandle"
-                                    size="small"
-                                    color="secondary"
+                                <button
                                     onClick={() => {
                                         Meteor.logout(error => this.props.logout(error));
                                     }}
                                 >
                                     {R.Str("LOGOUT")}
-                                </UI.Button>
+                                </button>
                             </div>
                         </div>
                         <UI.MenuList>{this.renderTabList(this.tabs)}</UI.MenuList>

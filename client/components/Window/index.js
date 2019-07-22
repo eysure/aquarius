@@ -19,7 +19,6 @@ export const WINDOW_PRIORITY_BOTTOM = 1;
 
 class Window extends Component {
     state = {
-        open: true,
         top: "50%",
         left: "50%",
         width: this.props.width,
@@ -28,6 +27,8 @@ class Window extends Component {
         isActive: true,
         lastActiveTime: new Date()
     };
+
+    id = this.props.appKey + "." + this.props._key;
 
     tmp_top = null;
     tmp_left = null;
@@ -165,9 +166,6 @@ class Window extends Component {
     };
 
     render() {
-        // Render nothing if not open
-        if (!this.state.open) return null;
-
         // Using Portal
         let appHostDOM = document.getElementById("app-host");
         if (!appHostDOM) {
@@ -184,10 +182,9 @@ class Window extends Component {
     };
 
     handleMouseDown = e => {
-        e.stopPropagation();
+        if (e) e.stopPropagation();
         if (this.windowRef.current && !this.state.isActive) {
             this.props.activateWindow(this.props._key, this.props.appKey);
-            this.restoreWindowPosition();
         }
     };
 
@@ -223,13 +220,12 @@ class Window extends Component {
 
         let insertPlace = document.getElementById(group);
         thisWindow.parentNode.insertBefore(thisWindow, insertPlace);
+
+        hotkeys.setScope(this.id);
     };
 
     handleClose = e => {
         if (this.props.onClose) this.props.onClose();
-        this.handleActivate(false);
-        this.setState({ open: false });
-        this.unregisterWindow();
     };
 
     handleMin = e => {
@@ -330,21 +326,32 @@ class Window extends Component {
         this.restoreWindowPosition();
 
         // Hotkeys
-        hotkeys("cmd+enter,ctrl+enter", (event, handler) => {
+        hotkeys("cmd+enter,ctrl+enter", this.id, (event, handler) => {
             event.preventDefault();
             if (this.state.isActive) this.handleMax();
         });
-        hotkeys("cmd+m,ctrl+m", (event, handler) => {
+        hotkeys("cmd+m,ctrl+m", this.id, (event, handler) => {
             event.preventDefault();
             if (this.state.isActive) this.handleMin();
         });
-        hotkeys("cmd+backspace,ctrl+backspace", { keydown: true }, (event, handler) => {
+        hotkeys("cmd+backspace,ctrl+backspace", { scope: this.id, keydown: true }, (event, handler) => {
             event.preventDefault();
             if (this.state.isActive) this.handleClose();
+        });
+        hotkeys("esc", { scope: this.id, keydown: true }, (event, handler) => {
+            if (!this.props.escToClose) return;
+            event.preventDefault();
+            event.stopPropagation();
+            this.handleClose();
         });
     }
 
     componentWillUnmount() {
+        hotkeys.unbind("cmd+enter,ctrl+enter", this.id);
+        hotkeys.unbind("cmd+m,ctrl+m", this.id);
+        hotkeys.unbind("cmd+m,ctrl+m", this.id);
+        hotkeys.unbind("cmd+backspace,ctrl+backspace", this.id);
+        hotkeys.unbind("esc", this.id);
         this.unregisterWindow();
     }
 
@@ -425,5 +432,8 @@ Window.defaultProps = {
     contentStyle: null,
 
     // Window's priority render on screen
-    windowPriority: WINDOW_PRIORITY_NORMAL
+    windowPriority: WINDOW_PRIORITY_NORMAL,
+
+    // Is possible to press ESC to close this window, useful for subwindows
+    escToClose: false
 };
