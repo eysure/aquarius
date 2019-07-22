@@ -168,13 +168,18 @@ class Window extends Component {
         // Render nothing if not open
         if (!this.state.open) return null;
 
-        // return this.renderWindow();
-
         // Using Portal
-        return ReactDOM.createPortal(this.renderWindow(), document.getElementById("app-host"));
+        let appHostDOM = document.getElementById("app-host");
+        if (!appHostDOM) {
+            // TODO handle app-host is not loaded
+            console.warn("app-host is not loaded.");
+            return null;
+        }
+        return ReactDOM.createPortal(this.renderWindow(), appHostDOM);
     }
 
     handleActivate = isActive => {
+        if (isActive) this.restoreWindowPosition();
         this.setState({ isActive, lastActiveTime: isActive ? new Date() : this.state.lastActiveTime });
     };
 
