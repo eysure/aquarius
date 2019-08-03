@@ -15,7 +15,7 @@ export default function(props) {
                 height: props.d || "auto",
                 ...props.style
             }}
-            src={oss(`assets/user/avatar/${props.user.avatar || "default"}`)}
+            src={oss(`assets/user/avatar/${props.user.avatar || "default.png"}`)}
         />
     );
 }

@@ -7,5 +7,9 @@ export default {
     TAB_SYSTEM_MANAGER: ["System Manager", "系统管理"],
 
     // User Manager
-    ADD_USER: ["Add User", "新增用户"]
+    ADD_USER: ["Add User", "新增用户"],
+    CREATE_NEW_USER: ["New User", "新用户"],
+    USERNAME: ["Username", "用户名"],
+    EMAIL: ["Email", "邮箱"],
+    CREATE: ["Create", "新建"]
 };

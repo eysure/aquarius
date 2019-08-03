@@ -3,6 +3,7 @@ import { Accounts } from "meteor/accounts-base";
 import * as Methods from "./methods";
 import { Collection, oss } from "./resources";
 import Errors from "./errors";
+import MailService from "./mail_service";
 
 async function listBuckets(client) {
     try {
@@ -12,6 +13,8 @@ async function listBuckets(client) {
         return err;
     }
 }
+
+let MS = null;
 
 /**
  * System Check
@@ -41,6 +44,17 @@ systemCheck = () => {
         if (res.code) console.error("OSS Error: " + res.code);
     });
 
+    // Nodemailer
+    let mailServer = Collection("system").findOne({ key: "mailServer" });
+    let mailSender = Collection("system").findOne({ key: "mailSenderAccount" });
+    if (mailServer == null) {
+        myErrors.push(Errors[1003]);
+    }
+    if (mailSender == null) {
+        myErrors.push(Errors[1004]);
+    }
+    MS = new MailService(mailServer, mailSender);
+
     return myErrors;
 };
 
@@ -69,15 +83,19 @@ Meteor.publish("myEmployeeInfo", function() {
                 _id: 1,
                 nickname: 1,
                 email: 1,
+                email2: 1,
                 name_cn: 1,
                 fn_en: 1,
                 ln_en: 1,
                 mobile: 1,
+                mobile2: 1,
                 ext: 1,
                 avatar: 1,
                 preferences: 1,
                 status: 1,
-                auth: 1
+                auth: 1,
+                ethnic: 1,
+                dob: 1
             }
         }
     );

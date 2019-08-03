@@ -56,7 +56,7 @@ function replaceAll(str, vals) {
 
 // TODO: THESE FUNCTIIONS ARE NOT IN THE STANDARD BUNDLE, AND NEED TO MOVE!!!
 
-export function getLocalCollection(string) {
+export function Collections(string) {
     return Meteor.connection._mongo_livedata_collections[string] || new Mongo.Collection(string);
 }
 
@@ -165,4 +165,17 @@ export function computeJobInfo(user_id, db) {
         }
     }
     return res;
+}
+
+export function checkAuth(auth, operation = null, context) {
+    if (!_.get(context.props.auth, auth)) {
+        context.props.throwMsg(
+            R.Msg("OPD", {
+                auth,
+                operation: operation || ""
+            })
+        );
+        return false;
+    }
+    return true;
 }

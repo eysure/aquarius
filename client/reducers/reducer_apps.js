@@ -21,6 +21,8 @@ export default function(state = {}, action) {
             let appKey = app.appKey;
             let option = app.option;
 
+            console.log("App Launch: ", appKey, option);
+
             let appClass = getAppWithKey(appKey);
             if (!appClass) return state; // No App found in the AppList
 

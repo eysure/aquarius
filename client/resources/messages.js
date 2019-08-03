@@ -110,5 +110,20 @@ export default {
         content: ["You have no authority to use this application, please contact admins for details.", "您无权使用此应用，请与管理员联系"],
         class: 5,
         persist: true
+    },
+    OPD: {
+        title: ["Operation Permission Denied", "操作缺少权限"],
+        content: [
+            "You don't have the permission: ${auth} to do this operation: ${operation}, please contact admins for details.",
+            "您缺少${auth}权限进行${operation}操作，请与管理员联系"
+        ],
+        class: 5,
+        persist: true
+    },
+    ERR: {
+        title: ["An Error Occured", "发生错误"],
+        content: ["${err}", "${err}"],
+        class: 5,
+        persist: true
     }
 };

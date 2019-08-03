@@ -30,5 +30,13 @@ export default {
     ],
 
     // ADVANCED TAB
-    AUTHORITY_TABLE: ["Authority Table", "权限表"]
+    AUTHORITY_TABLE: ["Authority Table", "权限表"],
+
+    // Initialization
+    UCI_WELCOME_TITLE: ["Welcome To Trumode", "欢迎来到 Trumode"],
+    UCI_WELCOME_DESCRIPTION: [
+        "We have several things to do right now. Optimally, you only need less than 10 minutes.",
+        "我们现在有几件事需要做。这大约需要占有10分钟的时间。"
+    ],
+    CONTINUE: ["Continue", "继续"]
 };

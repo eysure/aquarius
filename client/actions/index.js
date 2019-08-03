@@ -82,8 +82,8 @@ export function systemControl(system) {
 export function throwMsg(msg, args = null) {
     // TODO: Back compatible, no longer support in next version
     if (typeof msg === "string" || msg instanceof String) {
-        console.warn("Deprecated: Throw a message by key in action function is deprecated and no longer support in next version");
-        msg = getMsg(msg, args);
+        console.error("Deprecated: Throw a message by key in action function is deprecated and no longer support in current version. Use R.Msg(...) instead.");
+        return null;
     }
 
     return {

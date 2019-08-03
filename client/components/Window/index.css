@@ -1,5 +1,5 @@
 /*
- * General ------------------------------------------------------------------------------------------------------------------------
+ * Shortcuts ------------------------------------------------------------------------------------------------------------------------
  */
 .v-stack {
     display: flex;
@@ -8,6 +8,214 @@
 .h-stack {
     display: flex;
     flex-direction: row;
+}
+
+.h-start {
+    align-items: flex-start;
+}
+.h-center {
+    align-items: center;
+}
+.h-end {
+    align-items: flex-end;
+}
+.v-start {
+    justify-content: flex-start;
+}
+.v-center {
+    justify-content: center;
+}
+.v-end {
+    justify-content: flex-end;
+}
+.v-scale {
+    justify-content: space-between;
+}
+
+.vss,
+.v-start-start {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.vsc,
+.v-start-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+.vse,
+.v-start-end {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+}
+.vcs,
+.v-center-start {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+.vcc,
+.v-center-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.vce,
+.v-center-end {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+}
+.ves,
+.v-end-start {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+.vec,
+.v-end-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+}
+.vee,
+.v-end-end {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+.vbs,
+.v-sb-start {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.vbc,
+.v-sb-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+.vbe,
+.v-sb-end {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+.hss,
+.h-start-start {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.hsc,
+.h-start-center {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+.hse,
+.h-start-end {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+}
+.hcs,
+.h-center-start {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+}
+.hcc,
+.h-center-center {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.hce,
+.h-center-end {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+}
+.hes,
+.h-end-start {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+.hec,
+.h-end-center {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+.hee,
+.h-end-end {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+.hbs,
+.h-sb-start {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.hbc,
+.h-sb-center {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.hbe,
+.h-sb-end {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.v-full {
+    height: 100%;
+}
+.h-full {
+    width: 100%;
+}
+.abs {
+    position: absolute;
+}
+
+.b-box {
+    box-sizing: border-box;
+}
+.c-box {
+    box-sizing: content-box;
 }
 
 /*
@@ -42,14 +250,14 @@
 .window.light {
     color: black;
     background: rgba(240, 240, 240, 0.8);
-    border: 1px solid rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 0, 0, 0.2);
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.15), 0 25px 60px 0 rgba(0, 0, 0, 0.45);
 }
 
 .window.light.inactive {
     color: rgba(0, 0, 0, 0.8);
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(0, 0, 0, 0.5);
+    background: rgb(200, 200, 200);
+    border: 1px solid rgba(150, 150, 150, 1);
     box-shadow: 0px 15px 40px 0px rgba(0, 0, 0, 0.2);
 }
 
@@ -385,7 +593,8 @@
 }
 
 .window-content-inner {
-    width: calc(100% - 80px);
+    box-sizing: border-box;
+    width: 100%;
     margin: 0 40px;
     padding: 40px 0;
 }
@@ -404,9 +613,27 @@
     opacity: 0.5;
 }
 
+.window hr {
+    height: 1px;
+    width: 100%;
+    margin: 16px 0;
+    background: rgba(0, 0, 0, 0.15);
+    border: none;
+}
+
 /*
  * Input ------------------------------------------------------------------------------------------------------------------------
  */
+.window select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: transparent;
+    background-position: right 0.7em top 50%, 0 0;
+    background-size: 0.65em auto, 100%;
+    background-repeat: no-repeat, repeat;
+}
+
+.window select,
 .window input {
     font-size: 1rem;
     margin: 0;
@@ -415,50 +642,168 @@
     transition: 150ms;
     box-sizing: border-box;
     margin-bottom: 16px;
-}
-
-.window input {
+    font-weight: 300;
     padding: 8px 12px;
     width: 100%;
 }
-
-.window input:focus {
+.window select:focus,
+.window input:focus,
+.window .aqui-checkbox:focus {
     box-shadow: 0 0 1px 1px rgba(0, 122, 255, 0.5);
 }
+.window select:disabled,
+.window input:disabled,
+.window .aqui-checkbox.disabled {
+    filter: brightness(0.5);
+}
 
-.dark input {
+.dark input,
+.dark .aqui-checkbox {
     background: rgba(0, 0, 0, 0.3);
     color: white;
 }
-
+.dark input:disabled,
+.dark .aqui-checkbox.disabled {
+    background: rgba(0, 0, 0, 0.15);
+    color: #eee;
+}
+.dark select {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMCA3LjMzbDIuODI5LTIuODMgOS4xNzUgOS4zMzkgOS4xNjctOS4zMzkgMi44MjkgMi44My0xMS45OTYgMTIuMTd6Ii8+PC9zdmc+"),
+        linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3));
+    color: white;
+}
+.dark select:disabled {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMCA3LjMzbDIuODI5LTIuODMgOS4xNzUgOS4zMzkgOS4xNjctOS4zMzkgMi44MjkgMi44My0xMS45OTYgMTIuMTd6Ii8+PC9zdmc+"),
+        linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
+    color: #eee;
+}
 .dark ::placeholder {
     opacity: 0.5;
 }
 
-.light input {
+.light input,
+.light .aqui-checkbox {
     background: rgba(0, 0, 0, 0.15);
     color: black;
 }
-
+.light input:disabled,
+.light .aqui-checkbox.disabled {
+    color: #eee;
+    background: rgba(0, 0, 0, 0.05);
+}
+.light select {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMCA3LjMzbDIuODI5LTIuODMgOS4xNzUgOS4zMzkgOS4xNjctOS4zMzkgMi44MjkgMi44My0xMS45OTYgMTIuMTd6Ii8+PC9zdmc+"),
+        linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
+}
+.light select:disabled {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMCA3LjMzbDIuODI5LTIuODMgOS4xNzUgOS4zMzkgOS4xNjctOS4zMzkgMi44MjkgMi44My0xMS45OTYgMTIuMTd6Ii8+PC9zdmc+"),
+        linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
+}
 .light ::placeholder {
-    opacity: 0.5;
+    opacity: 1;
 }
 
+.aqui-input-title {
+    font-weight: 400;
+    padding: 0;
+    margin: 0 0 8px 12px;
+    font-size: 1rem;
+}
+.dark .aqui-input-title {
+    color: #aaa;
+}
+
+.aqui-input-caption {
+    font-size: 0.8rem;
+    margin-top: -12px;
+    padding-left: 12px;
+    margin-bottom: 16px;
+}
+
+.aqui-input-item {
+    box-sizing: border-box;
+    padding: 0 8px;
+}
+.aqui-input-group {
+    box-sizing: border-box;
+    margin: 0 -8px;
+}
+
+.aqui-checkbox {
+    background: rgba(0, 0, 0, 0.15);
+    height: 24px;
+    width: 24px;
+    border: 1px solid none;
+    border-radius: 6px;
+    transition: 150ms;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.aqui-checkbox.disabled {
+    cursor: not-allowed;
+}
+
+.aqui-checkbox.checked {
+    background: rgb(0, 122, 255);
+}
+
+.aqui-checkbox.checked::after {
+    color: white;
+    content: "✓";
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.aqui-checkbox-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 18px;
+}
+
+.aqui-checkbox-label {
+    margin-bottom: 0;
+}
 /*
  * Button ------------------------------------------------------------------------------------------------------------------------
  */
 
-.window button.aqui-btn {
+.aqui-btn {
     font-weight: 500;
     color: rgb(0, 122, 255);
     padding: 8px 20px;
     font-size: 1rem;
     border: 0;
-    margin: 16px 0;
+    margin: 16px 8px;
     border-radius: 6px;
-    transition: 150ms;
-    box-sizing: border-box;
+    transition: 200ms;
+    background: none;
 }
-.window button.aqui-btn.circle {
+.aqui-btn:focus,
+.aqui-btn:hover {
+    cursor: pointer;
+    box-shadow: 0 0 1px 1px rgba(0, 122, 255, 0.5);
+}
+.aqui-btn:active {
+    filter: brightness(0.8);
+}
+.aqui-btn.circle {
     border-radius: 50%;
+}
+
+.window.inactive .aqui-btn,
+.aqui-btn:disabled {
+    color: #aaa;
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+.dark.aqui-btn:disabled {
+    color: #888;
 }

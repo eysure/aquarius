@@ -81,7 +81,7 @@ class MainFrame extends Component {
                             if (!app) return;
                             activeWindow.handleMax();
                         },
-                        disabled: !activeWindow
+                        disabled: !activeWindow || !activeWindow.props.canMaximize
                     },
                     {
                         title: "Minimize",
@@ -90,7 +90,7 @@ class MainFrame extends Component {
                             if (!app) return;
                             activeWindow.handleMin();
                         },
-                        disabled: !activeWindow
+                        disabled: !activeWindow || !activeWindow.props.canMinimize
                     },
                     {
                         title: "Close",
@@ -99,7 +99,7 @@ class MainFrame extends Component {
                             if (!app) return;
                             activeWindow.handleClose();
                         },
-                        disabled: !activeWindow
+                        disabled: !activeWindow || !activeWindow.props.canClose
                     }
                 ];
         }
@@ -181,11 +181,6 @@ class MainFrame extends Component {
     }
 
     componentDidMount() {
-        // Deal with auto start apps
-        this.props.appLaunch("user_center");
-        this.props.appLaunch("debugger");
-        this.props.appLaunch("admin");
-
         // Open Launcher
         hotkeys("cmd+l,ctrl+l,f1", (event, handler) => {
             event.preventDefault();

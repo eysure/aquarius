@@ -549,9 +549,9 @@ form a {
 .panel {
     width: 100%;
     margin-bottom: 16px;
-    border-radius: 6px;
     box-shadow: 0px 0px 20px 0 rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    border-radius: 6px;
+    overflow: visible;
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: auto;
@@ -561,7 +561,7 @@ form a {
     background: #f0f0f0;
 }
 .dark .panel {
-    background: #333435;
+    background: #444;
 }
 .panel-item {
     min-height: 40px;
@@ -570,6 +570,14 @@ form a {
     display: flex;
     align-items: center;
     grid-column: span 12;
+}
+.panel-item:first-child {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+.panel-item:last-child {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
 }
 .light .panel-item {
     background: #fff;

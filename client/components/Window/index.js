@@ -229,6 +229,7 @@ class Window extends Component {
     };
 
     handleMin = e => {
+        if (!this.props.canMinimize) return;
         // Only when this window belongs to an application can this do minimize
         let div = this.windowRef.current;
         let dockItem = document.getElementById(`di-${this.props.appKey}`);
@@ -271,6 +272,7 @@ class Window extends Component {
     };
 
     handleMax = e => {
+        if (!this.props.canMaximize) return;
         let div = this.windowRef.current;
         if (!div) return;
 

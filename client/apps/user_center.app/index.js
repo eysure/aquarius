@@ -13,9 +13,11 @@ import AccountBasicTab from "./tab_account_basic";
 import AccountSecurityTab from "./tab_account_security";
 import AccountAdvancedTab from "./tab_account_advanced";
 
+import EmployeeInitialize from "./employee_initialize";
+
 import Avatar from "../../components/user_avatar";
 import DropFile from "../../components/DropFile";
-import Window from "../../components/Window";
+import Window, { WINDOW_PRIORITY_HIGH } from "../../components/Window";
 
 export const R = new ResourceFeeder(require("./resources/strings"), require("./resources/messages"));
 
@@ -105,6 +107,50 @@ class UserCenter extends Component {
         return tabs[this.state.selectedTab].tab;
     };
 
+    renderUserCenter = () => {
+        if (this.props.user.status > 0) {
+            return (
+                <Window key="Main" _key="Main" width={960} height={720} appKey={this.props.appKey} theme="light" onClose={e => this.setState({ open: false })}>
+                    <div className="window-sidebar-container">
+                        <div className="window-sidebar">
+                            <div className="user-center-sidebar-user-section">
+                                <DropFile handleDrop={this.handleAvatarUpload} style={this.userAvatarStyle} clickToSelect>
+                                    <Avatar user={this.props.user} d={120} />
+                                </DropFile>
+                                <div style={this.userSectionStyle}>
+                                    <UI.Typography variant="subheading">{this.props.user.nickname}</UI.Typography>
+                                </div>
+                                <div style={this.userSectionStyle}>
+                                    <UI.Typography variant="caption">{this.props.user.email}</UI.Typography>
+                                </div>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexWrap: "nowrap",
+                                        justifyContent: "center",
+                                        padding: 8
+                                    }}
+                                >
+                                    <button
+                                        onClick={() => {
+                                            Meteor.logout(error => this.props.logout(error));
+                                        }}
+                                    >
+                                        {R.Str("LOGOUT")}
+                                    </button>
+                                </div>
+                            </div>
+                            <UI.MenuList>{this.renderTabList(this.tabs)}</UI.MenuList>
+                        </div>
+                        <div className="window-sidebar-content">{this.renderContent(this.tabs)}</div>
+                    </div>
+                </Window>
+            );
+        } else if (this.props.user.status == 0) {
+            return <EmployeeInitialize context={this} />;
+        }
+    };
+
     render() {
         if (!this.state.open) return null;
 
@@ -112,43 +158,7 @@ class UserCenter extends Component {
             this.tabs[TAB_ACCOUNT_SECURITY] = { name: TAB_ACCOUNT_SECURITY, icon: "vpn_key", tab: <AccountSecurityTab /> };
         }
 
-        return (
-            <Window key="Main" _key="Main" width={960} height={720} appKey={this.props.appKey} theme="light" onClose={e => this.setState({ open: false })}>
-                <div className="window-sidebar-container">
-                    <div className="window-sidebar">
-                        <div className="user-center-sidebar-user-section">
-                            <DropFile handleDrop={this.handleAvatarUpload} style={this.userAvatarStyle} clickToSelect>
-                                <Avatar user={this.props.user} d={120} />
-                            </DropFile>
-                            <div style={this.userSectionStyle}>
-                                <UI.Typography variant="subheading">{this.props.user.nickname}</UI.Typography>
-                            </div>
-                            <div style={this.userSectionStyle}>
-                                <UI.Typography variant="caption">{this.props.user.email}</UI.Typography>
-                            </div>
-                            <div
-                                style={{
-                                    display: "flex",
-                                    flexWrap: "nowrap",
-                                    justifyContent: "center",
-                                    padding: 8
-                                }}
-                            >
-                                <button
-                                    onClick={() => {
-                                        Meteor.logout(error => this.props.logout(error));
-                                    }}
-                                >
-                                    {R.Str("LOGOUT")}
-                                </button>
-                            </div>
-                        </div>
-                        <UI.MenuList>{this.renderTabList(this.tabs)}</UI.MenuList>
-                    </div>
-                    <div className="window-sidebar-content">{this.renderContent(this.tabs)}</div>
-                </div>
-            </Window>
-        );
+        return this.renderUserCenter();
     }
 }
 

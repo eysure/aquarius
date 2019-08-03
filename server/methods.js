@@ -2,7 +2,8 @@ import _ from "lodash";
 import uuidv4 from "uuid/v4";
 import { Collection, oss } from "./resources";
 import { Accounts } from "meteor/accounts-base";
-import sys_errors from "./errors";
+import MailService from "./mail_service";
+import SimpleSchema from "simpl-schema";
 
 getEmailById = userId => {
     let user = Meteor.users.findOne({ _id: userId });
@@ -160,7 +161,7 @@ function overwrite(objValue, srcValue) {
     }
 }
 
-export function getAuth() {
+export function getAuth(userId = this.userId) {
     let auth = {};
 
     // First merge the system auth
@@ -168,8 +169,8 @@ export function getAuth() {
     _.merge(auth, systemAuth);
 
     // If user is not loged in, or no employees are found, return the systemAuth
-    if (!this.userId) return auth;
-    let employeeInfo = Collection("employees").findOne({ email: getEmailById(this.userId) });
+    if (!userId) return auth;
+    let employeeInfo = Collection("employees").findOne({ email: getEmailById(userId) });
     if (!employeeInfo) return auth;
 
     let employeeId = employeeInfo._id;
@@ -196,4 +197,59 @@ export function getAuth() {
     _.mergeWith(auth, employeeAuth, overwrite);
 
     return auth;
+}
+
+export function addUser(username, email) {
+    if (!_.get(getAuth(this.userId), "user_admin", false)) {
+        return {
+            status: 401,
+            reason: "Unauthorized"
+        };
+    }
+
+    const tempPassword = uuidv4();
+
+    Accounts.createUser({
+        username,
+        email,
+        password: tempPassword
+    });
+
+    Collection("employees").insert({
+        email: email,
+        nickname: username,
+        status: 0 // means initialized account
+    });
+
+    // Send password email to new user
+    MailService.send(
+        {
+            to: email,
+            subject: "Trumode OA 账户信息",
+            text: `Hi ${username},\n\n欢迎来到 Trumode, 你的系统初始密码为：\n ${tempPassword}\n\n请使用本邮箱地址与此临时密码登陆系统并修改密码。注意，这不是你的电子邮箱密码，请加以区分。\n此邮件由系统发送，请勿回复。若有疑问请联系管理员。\n\nTrumode 技术中心`
+        },
+        (err, info) => {
+            if (err) {
+                return {
+                    status: 500,
+                    err,
+                    info
+                };
+            } else {
+                return {
+                    status: 200,
+                    info
+                };
+            }
+        }
+    );
+}
+
+export function employee_register(state) {
+    if (!state) throw new Meteor.Error("PARM_EMPTY", "Parameters send to server are empty");
+
+    new SimpleSchema({
+        nickname: { type: String },
+        email2: { type: SimpleSchema.RegEx.EmailWithTLD }
+    }).validate(state);
 }

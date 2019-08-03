@@ -11,7 +11,7 @@ import Avatar from "./user_avatar";
 import { Tracker } from "meteor/tracker";
 
 import { clearMsg, logout, bindUserInfo, throwMsg, changeLanguageLocal, appLaunch, systemControl } from "../actions";
-import { generateEmailLinkToService, getLocalCollection } from "../utils";
+import { generateEmailLinkToService, Collections } from "../utils";
 
 class AccessControl extends React.Component {
     constructor(props) {
@@ -48,7 +48,7 @@ class AccessControl extends React.Component {
     };
 
     handleLoginError = error => {
-        Meteor.logout(error => this.props.logout(error));
+        if (Meteor.userId()) Meteor.logout(error => this.props.logout(error));
         let content = [error.message, error.message];
 
         switch (error.error) {
@@ -287,28 +287,6 @@ class AccessControl extends React.Component {
             // Server logout
             if (this.props.system.loginFlag && !Meteor.userId()) {
                 this.props.logout(R.Msg("SERVER_LOG_OUT"));
-            }
-
-            // User login, fetch user's employee info
-            if (Meteor.user()) {
-                // use subscribe to log invalid user out immidiately.
-                let employee = getLocalCollection("employees").findOne({ email: Meteor.user().emails[0].address });
-                if (!employee) return;
-                if (employee.status < 1) {
-                    this.handleLoginError({ error: 1001 });
-                    return;
-                }
-                this.props.bindUserInfo(employee);
-
-                localStorage.setItem(
-                    "lastLoginUser",
-                    JSON.stringify({
-                        nickname: employee.nickname,
-                        avatar: employee.avatar,
-                        email: employee.email,
-                        desktop: _.get(employee, "preferences.desktop", null)
-                    })
-                );
             }
         });
     }

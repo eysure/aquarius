@@ -6,7 +6,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Meteor } from "meteor/meteor";
 import { Tracker } from "meteor/tracker";
-import { getLocalCollection } from "../utils";
+import { Collections } from "../utils";
 import _ from "lodash";
 
 import * as Action from "../actions";
@@ -29,7 +29,7 @@ class VirtualDataLayer extends React.Component {
                 for (let collection of collections) {
                     this.props.bindCollection(
                         collection,
-                        getLocalCollection(collection)
+                        Collections(collection)
                             .find()
                             .fetch()
                     );
@@ -37,7 +37,7 @@ class VirtualDataLayer extends React.Component {
             } else {
                 this.props.bindCollection(
                     collections,
-                    getLocalCollection(collections)
+                    Collections(collections)
                         .find()
                         .fetch()
                 );
@@ -58,7 +58,27 @@ class VirtualDataLayer extends React.Component {
     componentDidMount() {
         this.subscribeAndBind("myEmployeeInfo", "employees", () => {
             this.updateAuth();
+
+            if (!Meteor.user()) return;
+            let employee = Collections("employees").findOne({ email: Meteor.user().emails[0].address });
+            if (!employee) return;
+
+            this.props.bindUserInfo(employee);
+
+            localStorage.setItem(
+                "lastLoginUser",
+                JSON.stringify({
+                    nickname: employee.nickname,
+                    avatar: employee.avatar,
+                    email: employee.email,
+                    desktop: _.get(employee, "preferences.desktop", null)
+                })
+            );
+
+            // Startup Apps Here
+            if (this.props.user.status === 0) this.props.appLaunch("user_center");
         });
+
         this.subscribeAndBind("allEmployeesBasicInfo", "employees");
         this.subscribeAndBind("allEmployeesAssign", "employees_assign", () => {
             this.updateAuth();
@@ -80,7 +100,8 @@ class VirtualDataLayer extends React.Component {
 mapStateToProps = state => {
     return {
         db: state.db,
-        user: state.user
+        user: state.user,
+        system: state.system
     };
 };
 

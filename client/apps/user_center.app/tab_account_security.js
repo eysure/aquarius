@@ -12,13 +12,7 @@ import PI from "../../components/panel_item";
 import clientConfig from "../../client_config";
 
 import { R } from "./";
-
-const pwdLen = /^.{8,}$/;
-const pwdUpper = /^(?=.*[A-Z]).{0,}$/;
-const pwdLower = /^(?=.*[a-z]).{0,}$/;
-const pwdDigit = /^(?=.*[0-9]).{0,}$/;
-const pwdSpecial = /^(?=.*[\\\~\`\!\@\#\$\%\^\&\*\(\)\+\=\_\-\{\}\[\]\|\:\;\"\'\?\/\<\>\,\.]).{0,}$/;
-const pwdNothingElse = /[^\d\w\\\~\`\!\@\#\$\%\^\&\*\(\)\+\=\_\-\{\}\[\]\|\:\;\"\'\?\/\<\>\,\.]/;
+import { passwordValidation } from "./password_util";
 
 class AccountSecurityTab extends React.Component {
     state = {
@@ -35,20 +29,9 @@ class AccountSecurityTab extends React.Component {
 
         if (e.target.name === "newPassword") {
             this.setState({
-                newPasswordValidated: this.passwordValidation(e.target.value)
+                newPasswordValidated: passwordValidation(e.target.value)
             });
         }
-    };
-
-    passwordValidation = password => {
-        let length = pwdLen.exec(password) ? true : false;
-        let upperCase = pwdUpper.exec(password) ? 1 : 0;
-        let lowerCase = pwdLower.exec(password) ? 1 : 0;
-        let digit = pwdDigit.exec(password) ? 1 : 0;
-        let special = pwdSpecial.exec(password) ? 1 : 0;
-        let noForbidden = pwdNothingElse.exec(password) ? false : true;
-
-        return length && upperCase + lowerCase + digit + special >= 2 && noForbidden;
     };
 
     handlePasswordChange = () => {
@@ -61,12 +44,6 @@ class AccountSecurityTab extends React.Component {
         if (newPassword !== repeatNewPassword) {
             this.props.throwMsg(R.Msg("MSG_NEW_PASSWORD_NOT_MATCH"));
             this.setState({ newPassword: "", repeatNewPassword: "" });
-            return;
-        }
-
-        // Demo only
-        if (clientConfig.demo) {
-            this.props.throwMsg(R.Msg("DEMO_CANT_CHANGE_PASSWORD"));
             return;
         }
 

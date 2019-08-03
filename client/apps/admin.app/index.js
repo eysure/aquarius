@@ -43,7 +43,7 @@ class Admin extends React.Component {
             case TAB_USER_MANAGER:
                 return <UserManager context={this} />;
             case TAB_SYSTEM_MANAGER:
-                return <SystemManager />;
+                return <SystemManager context={this} />;
             default:
                 return <div className="empty-page">Admin</div>;
         }
