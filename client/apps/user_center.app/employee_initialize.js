@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import { Meteor } from "meteor/meteor";
+
+import { throwMsg } from "../../actions";
 
 import _ from "lodash";
 
@@ -146,11 +149,11 @@ export class EmployeeInitialize extends Component {
             title: "Gender",
             type: "select",
             options: {
-                0: "Male",
-                1: "Female"
+                M: "Male",
+                F: "Female"
             },
             valid: {
-                $regex: /[0-1]{1}/
+                $regex: /[MF]{1}/
             }
         },
         mobile: {
@@ -790,7 +793,9 @@ const mapStateToProps = state => ({
     auth: state.auth
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = dispatch => {
+    return bindActionCreators({ throwMsg }, dispatch);
+};
 
 export default connect(
     mapStateToProps,

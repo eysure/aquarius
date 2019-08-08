@@ -3,7 +3,9 @@ import uuidv4 from "uuid/v4";
 import { Collection, oss } from "./resources";
 import { Accounts } from "meteor/accounts-base";
 import MailService from "./mail_service";
-import SimpleSchema from "simpl-schema";
+import Ajv from "ajv";
+
+const ajv = new Ajv();
 
 getEmailById = userId => {
     let user = Meteor.users.findOne({ _id: userId });
@@ -247,9 +249,6 @@ export function addUser(username, email) {
 
 export function employee_register(state) {
     if (!state) throw new Meteor.Error("PARM_EMPTY", "Parameters send to server are empty");
-
-    new SimpleSchema({
-        nickname: { type: String },
-        email2: { type: SimpleSchema.RegEx.EmailWithTLD }
-    }).validate(state);
+    console.log(state);
+    return "okay!";
 }
