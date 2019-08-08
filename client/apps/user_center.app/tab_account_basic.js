@@ -12,10 +12,10 @@ export class AccountBasicTab extends Component {
             <div className="window-content-inner">
                 <div className="panel-title">{R.Str("TAB_ACCOUNT_BASIC")}</div>
                 <div className="panel">
-                    <PI title={R.Str("ENG_FN")} value={this.props.user.fn_en} span={4} />
-                    <PI title={R.Str("ENG_MN")} value={this.props.user.mn_en} span={4} />
-                    <PI title={R.Str("ENG_LN")} value={this.props.user.ln_en} span={4} />
                     <PI title={R.Str("EMAIL")} value={this.props.user.email} />
+                    <PI title={R.Str("ENG_FN")} value={this.props.user.fname} span={4} />
+                    <PI title={R.Str("ENG_MN")} value={this.props.user.mname} span={4} />
+                    <PI title={R.Str("ENG_LN")} value={this.props.user.lname} span={4} />
                     <PI title={R.Str("NICKNAME")} value={this.props.user.nickname} />
                     <PI title={R.Str("MOBILE")} value={this.props.user.mobile} />
                     <PI title={R.Str("EXT")} value={this.props.user.ext} />

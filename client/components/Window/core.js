@@ -2,7 +2,6 @@
  * Aquarius UI Core
  */
 import React, { Component } from "react";
-import { isUndefined } from "util";
 
 export class Button extends Component {
     render() {
@@ -120,7 +119,7 @@ export class InputItem extends Component {
 }
 
 export class FieldItem extends Component {
-    fields = null;
+    schema = null;
     state = null;
     name = null;
     field = null;
@@ -159,6 +158,13 @@ export class FieldItem extends Component {
                 );
             }
             return this.state[name] === this.state[val];
+        } else if (key === "$!eq") {
+            if (this.state[val] === undefined) {
+                throw new Error(
+                    `Exception when calculate single condition. When compare state.${name} and state.${val}, state.${val} is not exist in the state, maybe a typo, or not set.`
+                );
+            }
+            return this.state[name] !== this.state[val];
         } else if (this.state[key] !== undefined) {
             if (val === "$valid") return this.calculateValid(key);
             else if (val === "$!valid") return !this.calculateValid(key);
@@ -174,15 +180,15 @@ export class FieldItem extends Component {
     };
 
     calculateValid = name => {
-        if (this.fields[name].valid === undefined) return true;
-        return this.calculateConditions(name, this.fields[name].valid);
+        if (this.schema[name].valid === undefined) return true;
+        return this.calculateConditions(name, this.schema[name].valid);
     };
 
     calculateDisable = name => {
         if (this.state.processing) return true;
-        if (this.fields[name].disabled === true) return true;
-        if (!this.fields[name].disabled) return false;
-        return this.calculateConditions(name, this.fields[name].disabled);
+        if (this.schema[name].disabled === true) return true;
+        if (!this.schema[name].disabled) return false;
+        return this.calculateConditions(name, this.schema[name].disabled);
     };
 
     onChange = e => {
@@ -215,17 +221,18 @@ export class FieldItem extends Component {
     render() {
         if (!this.props.name) throw new Error("Props: name is not set for this FieldItem");
         if (!this.props.context) throw new Error("Props: context is not set for this Field Item.");
+        if (!this.props.schema) throw new Error(`No shcema is provided for this Field Item: ${this.props.name}`);
 
-        this.fields = this.props.context.fields;
+        this.schema = this.props.schema;
         this.state = this.props.context.state;
         this.name = this.props.name;
-        this.field = this.fields[this.name];
+        this.field = this.schema[this.name];
 
-        let { fields, state, name, field } = this;
+        let { schema, state, name, field } = this;
 
-        if (!fields) throw new Error(`This FieldItem ${name} has no fields set. Check the parent class and set the fields.`);
+        if (!schema) throw new Error(`This FieldItem ${name} has no schema set. Check the parent class and set the schema.`);
         if (!state) throw new Error(`State of this FieldItem "${name}" is not set.`);
-        if (!field) throw new Error(`Cannot find field in fields of parent of this FieldItem "${name}". Maybe a typo in name or fields, or not set.`);
+        if (!field) throw new Error(`Cannot find field in schema of parent of this FieldItem "${name}". Maybe a typo in name or schema, or not set.`);
 
         let disabled = this.calculateDisable(name);
         let valid = this.calculateValid(name);
@@ -307,4 +314,21 @@ export class InputGroup extends Component {
     render() {
         return <div className="aqui-input-group hbs h-full">{this.props.children}</div>;
     }
+}
+
+export function schemaDataPack(schema, state, fields = null) {
+    let packedData = {};
+    if (fields) {
+        if (!fields instanceof Array) throw new Error("fields should be an array");
+        for (let field of fields) {
+            packedData[field] = state[field];
+        }
+    } else {
+        for (let field in schema) {
+            if (state[field] && !schema[field].noUpload) {
+                packedData[field] = state[field];
+            }
+        }
+    }
+    return packedData;
 }

@@ -5,6 +5,8 @@ import { Accounts } from "meteor/accounts-base";
 import MailService from "./mail_service";
 import Ajv from "ajv";
 
+import EmployeeInitializationSchema from "../public/schemas/employee_initialization.schema.json";
+
 const ajv = new Ajv();
 
 getEmailById = userId => {
@@ -247,8 +249,41 @@ export function addUser(username, email) {
     );
 }
 
-export function employee_register(state) {
-    if (!state) throw new Meteor.Error("PARM_EMPTY", "Parameters send to server are empty");
-    console.log(state);
-    return "okay!";
+export async function employee_register(data) {
+    let email = getEmailById(this.userId);
+    let employee = Collection("employees").findOne({ email });
+
+    if (!employee) {
+        return {
+            status: 400,
+            err: "Can't find this employee"
+        };
+    }
+
+    if (employee.status !== 0) {
+        return {
+            status: 400,
+            err: "This Employee's status is not 0"
+        };
+    }
+
+    const valid = ajv.validate(EmployeeInitializationSchema, data);
+
+    if (!valid) {
+        return {
+            status: 400,
+            err: ajv.errorsText()
+        };
+    } else {
+        Object.assign(employee, data);
+        employee.status = 10;
+        let err = null;
+        await Collection("employees").update({ email }, employee, error => {
+            err = error;
+        });
+        return {
+            status: err ? 400 : 200,
+            err
+        };
+    }
 }

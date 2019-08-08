@@ -108,7 +108,7 @@ class UserCenter extends Component {
     };
 
     renderUserCenter = () => {
-        if (this.props.user.status > 0) {
+        if (this.props.user.status === 1) {
             return (
                 <Window key="Main" _key="Main" width={960} height={720} appKey={this.props.appKey} theme="light" onClose={e => this.setState({ open: false })}>
                     <div className="window-sidebar-container">
@@ -132,6 +132,7 @@ class UserCenter extends Component {
                                     }}
                                 >
                                     <button
+                                        className="aqui-btn"
                                         onClick={() => {
                                             Meteor.logout(error => this.props.logout(error));
                                         }}
@@ -146,8 +147,11 @@ class UserCenter extends Component {
                     </div>
                 </Window>
             );
-        } else if (this.props.user.status == 0) {
+        } else if (this.props.user.status === 0 || this.props.user.status === 10) {
             return <EmployeeInitialize context={this} />;
+        } else {
+            console.error("Employee Status invalid");
+            return null;
         }
     };
 

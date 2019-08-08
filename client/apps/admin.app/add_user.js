@@ -17,6 +17,34 @@ export class AddUser extends Component {
         validate: false
     };
 
+    schema = {
+        username: {
+            title: R.Str("USERNAME"),
+            valid: {
+                $regex: /.{5,}/
+            },
+            placeholder: R.Str("USERNAME")
+        },
+        email: {
+            title: R.Str("EMAIL"),
+            valid: {
+                $regex: /\S+@\S+\.\S+/
+            },
+            placeholder: R.Str("EMAIL")
+        },
+        create: {
+            type: "button",
+            title: R.Str("CREATE"),
+            disabled: {
+                $or: {
+                    username: "$!valid",
+                    email: "$!valid"
+                }
+            },
+            onClick: e => this.handleSubmit(e)
+        }
+    };
+
     handleSubmit = e => {
         if (!checkAuth("user_admin", R.Str("ADD_USER"), this.props.context)) return;
 
@@ -25,17 +53,12 @@ export class AddUser extends Component {
         this.setState({ processing: true });
         Meteor.call("addUser", username, email, (err, res) => {
             this.setState({ processing: false });
-            if (err || res.err) {
-                this.props.context.props.throwMsg(R.Msg("ERR", { err: err || res.err }));
+            if (err) {
+                this.props.context.props.throwMsg(R.Msg("ERR", { err }));
             } else {
                 this.props.context.props.throwMsg(R.Msg("USER_ADDED"));
             }
         });
-    };
-
-    handleChange = e => {
-        let valid = this.state.username.length > 0 && this.state.email.length > 0 && /\S+@\S+\.\S+/.test(this.state.email);
-        this.setState({ validate: valid });
     };
 
     render() {
@@ -52,15 +75,9 @@ export class AddUser extends Component {
                 <div className="window-content-inner handle">
                     <h1>{R.Str("CREATE_NEW_USER")}</h1>
 
-                    <p className="aqui-input-title">{R.Str("USERNAME")}</p>
-                    <AQUI.Input disabled={this.state.processing} placeholder="Username" binding={this} name="username" onChange={this.handleChange} />
-
-                    <p className="aqui-input-title">{R.Str("EMAIL")}</p>
-                    <AQUI.Input disabled={this.state.processing} placeholder="Email" binding={this} name="email" onChange={this.handleChange} />
-
-                    <AQUI.Button disabled={!this.state.validate || this.state.processing} onClick={this.handleSubmit}>
-                        {R.Str("CREATE")}
-                    </AQUI.Button>
+                    <AQUI.FieldItem context={this} schema={this.schema} name="username" />
+                    <AQUI.FieldItem context={this} schema={this.schema} name="email" />
+                    <AQUI.FieldItem context={this} schema={this.schema} name="create" />
                 </div>
             </Window>
         );

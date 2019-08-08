@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import * as UI from "@material-ui/core";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { appClose } from "../../actions";
@@ -95,9 +94,9 @@ class Welcome extends Component {
             <div style={{ height: "100%", padding: "32px 64px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
                 <span style={{ fontSize: "8rem" }}>👨🏻‍💻</span>
                 <h1 style={{ fontSize: "2rem" }}>And more cool features are comming soon!</h1>
-                <UI.Button variant="outlined" color="primary" style={{ width: "50%", margin: "32px" }} onClick={e => this.props.appClose(this.props.appKey)}>
+                <button className="aqui-btn" style={{ width: "50%", margin: "32px" }} onClick={e => this.props.appClose(this.props.appKey)}>
                     Enjoy
-                </UI.Button>
+                </button>
                 <p style={{ fontSize: "1rem", fontWeight: 300, width: "80%", position: "absolute", bottom: "32px", color: "grey" }}>
                     Please understand that this system is still developing and maintaining. Bugs and crashes may occur during the demo. If you have any advice
                     or feekback, feel free to open an issue, or send me an email at eysure@gmail.com. Thanks for all your cooperation.

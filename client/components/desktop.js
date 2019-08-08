@@ -68,13 +68,7 @@ class Desktop extends Component {
                 title: R.Str("SEARCH"),
                 onClick: () => {
                     this.props.launchPadControl(true);
-                },
-                submenu: [
-                    { title: "test" },
-                    { title: "test 2" },
-                    { title: "test 3", submenu: [{ title: "test 4" }] },
-                    { title: "test 5", submenu: [{ title: "test 6" }] }
-                ]
+                }
             },
             { divider: true }
         ];
@@ -85,7 +79,7 @@ class Desktop extends Component {
         contextMenu.push({ divider: true });
 
         contextMenu.push({
-            title: R.Str("LOGOUT_WITH_NAME", { user: this.props.user.fn_en }),
+            title: R.Str("LOGOUT_WITH_NAME", { user: this.props.user.nickname }),
             extra: "⌘⎋",
             onClick: () => Meteor.logout(error => this.props.logout(error))
         });

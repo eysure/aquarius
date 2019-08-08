@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Meteor } from "meteor/meteor";
 
-import { throwMsg } from "../../actions";
+import { throwMsg, appClose } from "../../actions";
 
 import _ from "lodash";
 
@@ -17,9 +17,16 @@ import { Accounts } from "meteor/accounts-base";
 
 import PI from "../../components/panel_item";
 
+import EmployeeInitializeSchema from "../../../public/schemas/employee_initialization.schema.json";
+
+import Ajv from "ajv";
+import { translateJSONSchemaError } from "../../utils";
+
+const ajv = new Ajv();
+
 export class EmployeeInitialize extends Component {
     state = {
-        page: 4,
+        page: 2,
 
         pwd_validate: false,
         old_pwd: "",
@@ -29,6 +36,7 @@ export class EmployeeInitialize extends Component {
         processing: false,
 
         info_validate1: false,
+        email: "",
         nickname: "",
         email2: "",
         fname: "",
@@ -41,7 +49,7 @@ export class EmployeeInitialize extends Component {
         dob: "",
 
         info_validate2: false,
-        id_type: 0,
+        id_type: "0",
         id_number: "",
         reg_type: "",
         addr_reg: "",
@@ -65,7 +73,8 @@ export class EmployeeInitialize extends Component {
         no_le: false
     };
 
-    fields = {
+    // Front-end schema, aka Semantic Schema
+    schema = {
         old_pwd: {
             title: "Old Password",
             type: "password",
@@ -258,7 +267,8 @@ export class EmployeeInitialize extends Component {
         },
         no_edu: {
             title: "I don't have any educational degree",
-            type: "checkbox"
+            type: "checkbox",
+            noUpload: true
         },
         edu_institution: {
             title: "Education Institution",
@@ -324,7 +334,8 @@ export class EmployeeInitialize extends Component {
         },
         no_le: {
             title: "I haven't been employed before",
-            type: "checkbox"
+            type: "checkbox",
+            noUpload: true
         },
         le_name: {
             title: "Last Employer Name",
@@ -393,7 +404,8 @@ export class EmployeeInitialize extends Component {
             onClick: e => {
                 e.preventDefault();
                 this.setState({ page: this.state.page + 1 });
-            }
+            },
+            noUpload: true
         },
         info_validate2: {
             title: "Next Page",
@@ -414,7 +426,8 @@ export class EmployeeInitialize extends Component {
             onClick: e => {
                 e.preventDefault();
                 this.setState({ page: this.state.page + 1 });
-            }
+            },
+            noUpload: true
         },
         info_validate3: {
             title: "Next Page",
@@ -434,7 +447,8 @@ export class EmployeeInitialize extends Component {
             onClick: e => {
                 e.preventDefault();
                 this.setState({ page: this.state.page + 1 });
-            }
+            },
+            noUpload: true
         },
         previous_page: {
             title: "Previous Page",
@@ -442,14 +456,16 @@ export class EmployeeInitialize extends Component {
             onClick: e => {
                 e.preventDefault();
                 this.setState({ page: this.state.page - 1 });
-            }
+            },
+            noUpload: true
         },
         submit: {
             title: "Submit",
             type: "button",
             onClick: e => {
                 this.handleInfoSubmit();
-            }
+            },
+            noUpload: true
         }
     };
 
@@ -485,13 +501,40 @@ export class EmployeeInitialize extends Component {
     };
 
     handleInfoSubmit = () => {
+        let packedData = AQUI.schemaDataPack(this.schema, this.state);
+
+        // Front-end validation
+        const validationResult = ajv.validate(EmployeeInitializeSchema, packedData);
+        if (!validationResult) {
+            this.props.throwMsg(
+                R.Msg("EMPLOYEE_REGISTER_ERR", {
+                    error: ajv.errorsText()
+                })
+            );
+            return;
+        }
+
         this.setState({ processing: true });
-        Meteor.call("employee_register", this.state, (error, res) => {
+
+        // Server-side validation
+        Meteor.call("employee_register", packedData, (error, res) => {
             this.setState({ processing: false });
             if (error) this.props.throwMsg(R.Msg("EMPLOYEE_REGISTER_ERR", { error }));
-            else {
+            else if (res && res.status === 200) {
                 this.props.throwMsg(R.Msg("EMPLOYEE_REGISTER_SUCCESSFUL"));
                 this.setState({ page: this.state.page + 1 });
+            } else if (res && res.status === 400) {
+                this.props.throwMsg(
+                    R.Msg("EMPLOYEE_REGISTER_ERR", {
+                        error: res.err
+                    })
+                );
+            } else {
+                this.props.throwMsg(
+                    R.Msg("EMPLOYEE_REGISTER_ERR", {
+                        error: res
+                    })
+                );
             }
         });
     };
@@ -545,13 +588,13 @@ export class EmployeeInitialize extends Component {
                         </ul>
 
                         <div className="vsc h-full" style={{ maxWidth: "480px" }}>
-                            <AQUI.FieldItem context={this} name="old_pwd" />
-                            <AQUI.FieldItem context={this} name="pwd" />
-                            <AQUI.FieldItem context={this} name="pwd2" />
+                            <AQUI.FieldItem context={this} schema={this.schema} name="old_pwd" />
+                            <AQUI.FieldItem context={this} schema={this.schema} name="pwd" />
+                            <AQUI.FieldItem context={this} schema={this.schema} name="pwd2" />
                         </div>
 
                         <div className="hcc h-full">
-                            <AQUI.FieldItem context={this} name="pwd_validate" />
+                            <AQUI.FieldItem context={this} schema={this.schema} name="pwd_validate" />
                         </div>
                     </div>
                 );
@@ -567,30 +610,30 @@ export class EmployeeInitialize extends Component {
 
                             <div id="page-2" className="vbc h-full">
                                 <AQUI.InputGroup>
-                                    <AQUI.FieldItem context={this} name="email" />
-                                    <AQUI.FieldItem context={this} name="email2" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="email" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="email2" />
                                 </AQUI.InputGroup>
                                 <AQUI.InputGroup>
-                                    <AQUI.FieldItem context={this} name="nickname" width={"50%"} />
-                                    <AQUI.FieldItem context={this} name="fname" width={"16.67%"} />
-                                    <AQUI.FieldItem context={this} name="mname" width={"16.67%"} />
-                                    <AQUI.FieldItem context={this} name="lname" width={"16.67%"} />
-                                </AQUI.InputGroup>
-
-                                <AQUI.InputGroup>
-                                    <AQUI.FieldItem context={this} name="gender" />
-                                    <AQUI.FieldItem context={this} name="ethnic" />
-                                    <AQUI.FieldItem context={this} name="dob" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="nickname" width={"50%"} />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="fname" width={"16.67%"} />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="mname" width={"16.67%"} />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="lname" width={"16.67%"} />
                                 </AQUI.InputGroup>
 
                                 <AQUI.InputGroup>
-                                    <AQUI.FieldItem context={this} name="mobile" />
-                                    <AQUI.FieldItem context={this} name="mobile2" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="gender" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="ethnic" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="dob" />
+                                </AQUI.InputGroup>
+
+                                <AQUI.InputGroup>
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="mobile" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="mobile2" />
                                 </AQUI.InputGroup>
                             </div>
 
                             <div className="hec h-full">
-                                <AQUI.FieldItem context={this} name="info_validate1" />
+                                <AQUI.FieldItem context={this} schema={this.schema} name="info_validate1" />
                             </div>
                         </div>
                     </div>
@@ -607,33 +650,33 @@ export class EmployeeInitialize extends Component {
 
                             <div id="page-3" className="vbc h-full">
                                 <AQUI.InputGroup>
-                                    <AQUI.FieldItem context={this} name="id_type" width={"50%"} />
-                                    <AQUI.FieldItem context={this} name="id_number" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="id_type" width={"50%"} />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="id_number" />
                                 </AQUI.InputGroup>
 
                                 <AQUI.InputGroup>
-                                    <AQUI.FieldItem context={this} name="reg_type" />
-                                    <AQUI.FieldItem context={this} name="marital" />
-                                    <AQUI.FieldItem context={this} name="political" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="reg_type" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="marital" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="political" />
                                 </AQUI.InputGroup>
 
                                 <AQUI.InputGroup>
-                                    <AQUI.FieldItem context={this} name="addr_reg" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="addr_reg" />
                                 </AQUI.InputGroup>
 
                                 <AQUI.InputGroup>
-                                    <AQUI.FieldItem context={this} name="addr_live" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="addr_live" />
                                 </AQUI.InputGroup>
 
                                 <AQUI.InputGroup>
-                                    <AQUI.FieldItem context={this} name="emg_name" width={"50%"} />
-                                    <AQUI.FieldItem context={this} name="emg_number" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="emg_name" width={"50%"} />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="emg_number" />
                                 </AQUI.InputGroup>
                             </div>
 
                             <div className="hbc h-full">
-                                <AQUI.FieldItem context={this} name="previous_page" />
-                                <AQUI.FieldItem context={this} name="info_validate2" />
+                                <AQUI.FieldItem context={this} schema={this.schema} name="previous_page" />
+                                <AQUI.FieldItem context={this} schema={this.schema} name="info_validate2" />
                             </div>
                         </div>
                     </div>
@@ -650,39 +693,39 @@ export class EmployeeInitialize extends Component {
 
                             <div id="page-4" className="vbc h-full">
                                 <AQUI.InputGroup>
-                                    <AQUI.FieldItem context={this} name="no_edu" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="no_edu" />
                                 </AQUI.InputGroup>
 
                                 <AQUI.InputGroup>
-                                    <AQUI.FieldItem context={this} name="edu_institution" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="edu_institution" />
                                 </AQUI.InputGroup>
 
                                 <AQUI.InputGroup>
-                                    <AQUI.FieldItem context={this} name="edu_major" />
-                                    <AQUI.FieldItem context={this} name="edu_degree" />
-                                    <AQUI.FieldItem context={this} name="edu_graduate_time" type="date" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="edu_major" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="edu_degree" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="edu_graduate_time" type="date" />
                                 </AQUI.InputGroup>
 
                                 <hr />
 
                                 <AQUI.InputGroup>
-                                    <AQUI.FieldItem context={this} name="no_le" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="no_le" />
                                 </AQUI.InputGroup>
 
                                 <AQUI.InputGroup>
-                                    <AQUI.FieldItem context={this} name="le_name" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="le_name" />
                                 </AQUI.InputGroup>
 
                                 <AQUI.InputGroup>
-                                    <AQUI.FieldItem context={this} name="le_dept_job" />
-                                    <AQUI.FieldItem context={this} name="le_time_from" type="date" />
-                                    <AQUI.FieldItem context={this} name="le_time_to" type="date" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="le_dept_job" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="le_time_from" type="date" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="le_time_to" type="date" />
                                 </AQUI.InputGroup>
                             </div>
 
                             <AQUI.InputGroup>
-                                <AQUI.FieldItem context={this} name="previous_page" />
-                                <AQUI.FieldItem context={this} name="info_validate3" />
+                                <AQUI.FieldItem context={this} schema={this.schema} name="previous_page" />
+                                <AQUI.FieldItem context={this} schema={this.schema} name="info_validate3" />
                             </AQUI.InputGroup>
                         </div>
                     </div>
@@ -702,10 +745,30 @@ export class EmployeeInitialize extends Component {
                             <div id="page-5" className="vbc v-full" style={{ width: "75%", overflow: "scroll" }}>
                                 {this.renderReview()}
                                 <AQUI.InputGroup>
-                                    <AQUI.FieldItem context={this} name="previous_page" />
-                                    <AQUI.FieldItem context={this} name="submit" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="previous_page" />
+                                    <AQUI.FieldItem context={this} schema={this.schema} name="submit" />
                                 </AQUI.InputGroup>
                             </div>
+                        </div>
+                    </div>
+                );
+            }
+            case 6: {
+                return (
+                    <div className="window-content-inner handle vbc v-full h-full">
+                        <div className="vcc v-full">
+                            <h1 style={{ fontSize: "3rem", marginBottom: 8 }}>Register Complete</h1>
+                            <p>Admins will validate your data. Come back to User Center later.</p>
+                        </div>
+                        <div>
+                            <button
+                                className="aqui-btn"
+                                onClick={() => {
+                                    this.props.appClose("user_center");
+                                }}
+                            >
+                                Close
+                            </button>
                         </div>
                     </div>
                 );
@@ -751,14 +814,14 @@ export class EmployeeInitialize extends Component {
                 renderedFields.push(
                     <PI
                         key={name}
-                        title={this.fields[name].title}
-                        value={this.fields[name].type === "select" ? this.fields[name].options[this.state[name]] : this.state[name]}
+                        title={this.schema[name].title}
+                        value={this.schema[name].type === "select" ? this.schema[name].options[this.state[name]] : this.state[name]}
                     />
                 );
             }
         }
 
-        return <div className="panel">{renderedFields}</div>;
+        return <div className="panel unhandle">{renderedFields}</div>;
     };
 
     render() {
@@ -785,6 +848,9 @@ export class EmployeeInitialize extends Component {
         for (let field in this.props.user) {
             this.setState({ [field]: this.props.user[field] });
         }
+        if (this.props.user.status === 10) {
+            this.setState({ page: 6 });
+        }
     }
 }
 
@@ -794,7 +860,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => {
-    return bindActionCreators({ throwMsg }, dispatch);
+    return bindActionCreators({ throwMsg, appClose }, dispatch);
 };
 
 export default connect(

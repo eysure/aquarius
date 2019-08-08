@@ -14,8 +14,6 @@ async function listBuckets(client) {
     }
 }
 
-let MS = null;
-
 /**
  * System Check
  */
@@ -84,9 +82,9 @@ Meteor.publish("myEmployeeInfo", function() {
                 nickname: 1,
                 email: 1,
                 email2: 1,
-                name_cn: 1,
-                fn_en: 1,
-                ln_en: 1,
+                fname: 1,
+                mname: 1,
+                lname: 1,
                 mobile: 1,
                 mobile2: 1,
                 ext: 1,

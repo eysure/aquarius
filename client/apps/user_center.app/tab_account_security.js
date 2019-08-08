@@ -3,57 +3,95 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import _ from "lodash";
 
-import * as UI from "@material-ui/core";
+import * as AQUI from "../../components/Window/core";
 
-import { Meteor } from "meteor/meteor";
 import { Accounts } from "meteor/accounts-base";
 import { throwMsg } from "../../actions";
-import PI from "../../components/panel_item";
-import clientConfig from "../../client_config";
 
 import { R } from "./";
 import { passwordValidation } from "./password_util";
+import { checkAuth } from "../../utils";
 
 class AccountSecurityTab extends React.Component {
     state = {
-        currentPassword: "",
-        newPassword: "",
-        repeatNewPassword: "",
-        newPasswordVisibility: false,
-        newPasswordValidated: false
+        old_pwd: "",
+        pwd: "",
+        pwd2: "",
+        processing: false,
+        pwd_validate: false
     };
 
-    handleChange = e => {
-        this.setState({ [e.target.name]: e.target.value });
-        e.preventDefault();
-
-        if (e.target.name === "newPassword") {
-            this.setState({
-                newPasswordValidated: passwordValidation(e.target.value)
-            });
-        }
-    };
-
-    handlePasswordChange = () => {
-        let { currentPassword, newPassword, repeatNewPassword } = this.state;
-        if (!currentPassword || !newPassword || !repeatNewPassword) {
-            this.props.throwMsg(R.Msg("MSG_FILL_ALL_FIELDS"));
-            return;
-        }
-
-        if (newPassword !== repeatNewPassword) {
-            this.props.throwMsg(R.Msg("MSG_NEW_PASSWORD_NOT_MATCH"));
-            this.setState({ newPassword: "", repeatNewPassword: "" });
-            return;
-        }
-
-        Accounts.changePassword(currentPassword, newPassword, error => {
-            if (error) {
-                this.props.throwMsg(R.Msg("CHANGE_PASSWORD_FAILED", { error: error.message }));
-                return;
+    schema = {
+        old_pwd: {
+            title: "Old Password",
+            type: "password",
+            valid: {
+                $regex: /.+/
             }
-            Meteor.logout();
-            this.props.throwMsg(R.Msg("CHANGE_PASSWORD_SUCCESSFUL"));
+        },
+        pwd: {
+            title: "New Password",
+            type: "password",
+            valid: {
+                $func: val => passwordValidation(val)
+            }
+        },
+        pwd2: {
+            title: "Repeat New Password",
+            type: "password",
+            valid: {
+                $eq: "pwd"
+            }
+        },
+        pwd_validate: {
+            title: "Set",
+            type: "button",
+            disabled: {
+                $or: {
+                    old_pwd: "$!valid",
+                    pwd: "$!valid",
+                    pwd2: "$!valid"
+                }
+            },
+            onClick: () => this.handlePasswordSubmit()
+        }
+    };
+
+    handlePasswordSubmit = () => {
+        if ((!checkAuth("change_password"), R.Str("CHANGE_PASSWORD"), this)) return;
+
+        let { old_pwd, pwd, pwd2 } = this.state;
+        this.setState({ processing: true });
+
+        if (!old_pwd || !pwd || !pwd2 || pwd !== pwd2) {
+            this.setState({ processing: false });
+            this.props.throwMsg(R.Msg("NEW_PASSWORD_NOT_MATCH"));
+            return;
+        }
+
+        if (!passwordValidation(pwd)) {
+            this.setState({ processing: false });
+            this.props.throwMsg(R.Msg("NEW_PASSWORD_NOT_VALID"));
+            return;
+        }
+
+        Accounts.changePassword(old_pwd, pwd, err => {
+            this.setState({ processing: false });
+            if (err) {
+                this.props.throwMsg(
+                    R.Msg("CHANGE_PASSWORD_FAILED", {
+                        error: err.reason
+                    })
+                );
+            } else {
+                this.props.throwMsg(R.Msg("CHANGE_PASSWORD_SUCCESSFUL"));
+                this.setState({
+                    old_pwd: "",
+                    pwd: "",
+                    pwd2: "",
+                    pwd_validate: false
+                });
+            }
         });
     };
 
@@ -61,50 +99,33 @@ class AccountSecurityTab extends React.Component {
         return (
             <div className="window-content-inner">
                 <div className="panel-title">{R.Str("CHANGE_PASSWORD")}</div>
-
-                <div className="panel">
-                    <PI
-                        title={R.Str("CURRENT_PASSWORD")}
-                        value={this.state.currentPassword}
-                        onChange={this.handleChange}
-                        input
-                        name="currentPassword"
-                        type="password"
-                    />
-                    <PI title={R.Str("NEW_PASSWORD")} value={this.state.newPassword} onChange={this.handleChange} input name="newPassword" type="password" />
-                    <PI
-                        title={R.Str("REPEAT_NEW_PASSWORD")}
-                        value={this.state.repeatNewPassword}
-                        onChange={this.handleChange}
-                        input
-                        name="repeatNewPassword"
-                        type="password"
-                    />
-                </div>
                 <div className="panel-title">{R.Str("PASSWORD_REQUIREMENT")}</div>
-                <div className="panel-title">
-                    <ul>
-                        <li>{R.Str("PASSWORD_REQUIREMENT_1")}</li>
-                        <li>{R.Str("PASSWORD_REQUIREMENT_2")}</li>
-                        <ul>
-                            <li>{R.Str("PASSWORD_REQUIREMENT_3")}</li>
-                            <li>{R.Str("PASSWORD_REQUIREMENT_4")}</li>
-                            <li>{R.Str("PASSWORD_REQUIREMENT_5")}</li>
-                            <li>{R.Str("PASSWORD_REQUIREMENT_6")}</li>
-                        </ul>
-                        <li>{R.Str("PASSWORD_REQUIREMENT_7")}</li>
-                    </ul>
-                </div>
-
-                <UI.Button
-                    color="primary"
-                    disabled={!(this.state.currentPassword && this.state.newPasswordValidated && this.state.newPassword === this.state.repeatNewPassword)}
-                    variant="outlined"
-                    style={{ width: "100%" }}
-                    onClick={this.handlePasswordChange}
+                <ul
+                    style={{
+                        background: "rgba(180,180,180,0.5)",
+                        borderRadius: "12px",
+                        padding: "16px",
+                        paddingLeft: "40px",
+                        color: "#444"
+                    }}
                 >
-                    {R.Str("SUBMIT")}
-                </UI.Button>
+                    <li>{R.Str("PASSWORD_REQUIREMENT_1")}</li>
+                    <li>{R.Str("PASSWORD_REQUIREMENT_2")}</li>
+                    <ul>
+                        <li>{R.Str("PASSWORD_REQUIREMENT_3")}</li>
+                        <li>{R.Str("PASSWORD_REQUIREMENT_4")}</li>
+                        <li>{R.Str("PASSWORD_REQUIREMENT_5")}</li>
+                        <li>{R.Str("PASSWORD_REQUIREMENT_6")}</li>
+                    </ul>
+                    <li>{R.Str("PASSWORD_REQUIREMENT_7")}</li>
+                </ul>
+
+                <div className="vsc h-full">
+                    <AQUI.FieldItem context={this} schema={this.schema} name="old_pwd" />
+                    <AQUI.FieldItem context={this} schema={this.schema} name="pwd" />
+                    <AQUI.FieldItem context={this} schema={this.schema} name="pwd2" />
+                    <AQUI.FieldItem context={this} schema={this.schema} name="pwd_validate" />
+                </div>
             </div>
         );
     }
@@ -116,6 +137,7 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state) {
     return {
+        auth: state.auth,
         user: state.user
     };
 }

@@ -113,6 +113,12 @@
         "le_time_to": {
             "type": "string",
             "format": "date"
+        },
+        "no_le": {
+            "type": "boolean"
+        },
+        "no_edu": {
+            "type": "boolean"
         }
     },
     "required": [

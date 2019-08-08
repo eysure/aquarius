@@ -34,6 +34,8 @@ export default {
     },
     EMPLOYEE_REGISTER_ERR: {
         title: ["Register Failed", "信息注册失败"],
-        content: "${error}"
+        content: "${error}",
+        class: 5,
+        persist: true
     }
 };

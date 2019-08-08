@@ -570,6 +570,8 @@ form a {
     display: flex;
     align-items: center;
     grid-column: span 12;
+    user-select: none;
+    -webkit-user-select: none;
 }
 .panel-item:first-child {
     border-top-left-radius: 6px;
@@ -587,7 +589,7 @@ form a {
 }
 .panel-item-title {
     position: absolute;
-    user-select: none;
+
     width: calc(100% - 24px);
     padding: 12px;
     background: none;
@@ -600,7 +602,8 @@ form a {
 }
 .panel-item-value {
     position: absolute;
-    user-select: all;
+    user-select: text;
+    -webkit-user-select: text;
     width: calc(100% - 24px);
     padding: 12px;
     background: none;
@@ -613,10 +616,6 @@ form a {
 }
 .panel-item.button {
     transition: 300ms all;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
     pointer-events: all;
     cursor: pointer;
 }
@@ -625,10 +624,6 @@ form a {
 }
 .panel-item i {
     font-size: 1rem;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
 }
 
 .app-template-fill {
