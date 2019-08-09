@@ -994,6 +994,7 @@ tbody tr.active,
 tbody tr:active {
     background: #0058dd;
 }
+tbody tr.active td,
 tbody tr:active td {
     color: white;
 }

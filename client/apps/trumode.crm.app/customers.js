@@ -4,7 +4,12 @@ import { bindActionCreators } from "redux";
 import * as AQUI from "../../components/Window/core";
 import { R } from "./index";
 
+import CustomerDetail from "./customer_detail";
+
 class Customers extends Component {
+    state = {
+        renderedCustomerDetails: []
+    };
     render() {
         return (
             <div className="h-full v-full">
@@ -24,7 +29,7 @@ class Customers extends Component {
                             console.log("rowClick", row);
                         }}
                         rowDoubleClick={(e, row) => {
-                            console.log("rowDoubleClick", row);
+                            this.setState({ renderedCustomerDetails: [...this.state.renderedCustomerDetails, row] });
                         }}
                         rowContextMenu={(e, row) => {
                             e.preventDefault();
@@ -32,9 +37,29 @@ class Customers extends Component {
                         }}
                     />
                 </div>
+                {this.renderCustomerDetails()}
             </div>
         );
     }
+
+    renderCustomerDetails = () => {
+        let windows = [];
+        for (let row of this.state.renderedCustomerDetails) {
+            windows.push(
+                <CustomerDetail
+                    key={row._id.toString()}
+                    context={this.props.context}
+                    customer={row}
+                    onClose={e => {
+                        let customers = this.state.renderedCustomerDetails;
+                        customers.splice(customers.indexOf(row), 1);
+                        this.setState({ renderedCustomerDetails: customers });
+                    }}
+                />
+            );
+        }
+        return windows;
+    };
 
     componentDidMount() {
         document.getElementsByTagName("table")[0].addEventListener("scroll", function() {

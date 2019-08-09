@@ -42,7 +42,7 @@ class CustomerRelationshipManager extends Component {
     renderContent = () => {
         switch (this.state.selected) {
             case TAB_CUSTOMERS:
-                return <Customers />;
+                return <Customers context={this} />;
             case TAB_PROVIDERS:
                 return <div className="empty-page">PROVIDERS</div>;
             default:

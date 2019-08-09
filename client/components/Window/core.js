@@ -441,7 +441,8 @@ export class Table extends Component {
         headContextMenu: false,
         contextMenuX: 0,
         contextMenuY: 0,
-        autoWidths: null
+        autoWidths: null,
+        selected: []
     };
 
     tableRef = React.createRef();
@@ -534,8 +535,18 @@ export class Table extends Component {
             }
             renderedRows.push(
                 <tr
+                    className={this.state.selected.includes(row) ? "active" : ""}
                     key={rowId++}
-                    onClick={e => this.props.rowClick && this.props.rowClick(e, row)}
+                    onMouseDown={e => {
+                        this.setState({ selected: [row] });
+                        // TODO: Multi-select
+                    }}
+                    onBlur={e => {
+                        this.setState({ select: [] });
+                    }}
+                    onClick={e => {
+                        this.props.rowClick && this.props.rowClick(e, row);
+                    }}
                     onDoubleClick={e => this.props.rowDoubleClick && this.props.rowDoubleClick(e, row)}
                     onContextMenu={e => this.props.rowContextMenu && this.props.rowContextMenu(e, row)}
                 >
