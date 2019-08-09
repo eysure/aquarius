@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import PI from "../../components/panel_item";
+import * as AQUI from "../../components/Window/core";
 
 import { R } from "./";
 
@@ -16,7 +16,7 @@ export class UserManager extends Component {
             <div className="window-content-inner">
                 <div className="panel-title">{R.Str("ADD_USER")}</div>
                 <div className="panel">
-                    <PI title={R.Str("ADD_USER")} onClick={() => this.setState({ openNewUserWindow: true })} />
+                    <AQUI.PanelItem title={R.Str("ADD_USER")} onClick={() => this.setState({ openNewUserWindow: true })} />
                 </div>
                 {this.renderNewUserWindow()}
             </div>

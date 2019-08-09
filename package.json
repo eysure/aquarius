@@ -33,6 +33,7 @@
         "react-swipeable-views": "^0.13.1",
         "redux": "^4.0.1",
         "redux-promise": "^0.6.0",
+        "sortablejs": "^1.10.0-rc3",
         "terminal-in-react": "^4.3.0",
         "utf-8-validate": "^5.0.2",
         "uuid": "^3.3.2"

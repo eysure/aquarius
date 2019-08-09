@@ -121,7 +121,7 @@ class MainFrame extends Component {
                         onClick: () => location.reload()
                     },
                     {
-                        title: R.Str("LOGOUT_WITH_NAME", { user: this.props.user.fn_en }),
+                        title: R.Str("LOGOUT_WITH_NAME", { user: this.props.user.nickname }),
                         extra: "⌘⎋",
                         onClick: () => Meteor.logout(error => this.props.logout(error))
                     }

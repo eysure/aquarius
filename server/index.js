@@ -145,6 +145,11 @@ Meteor.publish("allEmployeesAssign", function() {
     return Collection("employees_assign").find({ time_end: { $exists: false } });
 });
 
+Meteor.publish("allCustomers", function() {
+    if (!this.userId) return null;
+    return Collection("customers").find();
+});
+
 // Account log
 Accounts.config({
     loginExpirationInDays: 1,

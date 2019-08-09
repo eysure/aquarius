@@ -15,8 +15,6 @@ import Window, { WINDOW_PRIORITY_HIGH } from "../../components/Window";
 import { passwordValidation } from "./password_util";
 import { Accounts } from "meteor/accounts-base";
 
-import PI from "../../components/panel_item";
-
 import EmployeeInitializeSchema from "../../../public/schemas/employee_initialization.schema.json";
 
 import Ajv from "ajv";
@@ -812,7 +810,7 @@ export class EmployeeInitialize extends Component {
         for (let name of reviewFields) {
             if (this.state[name]) {
                 renderedFields.push(
-                    <PI
+                    <AQUI.PanelItem
                         key={name}
                         title={this.schema[name].title}
                         value={this.schema[name].type === "select" ? this.schema[name].options[this.state[name]] : this.state[name]}

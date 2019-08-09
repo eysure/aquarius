@@ -150,7 +150,11 @@ class UserCenter extends Component {
         } else if (this.props.user.status === 0 || this.props.user.status === 10) {
             return <EmployeeInitialize context={this} />;
         } else {
-            console.error("Employee Status invalid");
+            this.props.throwMsg(
+                R.Msg("EMPLOYEE_STATUS_INVALID", {
+                    status: this.props.user.status
+                })
+            );
             return null;
         }
     };

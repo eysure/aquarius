@@ -49,6 +49,14 @@ export class ResourceFeeder {
         return str;
     };
 
+    Strs = strKeys => {
+        let res = [];
+        for (let strKey of strKeys) {
+            res.push(this.Str(strKey));
+        }
+        return res;
+    };
+
     Msg = (msgKey, args = null) => {
         if (!this.messages && !this.isFallbackToSystemResources) {
             console.error("No Messages given in this ResourceFeeder!");

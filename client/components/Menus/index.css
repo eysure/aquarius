@@ -22,6 +22,8 @@ ul.menu {
 
     left: 0;
     top: 0;
+
+    pointer-events: all;
 }
 
 ul.menu.drop-down {
@@ -113,6 +115,7 @@ li.menu-divider hr {
 }
 
 div.menu-back-drop {
+    pointer-events: all;
     position: absolute;
     height: 100vh;
     width: 100vw;

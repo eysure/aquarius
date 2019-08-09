@@ -287,3 +287,10 @@ export async function employee_register(data) {
         };
     }
 }
+
+export function getCustomers() {
+    const customers = Collection("customers")
+        .find()
+        .fetch();
+    return customers;
+}

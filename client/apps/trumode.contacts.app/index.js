@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as UI from "@material-ui/core";
-import clientConfig from "../../client_config.js";
-import PI from "../../components/panel_item";
 import _ from "lodash";
+import * as AQUI from "../../components/Window/core";
 import Avatar from "../../components/user_avatar";
 
 import Window from "../../components/Window";
@@ -30,7 +28,7 @@ class Contacts extends Component {
 
             return (
                 <React.Fragment key={employee._id}>
-                    <PI
+                    <AQUI.PanelItem
                         title={
                             <React.Fragment>
                                 <Avatar user={employee} d={32} style={{ marginRight: "8px" }} /> {" " + (employee.name_cn || employee.fn_en)}
@@ -39,15 +37,15 @@ class Contacts extends Component {
                         value={employee.nickname}
                         span={3}
                     />
-                    <PI title={jobTitle} span={3} />
-                    <PI
+                    <AQUI.PanelItem title={jobTitle} span={3} />
+                    <AQUI.PanelItem
                         title={employee.email}
                         span={3}
                         onClick={() => {
                             window.location = `mailto:${employee.email}`;
                         }}
                     />
-                    <PI
+                    <AQUI.PanelItem
                         className="monospace"
                         title={employee.mobile}
                         span={2}
@@ -55,7 +53,7 @@ class Contacts extends Component {
                             window.location = `tel:${employee.mobile}`;
                         }}
                     />
-                    <PI className="monospace" title={employee.ext} span={1} />
+                    <AQUI.PanelItem className="monospace" title={employee.ext} span={1} />
                 </React.Fragment>
             );
         });
@@ -76,11 +74,11 @@ class Contacts extends Component {
             >
                 <div className="window-content-inner" style={{ maxWidth: 1600 }}>
                     <div className="panel" style={{ gridColumnGap: 0 }}>
-                        <PI title={R.Str("NAME")} value={R.Str("NICKNAME")} span={3} />
-                        <PI title={R.Str("JOB_TITLE")} span={3} />
-                        <PI title={R.Str("EMAIL")} span={3} />
-                        <PI title={R.Str("MOBILE")} span={2} />
-                        <PI title={R.Str("EXT")} span={1} />
+                        <AQUI.PanelItem title={R.Str("NAME")} value={R.Str("NICKNAME")} span={3} />
+                        <AQUI.PanelItem title={R.Str("JOB_TITLE")} span={3} />
+                        <AQUI.PanelItem title={R.Str("EMAIL")} span={3} />
+                        <AQUI.PanelItem title={R.Str("MOBILE")} span={2} />
+                        <AQUI.PanelItem title={R.Str("EXT")} span={1} />
                         {this.renderList()}
                     </div>
                 </div>

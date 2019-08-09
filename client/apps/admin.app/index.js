@@ -26,7 +26,7 @@ class Admin extends React.Component {
 
         if (!this.props.auth) return sidebar;
         if (this.props.auth.user_admin) tabs.add(TAB_USER_MANAGER);
-        if (this.props.auth.system_admin) tabs.add(TAB_USER_MANAGER);
+        if (this.props.auth.system_admin) tabs.add(TAB_SYSTEM_MANAGER);
 
         for (let tab of tabs) {
             sidebar.push(

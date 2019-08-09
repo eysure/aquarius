@@ -31,6 +31,7 @@ Meteor.startup(() => {
             <MainFrame />
             <AccessControl />
             <NotificationBar />
+            <div id="menu-container" className="first-class-overlap" />
         </Provider>,
         document.querySelector("#root")
     );

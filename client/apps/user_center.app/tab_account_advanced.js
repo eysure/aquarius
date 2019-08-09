@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PI from "../../components/panel_item";
+import * as AQUI from "../../components/Window/core";
 import { connect } from "react-redux";
 
 import { R } from "./";
@@ -10,7 +10,7 @@ export class AccountAdvancedTab extends Component {
         let authList = [];
 
         for (let authKey in auths) {
-            authList.push(<PI key={authKey} title={authKey} value={auths[authKey].toString()} />);
+            authList.push(<AQUI.PanelItem key={authKey} title={authKey} value={auths[authKey].toString()} />);
         }
 
         return authList;

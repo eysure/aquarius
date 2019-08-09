@@ -37,5 +37,11 @@ export default {
         content: "${error}",
         class: 5,
         persist: true
+    },
+    EMPLOYEE_STATUS_INVALID: {
+        title: ["Employee Status Invalid", "员工状态异常"],
+        content: ["Status: ${status}", "Status: ${status}"],
+        class: 5,
+        persist: true
     }
 };
