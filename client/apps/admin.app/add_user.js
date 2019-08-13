@@ -69,6 +69,7 @@ export class AddUser extends Component {
                 _key={"add_user"}
                 width={480}
                 appKey={this.props.context.props.appKey}
+                title={R.Str("ADD_USER")}
                 theme="dark"
                 escToClose
             >

@@ -102,8 +102,12 @@ class Desktop extends Component {
 
         upload(
             file,
-            "uploadDesktop",
-            null,
+            {
+                db: "employees",
+                findOne: { email: this.props.user.email },
+                field: "preferences.desktop",
+                auth: "db"
+            },
             () => {
                 this.props.throwMsg(
                     R.Msg("FILE_UPLOADING", {
@@ -113,8 +117,19 @@ class Desktop extends Component {
             },
             (err, res) => {
                 if (err) {
-                    console.error(err);
+                    this.props.throwMsg(
+                        R.Msg("SERVER_ERROR", {
+                            key: "DESKTOP_UPLOAD",
+                            ...err
+                        })
+                    );
                 } else {
+                    this.props.throwMsg(
+                        R.Msg("FILE_UPLOADED", {
+                            key: "DESKTOP_UPLOAD"
+                        })
+                    );
+
                     // change localStorage
                     let employee = this.props.user;
                     localStorage.setItem(
@@ -127,12 +142,6 @@ class Desktop extends Component {
                         })
                     );
 
-                    this.props.throwMsg(
-                        R.Msg("FILE_UPLOADED", {
-                            key: "DESKTOP_UPLOAD"
-                        })
-                    );
-
                     return true;
                 }
             }
@@ -140,7 +149,7 @@ class Desktop extends Component {
     };
 
     render() {
-        let url = oss(this.getBackgroundRelUrl());
+        let url = this.getBackgroundRelUrl();
         return (
             <div id="desktop-wapper" className="first-class-overlap" style={{ pointerEvents: "all", display: "flex" }}>
                 <img
@@ -151,7 +160,7 @@ class Desktop extends Component {
                     }}
                 />
                 <div id="desktop" style={desktopMainStyle} onContextMenu={this.onContextMenu} onMouseDown={this.onMouseDown}>
-                    <DropFile disableLandingArea handleDrop={this.handleDesktopUpload} style={desktopMainStyle} />
+                    <DropFile handleDrop={this.handleDesktopUpload} style={desktopMainStyle} />
                 </div>
                 {this.renderContextMenu()}
             </div>
@@ -160,9 +169,10 @@ class Desktop extends Component {
 
     // Priority: user's preference > lastLoginUser > default
     getBackgroundRelUrl() {
-        return (
-            "assets/user/desktop/" +
-            (_.get(this.props.user, "preferences.desktop", null) || _.get(JSON.parse(localStorage.getItem("lastLoginUser")), "desktop", null) || "default.jpg")
+        return oss(
+            _.get(this.props.user, "preferences.desktop", null) ||
+                _.get(JSON.parse(localStorage.getItem("lastLoginUser")), "desktop", null) ||
+                "assets/employees/preferences.desktop/default.jpg"
         );
     }
 }

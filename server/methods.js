@@ -61,88 +61,6 @@ export function getClientOSSInfo() {
 //     return employee;
 // }
 
-export function uploadDesktop(fileInfo, fileData) {
-    if (!this.userId) return null;
-    let client = oss();
-    if (!client) return null;
-
-    let email = getEmailById(this.userId);
-    let employee = Collection("employees").findOne({ email });
-    if (!employee) return null;
-
-    let prefix = "assets/user/desktop/";
-
-    let oldDesktop = _.get(employee, "preferences.desktop");
-
-    let relPath = uuidv4() + "." + fileInfo.name.split(".").pop();
-
-    let path = prefix + relPath;
-
-    async function deleteFile() {
-        try {
-            await client.delete(prefix + oldDesktop);
-        } catch (err) {
-            throw new Meteor.Error(err);
-        }
-    }
-
-    async function put() {
-        try {
-            await client.put(path, new Buffer(fileData, "binary"));
-            Collection("employees").update({ email }, { $set: { preferences: { desktop: relPath } } });
-            if (oldDesktop) {
-                deleteFile();
-            }
-            return relPath;
-        } catch (err) {
-            throw new Meteor.Error(err);
-        }
-    }
-
-    return put();
-}
-
-export function uploadAvatar(fileInfo, fileData) {
-    if (!this.userId) return null;
-    let client = oss();
-    if (!client) return null;
-
-    let email = getEmailById(this.userId);
-    let employee = Collection("employees").findOne({ email });
-    if (!employee) return null;
-
-    let prefix = "assets/user/avatar/";
-
-    let oldAvatar = employee.avatar;
-
-    let relPath = uuidv4() + "." + fileInfo.name.split(".").pop();
-
-    let path = prefix + relPath;
-
-    async function deleteFile() {
-        try {
-            await client.delete(prefix + oldAvatar);
-        } catch (err) {
-            throw new Meteor.Error(err);
-        }
-    }
-
-    async function put() {
-        try {
-            await client.put(path, new Buffer(fileData, "binary"));
-            Collection("employees").update({ email }, { $set: { avatar: relPath } });
-            if (oldAvatar) {
-                deleteFile();
-            }
-            return relPath;
-        } catch (err) {
-            throw new Meteor.Error(err);
-        }
-    }
-
-    return put();
-}
-
 // Add Merge rules:
 // - If two auths are numbers, return the larger one
 // - If two auths are arrays, concat them together
@@ -204,11 +122,9 @@ export function getAuth(userId = this.userId) {
 }
 
 export function addUser(username, email) {
+    if (!this.userId) throw new Meteor.Error(401, "User is not loged in");
     if (!_.get(getAuth(this.userId), "user_admin", false)) {
-        return {
-            status: 401,
-            reason: "Unauthorized"
-        };
+        throw new Meteor.Error(403, "Authorization Failed");
     }
 
     const tempPassword = uuidv4();
@@ -234,11 +150,7 @@ export function addUser(username, email) {
         },
         (err, info) => {
             if (err) {
-                return {
-                    status: 500,
-                    err,
-                    info
-                };
+                throw new Meteor.Error(500, err, info);
             } else {
                 return {
                     status: 200,
@@ -254,17 +166,11 @@ export async function employee_register(data) {
     let employee = Collection("employees").findOne({ email });
 
     if (!employee) {
-        return {
-            status: 400,
-            err: "Can't find this employee"
-        };
+        throw new Meteor.Error(404, "Can't find the target employee.");
     }
 
     if (employee.status !== 0) {
-        return {
-            status: 400,
-            err: "This Employee's status is not 0"
-        };
+        throw new Meteor.Error(404, "Target employee's status is not zero.");
     }
 
     const valid = ajv.validate(EmployeeInitializationSchema, data);
@@ -288,9 +194,116 @@ export async function employee_register(data) {
     }
 }
 
-export function getCustomers() {
-    const customers = Collection("customers")
-        .find()
-        .fetch();
-    return customers;
+export function upload(args, file) {
+    if (!this.userId) throw new Meteor.Error(401, "User is not loged in");
+
+    let client = oss();
+    if (!client) return new Meteor.Error(500, "OSS cannot establish");
+
+    let { db, findOne, field, name } = args;
+
+    // Auth check
+    if (!_.get(getAuth(this.userId), `wr_${db}`, false)) {
+        throw new Meteor.Error(403, `wr_${db}`);
+    }
+
+    let target = Collection(db).findOne(findOne);
+    if (!target) return new Meteor.Error(404, "Target is not find");
+
+    let prefix = `assets/${db}/${field}/`;
+
+    let oldUri = _.get(target, field, null);
+    let newUri = uuidv4() + "." + name.split(".").pop();
+
+    async function deleteFile() {
+        try {
+            await client.delete(oldUri);
+        } catch (err) {
+            throw new Meteor.Error(err);
+        }
+    }
+
+    async function put() {
+        try {
+            await client.put(prefix + newUri, new Buffer(file, "binary"));
+            Collection(db).update(findOne, { $set: { [field]: prefix + newUri } });
+            if (oldUri) deleteFile();
+            return {
+                status: 200,
+                uri: newUri
+            };
+        } catch (err) {
+            throw new Meteor.Error(500, err);
+        }
+    }
+
+    return put();
+}
+
+export async function editCustomer(data) {
+    if (!this.userId) throw new Meteor.Error(401, "User is not loged in");
+
+    let client = oss();
+    if (!client) return new Meteor.Error(500, "OSS cannot establish");
+
+    // Auth check
+    if (!_.get(getAuth(this.userId), `wr_customers`, false)) {
+        throw new Meteor.Error(403, `wr_customers`);
+    }
+
+    let customer = Collection("customers").findOne({ _id: data._id });
+    if (!customer) throw new Meteor.Error(404, "Customer not found");
+
+    try {
+        Collection("customers").update({ _id: data._id }, { $set: data });
+    } catch (err) {
+        throw new Meteor.Error(500, err);
+    }
+
+    return {
+        status: 200
+    };
+}
+
+export async function deleteCustomer(id) {
+    if (!this.userId) throw new Meteor.Error(401, "User is not loged in");
+
+    // Auth check
+    if (!_.get(getAuth(this.userId), `wr_customers`, false)) {
+        throw new Meteor.Error(403, `wr_customers`);
+    }
+
+    let customer = Collection("customers").findOne({ _id: id });
+    if (!customer) throw new Meteor.Error(404, "Customer not found");
+
+    // TODO: Check if any order has this customer, if so, delete is forbidden
+
+    try {
+        Collection("customers").remove({ _id: id }, { justOne: true });
+    } catch (err) {
+        throw new Meteor.Error(500, err);
+    }
+
+    return {
+        status: 200
+    };
+}
+
+export async function addCustomer(data) {
+    if (!this.userId) throw new Meteor.Error(401, "User is not loged in");
+
+    // Auth check
+    if (!_.get(getAuth(this.userId), `wr_customers`, false)) {
+        throw new Meteor.Error(403, `wr_customers`);
+    }
+
+    try {
+        Collection("customers").insert(data);
+    } catch (err) {
+        throw new Meteor.Error(500, err);
+    }
+
+    return {
+        status: 200
+    };
 }

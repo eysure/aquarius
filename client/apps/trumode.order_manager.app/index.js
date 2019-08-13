@@ -57,7 +57,17 @@ class OrderManager extends Component {
     render() {
         if (!this.state.open) return null;
         return (
-            <Window key="Main" _key="Main" width="80vw" height="80vh" appKey={this.props.appKey} theme="dark" onClose={e => this.setState({ open: false })}>
+            <Window
+                key="Main"
+                _key="Main"
+                width="80vw"
+                height="80vh"
+                appKey={this.props.appKey}
+                title={R.Trans(OrderManager.manifest.appName)}
+                noTitlebar
+                theme="dark"
+                onClose={e => this.setState({ open: false })}
+            >
                 <UI.DialogContent className="no-padding" onMouseMove={this.adjustWidthMove} onMouseUp={this.adjustWidthEnd}>
                     <UI.Drawer className="dark" variant="permanent" anchor="left" PaperProps={{ style: this.sidebarStyle }}>
                         <div className="handle" style={{ height: "36px" }} />

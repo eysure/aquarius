@@ -11,7 +11,7 @@ import Avatar from "./user_avatar";
 import { Tracker } from "meteor/tracker";
 
 import { clearMsg, logout, bindUserInfo, throwMsg, changeLanguageLocal, appLaunch, systemControl } from "../actions";
-import { generateEmailLinkToService, Collections } from "../utils";
+import { generateEmailLinkToService } from "../utils";
 
 class AccessControl extends React.Component {
     constructor(props) {

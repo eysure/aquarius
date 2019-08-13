@@ -69,13 +69,13 @@ class Window extends Component {
      * Rander head of the window
      */
     renderHead = () => {
-        if (this.props.titlebar) {
+        if (!this.props.noTitlebar && this.props.title) {
             // Both titlebar and toolbar
             return (
                 <div className="window-titlebar">
                     {this.renderWindowControl()}
-                    <div className="window-title" onDoubleClickCapture={() => console.log("max")}>
-                        {this.props.titlebar}
+                    <div className="window-title" onDoubleClick={this.handleMax}>
+                        {this.props.title}
                     </div>
                     {this.props.toolbar && <div className="window-toolbar">{this.props.toolbar}</div>}
                 </div>
@@ -144,24 +144,28 @@ class Window extends Component {
         // Priority className
 
         return (
-            <div
-                ref={this.windowRef}
-                id={this.props.id}
-                className={classList.join(" ")}
-                style={{
-                    ...this.props.style,
-                    top: this.state.top,
-                    left: this.state.left,
-                    width: this.state.width,
-                    height: this.state.height
-                }}
-                onMouseDown={this.handleMouseDown}
-            >
-                {this.renderHead()}
-                {this.renderContent()}
-                {this.renderResizeHandle()}
-                {!this.props.titlebar && !this.props.toolbar ? this.renderWindowControl() : null}
-            </div>
+            <>
+                {this.renderBackDrop()}
+                <div
+                    ref={this.windowRef}
+                    id={this.props.id}
+                    className={classList.join(" ")}
+                    style={{
+                        ...this.props.style,
+                        top: this.state.top,
+                        left: this.state.left,
+                        width: this.state.width,
+                        height: this.state.height,
+                        zIndex: this.props.backDrop ? "2001" : "auto"
+                    }}
+                    onMouseDown={this.handleMouseDown}
+                >
+                    {this.renderHead()}
+                    {this.renderContent()}
+                    {this.renderResizeHandle()}
+                    {this.props.noTitlebar && !this.props.toolbar ? this.renderWindowControl() : null}
+                </div>
+            </>
         );
     };
 
@@ -175,6 +179,23 @@ class Window extends Component {
         }
         return ReactDOM.createPortal(this.renderWindow(), appHostDOM);
     }
+
+    renderBackDrop = () => {
+        return (
+            this.props.backDrop && (
+                <div
+                    className="backdrop"
+                    onClick={e => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                    }}
+                    onMouseDown={e => {
+                        e.stopPropagation();
+                    }}
+                />
+            )
+        );
+    };
 
     handleActivate = isActive => {
         if (isActive) this.restoreWindowPosition();
@@ -419,7 +440,10 @@ Window.defaultProps = {
     canMinimize: true,
 
     // Titlebar title
-    titlebar: null,
+    title: null,
+
+    // No titlebar
+    noTitlebar: false,
 
     // Toolbar component
     toolbar: null,
@@ -437,5 +461,8 @@ Window.defaultProps = {
     windowPriority: WINDOW_PRIORITY_NORMAL,
 
     // Is possible to press ESC to close this window, useful for subwindows
-    escToClose: false
+    escToClose: false,
+
+    // If true, use cannot do other things except finish this window
+    backDrop: false
 };

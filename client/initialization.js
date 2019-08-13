@@ -66,7 +66,7 @@ const gridTarget = interact.createSnapGrid({
 interact(".draggable")
     .draggable({
         allowFrom: ".window-titlebar,.handle,.window-sidebar-container",
-        ignoreFrom: ".unhandle,.window-sidebar-content,input,select,button",
+        ignoreFrom: ".unhandle,.window-sidebar-content,input,select,button,textarea",
         restrict: {
             restriction: "parent",
             elementRect: { top: 0, left: 1, bottom: 0, right: 0 }

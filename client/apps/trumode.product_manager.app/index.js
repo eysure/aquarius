@@ -18,7 +18,7 @@ class ProductManager extends Component {
                 width={800}
                 height={600}
                 appKey={this.props.appKey}
-                titlebar={"Producet Manger"}
+                title={"Producet Manger"}
                 onClose={e => this.setState({ open: false })}
             >
                 <div className="app-template-fill">

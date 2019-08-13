@@ -22,6 +22,8 @@ class Welcome extends Component {
                 width={"80vmin"}
                 height={"60vmin"}
                 appKey={this.props.appKey}
+                title={R.Trans(Welcome.manifest.appName)}
+                noTitleBar
                 canResize={false}
                 canMaximize={false}
                 onClose={e => this.setState({ open: false })}

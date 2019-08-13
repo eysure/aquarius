@@ -33,7 +33,7 @@ class DropFile extends Component {
         e.stopPropagation();
         this.setState({ drag: false });
         if (this.props.handleDropRaw) this.props.handleDropRaw(e);
-        else if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        else if (this.props.handleDrop && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
             this.props.handleDrop(e.dataTransfer.files);
             e.dataTransfer.clearData();
         }
@@ -69,18 +69,27 @@ class DropFile extends Component {
     };
 
     handleInput = e => {
-        if (e.target.files && e.target.files.length > 0) {
+        if (this.props.handleDrop && e.target.files && e.target.files.length > 0) {
             this.props.handleDrop(e.target.files);
         }
     };
 
     render() {
-        let landingAreaStyle = { opacity: this.state.drag ? 1 : 0 };
+        let classList = ["vcc"];
+        let concatStyle = { ...this.props.style };
+        if (this.props.disabled) classList.push("disabled");
+        else {
+            if (this.props.clickToSelect) classList.push("drop-file-clickable");
+            if (this.state.drag) {
+                classList.push("drop-file-dragging");
+                concatStyle = { ...concatStyle, ...this.props.draggingStyle };
+            }
+        }
+
         return (
-            <div className={this.props.clickToSelect ? "drop-file-clickable" : null} style={this.props.style} ref={this.dropRef} onClick={this.handleClick}>
-                <input ref={this.inputRef} type="file" style={{ display: "none" }} multiple={this.props.multiple} />
+            <div className={classList.join(" ")} style={concatStyle} ref={this.dropRef} onClick={this.handleClick}>
+                <input ref={this.inputRef} type="file" style={{ display: "none" }} multiple={this.props.multiple} disabled={this.props.disabled} />
                 {this.props.children}
-                {!this.props.disableLandingArea && <div className="drop-file-landing-area" style={{ ...this.props.landingAreaStyle, ...landingAreaStyle }} />}
             </div>
         );
     }

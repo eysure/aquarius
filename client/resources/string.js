@@ -1,3 +1,5 @@
+import countries from "./countries";
+
 export default {
     // Support Languages
     LANGUAGES: ["en-US", "zh-CN"],
@@ -94,5 +96,7 @@ export default {
     EDIT: ["Edit", "编辑"],
     VIEW: ["View", "视图"],
     WINDOW: ["Window", "窗口"],
-    HELP: ["Help", "帮助"]
+    HELP: ["Help", "帮助"],
+
+    ...countries
 };

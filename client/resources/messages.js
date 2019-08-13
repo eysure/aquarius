@@ -112,6 +112,7 @@ export default {
         persist: true
     },
     OPD: {
+        key: "${key}",
         title: ["Operation Permission Denied", "操作缺少权限"],
         content: [
             "You don't have the permission: ${auth} to do this operation: ${operation}, please contact admins for details.",
@@ -121,9 +122,25 @@ export default {
         persist: true
     },
     ERR: {
+        key: "${key}",
         title: ["An Error Occured", "发生错误"],
         content: ["${err}", "${err}"],
         class: 5,
         persist: true
+    },
+    SERVER_ERROR: {
+        key: "${key}",
+        title: ["${reason}", "${reason}"],
+        content: ["${details}", "${details}"],
+        class: 5,
+        persist: true
+    },
+    SAVED: {
+        title: ["Saved", "已保存"],
+        class: 2
+    },
+    DELETED: {
+        title: ["Deleted", "已删除"],
+        class: 2
     }
 };

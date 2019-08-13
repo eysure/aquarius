@@ -4,6 +4,7 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import _ from "lodash";
+import DropFile from "../DropFile";
 
 export class Button extends Component {
     render() {
@@ -126,6 +127,8 @@ export class FieldItem extends Component {
     name = null;
     field = null;
 
+    textareaRef = React.createRef();
+
     calculateConditions = (name, conditions) => {
         if (!conditions) {
             console.error("Conditions cannot found during calculate conditions, false has been returned.");
@@ -182,7 +185,20 @@ export class FieldItem extends Component {
     };
 
     calculateValid = name => {
+        let field = this.schema[name];
+
+        if (field.type === "select") {
+            // When value is not one of the options, return false
+            let options = field.options;
+            if (Array.isArray(options)) {
+                if (!options.includes(this.state[name])) return false;
+            } else {
+                if (!Object.keys(options).includes(this.state[name])) return false;
+            }
+        }
+
         if (this.schema[name].valid === undefined) return true;
+
         return this.calculateConditions(name, this.schema[name].valid);
     };
 
@@ -270,7 +286,7 @@ export class FieldItem extends Component {
                 return (
                     <div id={`${name}-input-item`} className="aqui-input-item vss" style={{ width: this.props.width || "100%" }}>
                         {field.title && <div className="hsc aqui-input-title">{field.title}</div>}
-                        <select id={name} name={name} value={state[name]} onChange={this.onChange} disabled={disabled}>
+                        <select id={name} name={name} className="input" value={state[name]} onChange={this.onChange} disabled={disabled}>
                             <option value={""} disabled>
                                 {field.placeholder || "Please Select"}
                             </option>
@@ -289,9 +305,60 @@ export class FieldItem extends Component {
                     </button>
                 );
             }
+            case "image": {
+                let classList = ["input", "aqui-img-container"];
+                if (!state[name]) classList.push("empty");
+
+                return (
+                    <div id={`${name}-input-item`} className="aqui-input-item vss" style={{ width: field.width || this.props.width || "100%" }}>
+                        {(this.props.title || field.title) && <div className="hsc aqui-input-title">{this.props.title || field.title}</div>}
+                        <div className={classList.join(" ")}>
+                            <DropFile
+                                handleDrop={field.handleDrop}
+                                clickToSelect
+                                disabled={disabled}
+                                handleDrop={this.props.handleDrop || field.handleDrop}
+                                style={{ width: "100%", minHeight: 34, color: "grey", boxSizing: "border-box", ...field.style, ...this.props.style }}
+                            >
+                                <img
+                                    src={state[name] && field.srcTranslator ? field.srcTranslator(state[name]) : state[name]}
+                                    style={{ maxWidth: "100%", maxHeight: "100%" }}
+                                    onError={e => {
+                                        // let image = e.target;
+                                        // image.onerror = "";
+                                        // image.src = "/assets/os_logo_white.png";
+                                        // return true;
+                                    }}
+                                />
+                                {!state[name] && <i className="material-icons">add_circle_outline</i>}
+                            </DropFile>
+                        </div>
+                        {field.caption && <span className="aqui-input-caption">{field.caption}</span>}
+                    </div>
+                );
+            }
+            case "textarea": {
+                if (state[name] === undefined) console.warn(`Cannot find name in state of parent of this FieldItem "${name}". Check the parent class's state.`);
+                return (
+                    <div id={`${name}-input-item`} className="aqui-input-item vss" style={{ width: this.props.width || "100%" }}>
+                        {(this.props.title || field.title) && <div className="hsc aqui-input-title">{this.props.title || field.title}</div>}
+                        <textarea
+                            ref={this.textareaRef}
+                            id={name}
+                            name={name}
+                            className="input"
+                            value={state[name]}
+                            onChange={this.onChange}
+                            disabled={disabled}
+                            placeholder={this.props.placeholder || field.placeholder}
+                            onInput={e => this.textAreaAutoResize(e.target)}
+                        />
+                        {field.caption && <span className="aqui-input-caption">{field.caption}</span>}
+                    </div>
+                );
+            }
             default: {
-                if (state[name] === undefined)
-                    throw new Error(`Cannot find name in state of parent of this FieldItem "${name}". Check the parent class's state.`);
+                if (state[name] === undefined) console.warn(`Cannot find name in state of parent of this FieldItem "${name}". Check the parent class's state.`);
                 return (
                     <div id={`${name}-input-item`} className="aqui-input-item vss" style={{ width: this.props.width || "100%" }}>
                         {(this.props.title || field.title) && <div className="hsc aqui-input-title">{this.props.title || field.title}</div>}
@@ -309,6 +376,22 @@ export class FieldItem extends Component {
                 );
             }
         }
+    }
+
+    componentDidMount() {
+        if (this.textareaRef && this.textareaRef.current) {
+            this.textAreaAutoResize(this.textareaRef.current);
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.textareaRef && this.textareaRef.current) {
+            this.textAreaAutoResize(this.textareaRef.current);
+        }
+    }
+
+    textAreaAutoResize(textarea) {
+        if (textarea.scrollHeight < 500) textarea.style.height = textarea.scrollHeight + "px";
     }
 }
 
@@ -379,6 +462,7 @@ export class TableHead extends Component {
                     e.stopPropagation();
                     this.props.onClick && this.props.onClick(e);
                 }}
+                onContextMenu={this.props.onContextMenu}
             >
                 <div>
                     {this.props.content}
@@ -442,7 +526,8 @@ export class Table extends Component {
         contextMenuX: 0,
         contextMenuY: 0,
         autoWidths: null,
-        selected: []
+        selected: [],
+        filters: []
     };
 
     tableRef = React.createRef();
@@ -469,12 +554,13 @@ export class Table extends Component {
                     onClick={e => {
                         this.setState({ sortBy: field, asc: this.state.sortBy === field ? !this.state.asc : false });
                     }}
+                    onContextMenu={e => this.onHeadContextMenu(e, field)}
                     asc={this.state.sortBy === field && this.state.asc}
                     dsc={this.state.sortBy === field && !this.state.asc}
                 />
             );
         }
-        renderedHeads.push(<th key="empty" className="ignore-elements" />);
+        renderedHeads.push(<th key="empty" className="ignore-elements" onContextMenu={e => this.onHeadContextMenu(e, "empty")} />);
         return renderedHeads;
     };
 
@@ -483,7 +569,9 @@ export class Table extends Component {
         let resortedData = [...this.state.data];
         if (sortBy === null) return;
         resortedData.sort((d1, d2) => {
-            if (d1[sortBy] < d2[sortBy]) {
+            if (!d1[sortBy]) return 1;
+            else if (!d2[sortBy]) return -1;
+            else if (d1[sortBy] < d2[sortBy]) {
                 return asc ? -1 : 1;
             } else if (d1[sortBy] > d2[sortBy]) {
                 return asc ? 1 : -1;
@@ -558,17 +646,82 @@ export class Table extends Component {
         return renderedRows;
     };
 
-    onHeadContextMenu = e => {
+    onHeadContextMenu = (e, field) => {
         e.preventDefault();
         this.setState({
-            headContextMenu: true,
+            headContextMenu: field,
             contextMenuX: e.clientX,
             contextMenuY: e.clientY
         });
     };
 
     renderContextMenu() {
+        let field = this.state.headContextMenu;
+        if (!field) return;
+
         let contextMenu = [];
+
+        // Add filter
+        if (field !== "empty") {
+            let fieldTitle = this.props.headsTranslator ? this.props.headsTranslator.Str(field) : field;
+            contextMenu.push(
+                {
+                    title: `Sort By ${fieldTitle}`,
+                    isTitle: true
+                },
+                {
+                    title: "Ascending",
+                    onClick: e => {
+                        this.setState({ sortBy: field, asc: true });
+                    },
+                    prefix: this.state.sortBy === field && this.state.asc ? "✓" : ""
+                },
+                {
+                    title: "Descending",
+                    onClick: e => {
+                        this.setState({ sortBy: field, asc: false });
+                    },
+                    prefix: this.state.sortBy === field && !this.state.asc ? "✓" : ""
+                },
+                {
+                    divider: true
+                },
+                {
+                    title: "Filter",
+                    isTitle: true
+                },
+                {
+                    title: this.props.filterTitle || `Add Filter ${fieldTitle}`,
+                    isTitle: true
+                    // onClick: e => {
+                    //     console.log("Add filter");
+                    //     this.setState({
+                    //         filters: [
+                    //             ...this.state.filters,
+                    //             {
+                    //                 field,
+                    //                 conditions: {
+                    //                     $len: {
+                    //                         $lg: 3
+                    //                     },
+                    //                     $includes: "Ali"
+                    //                 }
+                    //             }
+                    //         ]
+                    //     });
+                    // }
+                },
+                {
+                    divider: true
+                }
+            );
+        }
+
+        contextMenu.push({
+            title: "Display",
+            isTitle: true
+        });
+
         let { heads, headsHide } = this.state;
         for (let head of heads) {
             let hided = headsHide.includes(head);
@@ -594,9 +747,7 @@ export class Table extends Component {
                 <table id="table" ref={this.tableRef}>
                     {!this.props.noHead && this.props.heads && (
                         <thead ref={this.theadRef}>
-                            <tr ref={this.headRef} onContextMenu={this.onHeadContextMenu}>
-                                {this.renderHead()}
-                            </tr>
+                            <tr ref={this.headRef}>{this.renderHead()}</tr>
                         </thead>
                     )}
                     <tbody>{this.renderBody()}</tbody>
@@ -640,13 +791,22 @@ export class Table extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+        let tmpState = {};
+
         let widths = this.autoDetectWidth();
         if (!_.isEqual(widths, this.state.autoWidths)) {
-            this.setState({ autoWidths: widths });
+            tmpState.autoWidths = widths;
         }
 
         if (!_.isEqual(this.state.sortBy, prevState.sortBy) || !_.isEqual(this.state.asc, prevState.asc)) {
             this.sort();
         }
+
+        if (!_.isEqual(this.props.data, prevProps.data) || !_.isEqual(this.props.heads, prevProps.heads)) {
+            tmpState.data = this.props.data;
+            tmpState.heads = this.props.heads;
+        }
+
+        if (!_.isEmpty(tmpState)) this.setState(tmpState);
     }
 }

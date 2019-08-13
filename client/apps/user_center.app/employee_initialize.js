@@ -833,6 +833,7 @@ export class EmployeeInitialize extends Component {
                 _key={"Employee Initialize"}
                 width={900}
                 height={700}
+                title={R.Str("EMPLOYEE_INITIALIZATION")}
                 appKey={this.props.context.props.appKey}
                 windowPriority={WINDOW_PRIORITY_HIGH}
                 theme="dark"

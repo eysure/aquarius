@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as UI from "@material-ui/core";
-import Str from "../components/string_component";
 import { getAppName } from "../app_utils";
 import _ from "lodash";
+import { ResourceFeeder } from "../resources_feeder";
+const R = new ResourceFeeder(null);
 
 import { appClose, appWindowActivate } from "../actions";
 
@@ -20,7 +21,7 @@ class AppManager extends Component {
                 key="Main"
                 _key="Main"
                 appKey={this.props.appKey}
-                titlebar={getAppName("app_manager", this.props.user)}
+                title={R.Trans(AppManager.manifest.appName)}
                 windowPriority={WINDOW_PRIORITY_TOP}
                 onClose={e => this.setState({ open: false })}
             >

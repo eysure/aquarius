@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import { getAppName } from "../app_utils";
+import { ResourceFeeder } from "../resources_feeder";
+const R = new ResourceFeeder(null);
 
 import Window, { WINDOW_PRIORITY_HIGH } from "../components/Window";
 import ReactJson from "react-json-view";
@@ -22,7 +23,7 @@ class Debugger extends Component {
                 height={600}
                 x={"70vw"}
                 y={"0px"}
-                titlebar={getAppName("debugger", this.props.allStates.user)}
+                title={R.Trans(Debugger.manifest.appName)}
                 theme="dark"
                 windowPriority={WINDOW_PRIORITY_HIGH}
                 contentStyle={{ background: "rgba(39, 40, 34, 0.8)" }}

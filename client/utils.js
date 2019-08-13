@@ -4,6 +4,7 @@ import { Mongo } from "meteor/mongo";
 import MESSAGES from "./resources/messages";
 import { R } from "./resources_feeder";
 import _ from "lodash";
+import Countries from "./resources/countries";
 
 export function generateEmailLink(receiver, subject, body) {
     return `mailto:${receiver}?subject=${clientConfig.mailPrefix} ${subject}&body=${body}`;
@@ -56,7 +57,7 @@ function replaceAll(str, vals) {
 
 // TODO: THESE FUNCTIIONS ARE NOT IN THE STANDARD BUNDLE, AND NEED TO MOVE!!!
 
-export function Collections(string) {
+export function Collection(string) {
     return Meteor.connection._mongo_livedata_collections[string] || new Mongo.Collection(string);
 }
 
@@ -100,13 +101,13 @@ export function fileUploadVerify(file, throwMsg = null) {
     };
 }
 
-export function upload(file, methodName, args = null, beforeUpload, callback) {
+export function upload(file, args = null, beforeUpload, callback) {
     let reader = new FileReader();
     reader.readAsBinaryString(file);
     reader.onload = e => {
         beforeUpload();
         Meteor.call(
-            methodName,
+            "upload",
             {
                 ...args,
                 name: file.name,
@@ -178,4 +179,12 @@ export function checkAuth(auth, operation = null, context) {
         return false;
     }
     return true;
+}
+
+export function getCountryList() {
+    let list = {};
+    for (let code in Countries) {
+        list[code] = R.Str(code);
+    }
+    return list;
 }

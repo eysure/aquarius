@@ -68,7 +68,7 @@ class Contacts extends Component {
                 width={900}
                 height={600}
                 appKey={this.props.appKey}
-                titlebar={getAppName("trumode.contacts", this.props.user)}
+                title={getAppName("trumode.contacts", this.props.user)}
                 toolbar={this.toolbar}
                 onClose={e => this.setState({ open: false })}
             >

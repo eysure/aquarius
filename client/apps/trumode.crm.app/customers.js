@@ -1,58 +1,111 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as AQUI from "../../components/Window/core";
-import { R } from "./index";
+import { Mongo } from "meteor/mongo";
 
+import { R } from "./index";
+import * as AQUI from "../../components/Window/core";
+import Menu from "../../components/Menus";
+import { activateWindow } from "../../actions";
 import CustomerDetail from "./customer_detail";
+import CustomerNew from "./customer_new";
 
 class Customers extends Component {
     state = {
-        renderedCustomerDetails: []
+        customerTableContextMenu: false,
+        customerTableContextMenuSelect: null,
+        contextMenuX: 0,
+        contextMenuY: 0,
+        renderedCustomerDetails: [],
+        query: "",
+        renderedNewCustomer: false
     };
+
+    handleChange = e => {
+        this.setState({ [e.target.name]: e.target.value });
+    };
+
     render() {
         return (
             <div className="h-full v-full">
-                <div className="roof-toolbar handle">Toolbar</div>
+                <div className="handle roof-toolbar">
+                    <div className="hbc h-full">
+                        <div className="hcc">
+                            <button className="roof-toolbar-btn material-icons" onClick={e => this.setState({ renderedNewCustomer: true })}>
+                                person_add
+                            </button>
+                        </div>
+                        <div className="hcc">
+                            <input className="toolbar-input" name="query" value={this.state.query} onChange={this.handleChange} />
+                        </div>
+                    </div>
+                </div>
                 <div style={{ height: "calc(100% - 38px)", overflow: "auto" }}>
                     <AQUI.Table
-                        heads={["abbr", "name", "country", "type", "address", "tel", "website", "fax", "create_date", "name_cn"]}
-                        headsHide={["address", "tel", "website", "fax", "create_date", "name_cn"]}
+                        heads={["abbr", "name", "country", "type", "address", "tel", "website", "fax", "create_date", "name_cn", "remark"]}
+                        headsHide={["address", "tel", "website", "fax", "create_date", "name_cn", "remark"]}
                         headsTranslator={R}
                         data={this.props.db.customers}
                         dataTranslator={{
                             create_date: val => {
                                 return new Date(val).toLocaleString();
+                            },
+                            country: val => {
+                                return R.Str(val);
+                            },
+                            type: val => {
+                                return R.Str(`type_${val}`);
                             }
                         }}
-                        rowClick={(e, row) => {
-                            console.log("rowClick", row);
-                        }}
                         rowDoubleClick={(e, row) => {
-                            this.setState({ renderedCustomerDetails: [...this.state.renderedCustomerDetails, row] });
+                            this.openCustomer(row._id);
                         }}
                         rowContextMenu={(e, row) => {
                             e.preventDefault();
-                            console.log("rowContextMenu", row);
+                            this.setState({
+                                customerTableContextMenu: true,
+                                contextMenuX: e.clientX,
+                                contextMenuY: e.clientY,
+                                customerTableContextMenuSelect: row
+                            });
                         }}
                     />
                 </div>
+                {this.renderNewCustomer()}
                 {this.renderCustomerDetails()}
+                {this.renderTableContextMenu()}
             </div>
         );
     }
 
+    renderNewCustomer = () => {
+        if (!this.state.renderedNewCustomer) return;
+
+        let id = new Mongo.ObjectID();
+        return (
+            <CustomerNew
+                key={id._str}
+                context={this.props.context}
+                id={id}
+                onClose={e => {
+                    this.setState({ renderedNewCustomer: false });
+                }}
+            />
+        );
+    };
+
     renderCustomerDetails = () => {
         let windows = [];
-        for (let row of this.state.renderedCustomerDetails) {
+        for (let id of this.state.renderedCustomerDetails) {
             windows.push(
                 <CustomerDetail
-                    key={row._id.toString()}
+                    key={id._str}
                     context={this.props.context}
-                    customer={row}
+                    id={id}
                     onClose={e => {
                         let customers = this.state.renderedCustomerDetails;
-                        customers.splice(customers.indexOf(row), 1);
+                        customers.splice(customers.indexOf(id), 1);
                         this.setState({ renderedCustomerDetails: customers });
                     }}
                 />
@@ -61,19 +114,31 @@ class Customers extends Component {
         return windows;
     };
 
-    componentDidMount() {
-        document.getElementsByTagName("table")[0].addEventListener("scroll", function() {
-            var translate = "translate(0," + this.scrollTop + "px)";
-            var myElements = this.querySelectorAll("thead");
-            for (var i = 0; i < myElements.length; i++) {
-                myElements[i].style.transform = translate;
+    openCustomer = id => {
+        if (this.state.renderedCustomerDetails.includes(id)) {
+            this.props.activateWindow(id._str, this.props.context.props.appKey);
+        } else this.setState({ renderedCustomerDetails: [...this.state.renderedCustomerDetails, id] });
+    };
+
+    renderTableContextMenu = () => {
+        let row = this.state.customerTableContextMenuSelect;
+        let customerTableContextMenu = [
+            {
+                title: R.Str("OPEN"),
+                onClick: e => {
+                    this.openCustomer(row._id);
+                }
             }
-        });
-    }
+        ];
+        let menu = (
+            <Menu context={this} name="customerTableContextMenu" x={this.state.contextMenuX} y={this.state.contextMenuY} content={customerTableContextMenu} />
+        );
+        return ReactDOM.createPortal(menu, document.getElementById("menu-container"));
+    };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({}, dispatch);
+    return bindActionCreators({ activateWindow }, dispatch);
 }
 
 function mapStateToProps(state) {

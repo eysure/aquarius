@@ -6,7 +6,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Meteor } from "meteor/meteor";
 import { Tracker } from "meteor/tracker";
-import { Collections } from "../utils";
+import { Collection } from "../utils";
 import _ from "lodash";
 
 import * as Action from "../actions";
@@ -29,7 +29,7 @@ class VirtualDataLayer extends React.Component {
                 for (let collection of collections) {
                     this.props.bindCollection(
                         collection,
-                        Collections(collection)
+                        Collection(collection)
                             .find()
                             .fetch()
                     );
@@ -37,7 +37,7 @@ class VirtualDataLayer extends React.Component {
             } else {
                 this.props.bindCollection(
                     collections,
-                    Collections(collections)
+                    Collection(collections)
                         .find()
                         .fetch()
                 );
@@ -60,7 +60,7 @@ class VirtualDataLayer extends React.Component {
             this.updateAuth();
 
             if (!Meteor.user()) return;
-            let employee = Collections("employees").findOne({ email: Meteor.user().emails[0].address });
+            let employee = Collection("employees").findOne({ email: Meteor.user().emails[0].address });
             if (!employee) return;
 
             this.props.bindUserInfo(employee);

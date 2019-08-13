@@ -80,10 +80,12 @@ export function systemControl(system) {
 }
 
 export function throwMsg(msg, args = null) {
-    // TODO: Back compatible, no longer support in next version
+    // TODO: Back compatible, no longer support in current version
     if (typeof msg === "string" || msg instanceof String) {
-        console.error("Deprecated: Throw a message by key in action function is deprecated and no longer support in current version. Use R.Msg(...) instead.");
-        return null;
+        msg = {
+            title: msg,
+            class: 1
+        };
     }
 
     return {
@@ -199,13 +201,6 @@ export function bindCollection(name, collection) {
             name,
             collection
         }
-    };
-}
-
-export function bindCollections(collections) {
-    return {
-        type: BIND_COLLECTIONS,
-        payload: collections
     };
 }
 

@@ -22,7 +22,7 @@ class Preference extends Component {
                 appKey={this.props.appKey}
                 width={800}
                 height={600}
-                titlebar={getAppName("preference", this.props.user)}
+                title={R.Trans(Preference.manifest.appName)}
                 onClose={e => this.setState({ open: false })}
             >
                 <div>Preferences</div>

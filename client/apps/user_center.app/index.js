@@ -56,8 +56,11 @@ class UserCenter extends Component {
 
         upload(
             file,
-            "uploadAvatar",
-            null,
+            {
+                db: "employees",
+                findOne: { email: this.props.user.email },
+                field: "avatar"
+            },
             () => {
                 this.props.throwMsg(
                     R.Msg("FILE_UPLOADING", {
@@ -110,7 +113,17 @@ class UserCenter extends Component {
     renderUserCenter = () => {
         if (this.props.user.status === 1) {
             return (
-                <Window key="Main" _key="Main" width={960} height={720} appKey={this.props.appKey} theme="light" onClose={e => this.setState({ open: false })}>
+                <Window
+                    key="Main"
+                    _key="Main"
+                    width={960}
+                    height={720}
+                    appKey={this.props.appKey}
+                    title={R.Trans(UserCenter.manifest.appName)}
+                    noTitlebar
+                    theme="light"
+                    onClose={e => this.setState({ open: false })}
+                >
                     <div className="window-sidebar-container">
                         <div className="window-sidebar">
                             <div className="user-center-sidebar-user-section">

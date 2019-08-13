@@ -16,7 +16,7 @@ class Manual extends Component {
                 width={"40vmin"}
                 height={"60vmin"}
                 appKey={this.props.appKey}
-                titlebar="Manual"
+                title={R.Trans(Manual.manifest.appName)}
                 onClose={e => this.setState({ open: false })}
             >
                 <div className="app-template-fill">

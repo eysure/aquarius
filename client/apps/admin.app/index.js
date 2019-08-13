@@ -54,7 +54,17 @@ class Admin extends React.Component {
     render() {
         if (!this.state.open) return null;
         return (
-            <Window key={"admin"} _key={"admin"} width={800} height={600} appKey={this.props.appKey} theme="dark" onClose={e => this.setState({ open: false })}>
+            <Window
+                key={"admin"}
+                _key={"admin"}
+                width={800}
+                height={600}
+                appKey={this.props.appKey}
+                title={R.Trans(Admin.manifest.appName)}
+                noTitlebar
+                theme="dark"
+                onClose={e => this.setState({ open: false })}
+            >
                 <div className="window-sidebar-container">
                     <div className="window-sidebar">
                         <ul>{this.renderSidebar()}</ul>

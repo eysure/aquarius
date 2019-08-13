@@ -53,7 +53,16 @@ class CustomerRelationshipManager extends Component {
     render() {
         if (!this.state.open) return null;
         return (
-            <Window key="Main" _key="Main" width={1200} height={800} appKey={this.props.appKey} onClose={e => this.setState({ open: false })}>
+            <Window
+                key="Main"
+                _key="Main"
+                width={1200}
+                height={800}
+                title={R.Trans(CustomerRelationshipManager.manifest.appName)}
+                noTitlebar
+                appKey={this.props.appKey}
+                onClose={e => this.setState({ open: false })}
+            >
                 <div className="window-sidebar-container">
                     <div className="window-sidebar">
                         <ul>{this.renderSidebar()}</ul>

@@ -33,6 +33,7 @@ export default {
     AUTHORITY_TABLE: ["Authority Table", "权限表"],
 
     // Initialization
+    EMPLOYEE_INITIALIZATION: ["Employee Initialization", "员工初始化"],
     UCI_WELCOME_TITLE: ["Welcome To Trumode", "欢迎来到 Trumode"],
     UCI_WELCOME_DESCRIPTION: [
         "We have several things to do right now. Optimally, you only need less than 10 minutes.",

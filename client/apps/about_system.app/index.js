@@ -22,6 +22,8 @@ class AboutSystem extends Component {
                 canMaximize={false}
                 canResize={false}
                 onClose={e => this.setState({ open: false })}
+                title={R.Trans(AboutSystem.manifest.appName)}
+                noTitlebar
                 escToClose
             >
                 <div
