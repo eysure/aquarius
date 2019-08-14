@@ -43,12 +43,15 @@ class Customers extends Component {
                 </div>
                 <div style={{ height: "calc(100% - 38px)", overflow: "auto" }}>
                     <AQUI.Table
-                        heads={["abbr", "name", "country", "type", "address", "tel", "website", "fax", "create_date", "name_cn", "remark"]}
-                        headsHide={["address", "tel", "website", "fax", "create_date", "name_cn", "remark"]}
+                        heads={["abbr", "name", "country", "type", "address", "tel", "website", "fax", "time_created", "time_modified", "name_cn", "remark"]}
+                        headsHide={["address", "tel", "website", "fax", "time_modified", "name_cn", "remark"]}
                         headsTranslator={R}
                         data={this.props.db.customers}
                         dataTranslator={{
-                            create_date: val => {
+                            time_created: val => {
+                                return new Date(val).toLocaleString();
+                            },
+                            time_modified: val => {
                                 return new Date(val).toLocaleString();
                             },
                             country: val => {
@@ -70,6 +73,8 @@ class Customers extends Component {
                                 customerTableContextMenuSelect: row
                             });
                         }}
+                        sortBy="name"
+                        asc={true}
                     />
                 </div>
                 {this.renderNewCustomer()}

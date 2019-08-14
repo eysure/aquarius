@@ -6,6 +6,7 @@ import ReactDOM from "react-dom";
 import _ from "lodash";
 import hotkeys from "hotkeys-js";
 import DropFile from "../DropFile";
+import Spinner from "../spinner";
 
 export class Button extends Component {
     render() {
@@ -123,8 +124,10 @@ export class Button extends Component {
 // }
 
 export class FieldItem extends Component {
+    state = {};
+
     schema = null;
-    state = null;
+    parentState = null;
     name = null;
     field = null;
 
@@ -159,30 +162,30 @@ export class FieldItem extends Component {
     calculateSingleCondition = (name, key, val) => {
         if (this.field.debug) console.log("single: ", name, key, val);
         if (key === "$regex") {
-            let res = val.exec(this.state[name]);
+            let res = val.exec(this.parentState[name]);
             return res ? true : false;
         } else if (key === "$func") {
-            return val(this.state[name]);
+            return val(this.parentState[name]);
         } else if (key === "$eq") {
-            if (this.state[val] === undefined) {
+            if (this.parentState[val] === undefined) {
                 throw new Error(
                     `Exception when calculate single condition. When compare state.${name} and state.${val}, state.${val} is not exist in the state, maybe a typo, or not set.`
                 );
             }
-            return this.state[name] === this.state[val];
+            return this.parentState[name] === this.parentState[val];
         } else if (key === "$!eq") {
-            if (this.state[val] === undefined) {
+            if (this.parentState[val] === undefined) {
                 throw new Error(
                     `Exception when calculate single condition. When compare state.${name} and state.${val}, state.${val} is not exist in the state, maybe a typo, or not set.`
                 );
             }
-            return this.state[name] !== this.state[val];
-        } else if (this.state[key] !== undefined) {
+            return this.parentState[name] !== this.parentState[val];
+        } else if (this.parentState[key] !== undefined) {
             if (val === "$valid") return this.calculateValid(key);
             else if (val === "$!valid") return !this.calculateValid(key);
             else if (val === "$disabled") return this.calculateDisable(key);
             else if (val === "$!disabled") return !this.calculateDisable(key);
-            else return this.state[key] === val;
+            else return this.parentState[key] === val;
         } else {
             console.error(
                 `Exception when calculate single condition. key: "${key}" is not recognized, only $regex or specific field is valid. False is returned.`
@@ -198,9 +201,9 @@ export class FieldItem extends Component {
             // When value is not one of the options, return false
             let options = field.options;
             if (Array.isArray(options)) {
-                if (!options.includes(this.state[name])) return false;
+                if (!options.includes(this.parentState[name])) return false;
             } else {
-                if (!Object.keys(options).includes(this.state[name])) return false;
+                if (!Object.keys(options).includes(this.parentState[name])) return false;
             }
         }
 
@@ -210,7 +213,7 @@ export class FieldItem extends Component {
     };
 
     calculateDisable = name => {
-        if (this.state.processing) return true;
+        if (this.parentState.processing) return true;
         if (this.schema[name].disabled === true) return true;
         if (!this.schema[name].disabled) return false;
         return this.calculateConditions(name, this.schema[name].disabled);
@@ -220,7 +223,7 @@ export class FieldItem extends Component {
         if (!e) return;
         e.preventDefault();
         this.props.context.setState({ [e.target.name]: e.target.value });
-        if (!this.props.context.state["modified"]) this.props.context.setState({ modified: true });
+        if (!this.parentState["modified"]) this.props.context.setState({ modified: true });
     };
 
     renderSelect = () => {
@@ -244,17 +247,24 @@ export class FieldItem extends Component {
         }
     };
 
+    renderImagePlaceholder = (src, load) => {
+        if (!src) return <i className="material-icons">add_circle_outline</i>;
+        if (!load) return <Spinner />;
+        return null; // Only image
+    };
+
     render() {
         if (!this.props.name) throw new Error("Props: name is not set for this FieldItem");
         if (!this.props.context) throw new Error("Props: context is not set for this Field Item.");
         if (!this.props.schema) throw new Error(`No shcema is provided for this Field Item: ${this.props.name}`);
 
         this.schema = this.props.schema;
-        this.state = this.props.context.state;
+        this.parentState = this.props.context.state;
         this.name = this.props.name;
         this.field = this.schema[this.name];
 
-        let { schema, state, name, field } = this;
+        let { schema, name, field } = this;
+        let state = this.parentState;
 
         if (!schema) throw new Error(`This FieldItem ${name} has no schema set. Check the parent class and set the schema.`);
         if (!state) throw new Error(`State of this FieldItem "${name}" is not set.`);
@@ -303,7 +313,16 @@ export class FieldItem extends Component {
                 return (
                     <div id={`${name}-input-item`} className="aqui-input-item vss" style={{ width: this.props.width || "100%" }}>
                         {field.title && <div className="hsc aqui-input-title">{field.title}</div>}
-                        <select ref={this.inputRef} id={name} name={name} className="input" value={state[name]} onChange={this.onChange} disabled={disabled}>
+                        <select
+                            ref={this.inputRef}
+                            id={name}
+                            name={name}
+                            className="input"
+                            value={state[name]}
+                            onChange={this.onChange}
+                            onKeyDown={this.onKeyDown}
+                            disabled={disabled}
+                        >
                             <option value={""} disabled>
                                 {field.placeholder || "Please Select"}
                             </option>
@@ -347,14 +366,9 @@ export class FieldItem extends Component {
                                 <img
                                     src={state[name] && field.srcTranslator ? field.srcTranslator(state[name]) : state[name]}
                                     style={{ maxWidth: "100%", maxHeight: "100%" }}
-                                    onError={e => {
-                                        // let image = e.target;
-                                        // image.onerror = "";
-                                        // image.src = "/assets/os_logo_white.png";
-                                        // return true;
-                                    }}
+                                    onLoad={e => this.setState({ imageLoad: true })}
                                 />
-                                {!state[name] && <i className="material-icons">add_circle_outline</i>}
+                                {this.renderImagePlaceholder(state[name], this.state.imageLoad)}
                             </DropFile>
                         </div>
                         {field.caption && <span className="aqui-input-caption">{field.caption}</span>}
@@ -550,8 +564,8 @@ import Menu from "../Menus";
 
 export class Table extends Component {
     state = {
-        sortBy: null,
-        asc: false,
+        sortBy: this.props.sortBy,
+        asc: this.props.asc,
         heads: [],
         headsHide: [],
         data: [],
@@ -603,15 +617,20 @@ export class Table extends Component {
         let resortedData = [...this.state.data];
         if (sortBy === null) return;
         resortedData.sort((d1, d2) => {
-            if (!d1[sortBy]) return 1;
-            else if (!d2[sortBy]) return -1;
-            else if (d1[sortBy] < d2[sortBy]) {
+            let c1 = d1[sortBy];
+            let c2 = d2[sortBy];
+            if (_.isString(c1)) c1 = c1.trim().toLowerCase();
+            if (_.isString(c2)) c2 = c2.trim().toLowerCase();
+
+            if (!c1) return 1;
+            else if (!c2) return -1;
+            else if (c1 < c2) {
                 return asc ? -1 : 1;
-            } else if (d1[sortBy] > d2[sortBy]) {
+            } else if (c1 > c2) {
                 return asc ? 1 : -1;
             } else return 0;
         });
-        this.setState({ data: resortedData });
+        if (!_.isEqual(this.state.data, resortedData)) this.setState({ data: resortedData });
     }
 
     autoDetectWidth = () => {
@@ -832,9 +851,7 @@ export class Table extends Component {
             tmpState.autoWidths = widths;
         }
 
-        if (!_.isEqual(this.state.sortBy, prevState.sortBy) || !_.isEqual(this.state.asc, prevState.asc)) {
-            this.sort();
-        }
+        this.sort();
 
         if (!_.isEqual(this.props.data, prevProps.data) || !_.isEqual(this.props.heads, prevProps.heads)) {
             tmpState.data = this.props.data;

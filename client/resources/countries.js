@@ -1,3 +1,6 @@
+// Notice: countries is only the file name and for convenience.
+// This list consists of countries, regions, special administrative regions and disputed area.
+
 export default {
     __: ["Unkown", "未知"],
     AF: ["Afghanistan", "阿富汗"],
@@ -98,7 +101,7 @@ export default {
     HT: ["Haiti", "海地"],
     HM: ["Heard Island and McDonald Islands", "赫德岛和麦克唐纳群岛"],
     HN: ["Honduras", "洪都拉斯"],
-    HK: ["Hong Kong", "中国香港"],
+    HK: ["Hong Kong (SAR)", "中国香港"],
     HU: ["Hungary", "匈牙利"],
     IS: ["Iceland", "冰岛"],
     IN: ["India", "印度"],
@@ -127,7 +130,7 @@ export default {
     LI: ["Liechtenstein", "列支敦士登"],
     LT: ["Lithuania", "立陶宛"],
     LU: ["Luxembourg", "卢森堡"],
-    MO: ["Macao", "中国澳门"],
+    MO: ["Macao (SAR)", "中国澳门"],
     MG: ["Madagascar", "马达加斯加"],
     MW: ["Malawi", "马拉维"],
     MY: ["Malaysia", "马来西亚"],

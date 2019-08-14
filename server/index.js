@@ -150,6 +150,11 @@ Meteor.publish("allCustomers", function() {
     return Collection("customers").find();
 });
 
+Meteor.publish("customerContacts", function(args) {
+    if (!this.userId) return null;
+    return Collection("customers_contacts").find({ customer_id: args.customer_id });
+});
+
 // Account log
 Accounts.config({
     loginExpirationInDays: 1,

@@ -4,6 +4,7 @@ import { Collection, oss } from "./resources";
 import { Accounts } from "meteor/accounts-base";
 import MailService from "./mail_service";
 import Ajv from "ajv";
+import { Mongo } from "meteor/mongo";
 
 import EmployeeInitializationSchema from "../public/schemas/employee_initialization.schema.json";
 
@@ -208,7 +209,7 @@ export function upload(args, file) {
     }
 
     let target = Collection(db).findOne(findOne);
-    if (!target) return new Meteor.Error(404, "Target is not find");
+    if (!target) throw new Meteor.Error(404, "Target is not find");
 
     let prefix = `assets/${db}/${field}/`;
 
@@ -240,6 +241,42 @@ export function upload(args, file) {
     return put();
 }
 
+export async function edit(args) {
+    if (!this.userId) throw new Meteor.Error(401, "User is not loged in");
+
+    let client = oss();
+    if (!client) return new Meteor.Error(500, "OSS cannot establish");
+
+    let { db, findOne, action, data } = args;
+
+    // Auth check
+    if (!_.get(getAuth(this.userId), `wr_${db}`, false)) {
+        throw new Meteor.Error(403, `wr_${db}`);
+    }
+
+    // TODO: Schema Validation
+
+    try {
+        if (action === "insert" || action === "add") {
+            if (!data._id) data._id = new Mongo.ObjectID();
+            data.time_created = new Date();
+            data.time_modified = new Date();
+            Collection(db).insert(data);
+        } else if (action === "update" || action === "edit") {
+            data.time_modified = new Date();
+            Collection(db).update(findOne, { $set: data });
+        } else if (action === "delete" || action === "remove") {
+            Collection(db).remove(findOne);
+        }
+    } catch (err) {
+        throw new Meteor.Error(500, err);
+    }
+
+    return {
+        status: 200
+    };
+}
+
 export async function editCustomer(data) {
     if (!this.userId) throw new Meteor.Error(401, "User is not loged in");
 
@@ -253,6 +290,8 @@ export async function editCustomer(data) {
 
     let customer = Collection("customers").findOne({ _id: data._id });
     if (!customer) throw new Meteor.Error(404, "Customer not found");
+
+    data.time_modified = new Date();
 
     try {
         Collection("customers").update({ _id: data._id }, { $set: data });
@@ -296,6 +335,9 @@ export function addCustomer(data) {
     if (!_.get(getAuth(this.userId), `wr_customers`, false)) {
         throw new Meteor.Error(403, `wr_customers`);
     }
+
+    data.time_created = new Date();
+    data.time_modified = new Date();
 
     try {
         Collection("customers").insert(data);

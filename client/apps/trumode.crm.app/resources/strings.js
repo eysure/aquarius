@@ -13,13 +13,14 @@ export default {
     logo: ["Logo", "Logo"],
     abbr: ["Abbr.", "简称"],
     name: ["Name", "名称"],
-    country: ["Country", "国家或地区"],
+    country: ["Country or Region", "国家或地区"],
     type: ["Type", "类型"],
     address: ["Address", "地址"],
     tel: ["Tel.", "电话"],
     website: ["Website", "网站"],
     fax: ["Fax", "传真"],
-    create_date: ["Create Time", "创建时间"],
+    time_created: ["Created Time", "创建时间"],
+    time_modified: ["Last Modified Time", "最后修改时间"],
     name_cn: ["Name (CN)", "中文名称"],
     remark: ["Remark", "备注"],
 
@@ -39,5 +40,21 @@ export default {
     ],
     NEW_CUSTOMER: ["New Customer", "新建客户"],
     NAME_PH: ["Full company name", "公司全名"],
-    ABBR_PH: ["Brand abbrivation", "商标简称"]
+    ABBR_PH: ["Brand abbrivation", "商标简称"],
+
+    TAB_CUSTOMER_BASIC_INFO: ["Basic Info", "基本信息"],
+    TAB_CUSTOMER_CONTACTS: ["Contacts", "联系人"],
+    TAB_CUSTOMER_ANALYZE: ["Analyze", "分析"],
+
+    TAB_CUSTOMER_BASIC_INFO_ICON: ["folder_shared", "folder_shared"],
+    TAB_CUSTOMER_CONTACTS_ICON: ["folder_shared", "folder_shared"],
+    TAB_CUSTOMER_ANALYZE_ICON: ["folder_shared", "folder_shared"],
+
+    // Customer Contact
+    // Field
+    photo: ["Photo", "照片"],
+    role: ["Role", "职位"],
+    email: ["Email", "邮箱"],
+    mobile: ["Mobile", "电话"],
+    CUSTOMER_CONTACT_DELETE_DC: ['Are you sure to delete "${name}"? \n This cannot be undo.', '你确定要删除"${name}"吗？此操作不能复原。']
 };
