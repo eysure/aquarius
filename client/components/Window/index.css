@@ -597,9 +597,9 @@
 
 .window-content-inner {
     box-sizing: border-box;
-    width: calc(100% - 80px);
-    margin: 0 40px;
-    padding: 40px 0;
+    width: calc(100% - 64px);
+    margin: 0 32px;
+    padding: 32px 0;
 }
 
 /*

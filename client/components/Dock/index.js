@@ -6,7 +6,7 @@ import FlipMove from "react-flip-move";
 
 import { getAppName } from "../../app_utils";
 
-import { appLaunch, appClose, appConfig, launchPadControl, appWindowActivate } from "../../actions";
+import { appLaunch, appClose, appConfig, launchPadControl, activateWindow } from "../../actions";
 
 import DockItem from "./dock_item";
 import { WINDOW_STATUS_MIN, WINDOW_STATUS_NORMAL } from "../Window";
@@ -54,7 +54,7 @@ class Dock extends React.Component {
     handleDockItemClick = app => {
         if (app.status === WINDOW_STATUS_MIN) {
             this.props.appConfig(app.appKey, { status: WINDOW_STATUS_NORMAL }); // Make the window to the normal size
-        } else this.props.appWindowActivate(app.appKey);
+        } else this.props.activateWindow(app.appKey);
     };
 
     onContextMenu = e => {
@@ -72,7 +72,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ appLaunch, appClose, appConfig, launchPadControl, appWindowActivate }, dispatch);
+    return bindActionCreators({ appLaunch, appClose, appConfig, launchPadControl, activateWindow }, dispatch);
 }
 
 export default connect(

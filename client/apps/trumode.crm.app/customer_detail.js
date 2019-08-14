@@ -10,7 +10,7 @@ import { getCountryList, upload, Collection, oss } from "../../utils";
 
 import { throwMsg } from "../../actions";
 import { Meteor } from "meteor/meteor";
-import DoubleCheck from "../../components/double_check";
+import Popup from "../../components/Window/popup";
 
 class CustomerDetail extends Component {
     state = {
@@ -27,7 +27,8 @@ class CustomerDetail extends Component {
         name_cn: "",
         remark: "",
         processing: false,
-        deleteDoubleCheck: 0
+        deleteDoubleCheck: false,
+        modified: false
     };
 
     schema = {
@@ -109,6 +110,15 @@ class CustomerDetail extends Component {
         save: {
             title: R.Str("SAVE"),
             type: "button",
+            disabled: {
+                $or: {
+                    abbr: "$!valid",
+                    name: "$!valid",
+                    country: "$!valid",
+                    type: "$!valid",
+                    modified: false
+                }
+            },
             onClick: e => {
                 this.handleSave(e);
             }
@@ -117,7 +127,7 @@ class CustomerDetail extends Component {
             title: R.Str("DELETE"),
             type: "button",
             onClick: e => {
-                this.setState({ deleteDoubleCheck: 1 });
+                this.setState({ deleteDoubleCheck: true });
             }
         }
     };
@@ -149,6 +159,7 @@ class CustomerDetail extends Component {
     };
 
     render() {
+        if (!this.state._id) return null;
         return (
             <Window
                 onClose={this.props.onClose}
@@ -185,13 +196,14 @@ class CustomerDetail extends Component {
                         <AQUI.FieldItem context={this} schema={this.schema} name="save" />
                     </div>
                 </div>
-                <DoubleCheck
+                <Popup
                     context={this}
                     _key={this.state._id + "Delete Check"}
                     name="deleteDoubleCheck"
                     appKey={this.props.context.props.appKey}
                     title={`Delete ${this.state.name} checking`}
                     content={R.Str("CUSTOMER_DELETE_DC", { name: this.state.name })}
+                    onCheck={this.handleDelete}
                 />
             </Window>
         );
@@ -205,12 +217,6 @@ class CustomerDetail extends Component {
     componentDidUpdate(prevProps, prevState) {
         if (!_.isEqual(this.props, prevProps)) {
             this.componentDidMount();
-        }
-
-        if (this.state.deleteDoubleCheck === 2) {
-            this.setState({ deleteDoubleCheck: 0 }, () => {
-                this.handleDelete();
-            });
         }
     }
 }

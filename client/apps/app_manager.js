@@ -7,7 +7,7 @@ import _ from "lodash";
 import { ResourceFeeder } from "../resources_feeder";
 const R = new ResourceFeeder(null);
 
-import { appClose, appWindowActivate } from "../actions";
+import { appClose, activateWindow } from "../actions";
 
 import Window, { WINDOW_PRIORITY_TOP } from "../components/Window";
 
@@ -43,7 +43,7 @@ class AppManager extends Component {
                     button
                     key={app.appKey}
                     onClick={() => {
-                        this.props.appWindowActivate(app.appKey, app.option);
+                        this.props.activateWindow(app.appKey);
                     }}
                 >
                     <UI.ListItemIcon>
@@ -87,7 +87,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ appClose, appWindowActivate }, dispatch);
+    return bindActionCreators({ appClose, activateWindow }, dispatch);
 }
 
 AppManager.manifest = {

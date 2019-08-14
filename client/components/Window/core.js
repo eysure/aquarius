@@ -4,6 +4,7 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import _ from "lodash";
+import hotkeys from "hotkeys-js";
 import DropFile from "../DropFile";
 
 export class Button extends Component {
@@ -127,6 +128,7 @@ export class FieldItem extends Component {
     name = null;
     field = null;
 
+    inputRef = React.createRef();
     textareaRef = React.createRef();
 
     calculateConditions = (name, conditions) => {
@@ -136,21 +138,26 @@ export class FieldItem extends Component {
         }
 
         let res = true;
+        if (this.field.debug) console.log("conditions:", name);
         for (let and_con in conditions) {
             if (and_con === "$or") {
+                if (this.field.debug) console.log("or");
                 let subres = false;
                 for (let or_con in conditions["$or"]) {
-                    subres |= this.calculateSingleCondition(name, or_con, conditions["$or"][or_con]);
+                    subres = subres || this.calculateSingleCondition(name, or_con, conditions["$or"][or_con]);
+                    if (this.field.debug) console.log(`\tor subres for "${name}" with single condition:`, subres);
                 }
-                res &= subres;
+                res = res && subres;
             } else {
-                res &= this.calculateSingleCondition(name, and_con, conditions[and_con]);
+                res = res && this.calculateSingleCondition(name, and_con, conditions[and_con]);
             }
         }
+        if (this.field.debug) console.log(`final Result for "${name}":`, res);
         return res;
     };
 
     calculateSingleCondition = (name, key, val) => {
+        if (this.field.debug) console.log("single: ", name, key, val);
         if (key === "$regex") {
             let res = val.exec(this.state[name]);
             return res ? true : false;
@@ -213,6 +220,7 @@ export class FieldItem extends Component {
         if (!e) return;
         e.preventDefault();
         this.props.context.setState({ [e.target.name]: e.target.value });
+        if (!this.props.context.state["modified"]) this.props.context.setState({ modified: true });
     };
 
     renderSelect = () => {
@@ -274,7 +282,16 @@ export class FieldItem extends Component {
                                 this.onChange(e);
                             }}
                         >
-                            <input id={name} type="checkbox" style={{ display: "none" }} checked={state[name]} disabled={disabled} onChange={this.onChange} />
+                            <input
+                                ref={this.inputRef}
+                                id={name}
+                                type="checkbox"
+                                style={{ display: "none" }}
+                                checked={state[name]}
+                                disabled={disabled}
+                                onChange={this.onChange}
+                                onKeyDown={this.onKeyDown}
+                            />
                             <div className={classList.join(" ")} />
                             <div className="aqui-input-title aqui-checkbox-label">{field.title}</div>
                         </div>
@@ -286,7 +303,7 @@ export class FieldItem extends Component {
                 return (
                     <div id={`${name}-input-item`} className="aqui-input-item vss" style={{ width: this.props.width || "100%" }}>
                         {field.title && <div className="hsc aqui-input-title">{field.title}</div>}
-                        <select id={name} name={name} className="input" value={state[name]} onChange={this.onChange} disabled={disabled}>
+                        <select ref={this.inputRef} id={name} name={name} className="input" value={state[name]} onChange={this.onChange} disabled={disabled}>
                             <option value={""} disabled>
                                 {field.placeholder || "Please Select"}
                             </option>
@@ -300,7 +317,14 @@ export class FieldItem extends Component {
                 let classList = ["aqui-btn"];
                 if (this.props.transparent) classList.push("transparent");
                 return (
-                    <button className={classList.join(" ")} onClick={this.props.onClick || this.field.onClick} disabled={disabled} style={this.props.style}>
+                    <button
+                        ref={this.inputRef}
+                        className={classList.join(" ")}
+                        onClick={this.props.onClick || this.field.onClick}
+                        onKeyDown={this.onKeyDown}
+                        disabled={disabled}
+                        style={this.props.style}
+                    >
                         {field.title}
                     </button>
                 );
@@ -343,12 +367,13 @@ export class FieldItem extends Component {
                     <div id={`${name}-input-item`} className="aqui-input-item vss" style={{ width: this.props.width || "100%" }}>
                         {(this.props.title || field.title) && <div className="hsc aqui-input-title">{this.props.title || field.title}</div>}
                         <textarea
-                            ref={this.textareaRef}
+                            ref={this.inputRef}
                             id={name}
                             name={name}
                             className="input"
                             value={state[name]}
                             onChange={this.onChange}
+                            onKeyDown={this.onKeyDown}
                             disabled={disabled}
                             placeholder={this.props.placeholder || field.placeholder}
                             onInput={e => this.textAreaAutoResize(e.target)}
@@ -363,11 +388,13 @@ export class FieldItem extends Component {
                     <div id={`${name}-input-item`} className="aqui-input-item vss" style={{ width: this.props.width || "100%" }}>
                         {(this.props.title || field.title) && <div className="hsc aqui-input-title">{this.props.title || field.title}</div>}
                         <input
+                            ref={this.inputRef}
                             id={name}
                             name={name}
                             value={state[name]}
                             type={field.type || "text"}
                             onChange={this.onChange}
+                            onKeyDown={this.onKeyDown}
                             disabled={disabled}
                             placeholder={this.props.placeholder || field.placeholder}
                         />
@@ -378,15 +405,22 @@ export class FieldItem extends Component {
         }
     }
 
+    onKeyDown = e => {
+        // Esc
+        if (e.keyCode === 27) {
+            e.target.blur();
+        }
+    };
+
     componentDidMount() {
-        if (this.textareaRef && this.textareaRef.current) {
-            this.textAreaAutoResize(this.textareaRef.current);
+        if (this.inputRef && this.inputRef.current && this.inputRef.current.tagName === "TEXTAREA") {
+            this.textAreaAutoResize(this.inputRef.current);
         }
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.textareaRef && this.textareaRef.current) {
-            this.textAreaAutoResize(this.textareaRef.current);
+        if (this.inputRef && this.inputRef.current && this.inputRef.current.tagName === "TEXTAREA") {
+            this.textAreaAutoResize(this.inputRef.current);
         }
     }
 

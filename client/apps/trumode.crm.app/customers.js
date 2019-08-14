@@ -116,7 +116,7 @@ class Customers extends Component {
 
     openCustomer = id => {
         if (this.state.renderedCustomerDetails.includes(id)) {
-            this.props.activateWindow(id._str, this.props.context.props.appKey);
+            this.props.activateWindow(this.props.context.props.appKey, id._str);
         } else this.setState({ renderedCustomerDetails: [...this.state.renderedCustomerDetails, id] });
     };
 

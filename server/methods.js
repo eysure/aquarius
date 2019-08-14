@@ -265,7 +265,7 @@ export async function editCustomer(data) {
     };
 }
 
-export async function deleteCustomer(id) {
+export function deleteCustomer(id) {
     if (!this.userId) throw new Meteor.Error(401, "User is not loged in");
 
     // Auth check
@@ -279,7 +279,7 @@ export async function deleteCustomer(id) {
     // TODO: Check if any order has this customer, if so, delete is forbidden
 
     try {
-        Collection("customers").remove({ _id: id }, { justOne: true });
+        Collection("customers").remove({ _id: id });
     } catch (err) {
         throw new Meteor.Error(500, err);
     }
@@ -289,7 +289,7 @@ export async function deleteCustomer(id) {
     };
 }
 
-export async function addCustomer(data) {
+export function addCustomer(data) {
     if (!this.userId) throw new Meteor.Error(401, "User is not loged in");
 
     // Auth check

@@ -23,7 +23,6 @@ export const LAUNCHPAD_CONTROL = "LAUNCHPAD_CONTROL";
 export const APP_LAUNCH = "APP_LAUNCH";
 export const APP_LAUNCH_DEPRECATED = "APP_LAUNCH_DEPRECATED";
 export const APP_CLOSE = "APP_CLOSE";
-export const APP_WINDOW_ACTIVATE = "APP_WINDOW_ACTIVATE";
 export const APP_CONFIG = "APP_CONFIG";
 
 export const UPDATE_SALES_ORDER = "UPDATE_SALES_ORDER";
@@ -32,8 +31,9 @@ export const DELETE_SALES_ORDER = "DELETE_SALES_ORDER";
 export const BIND_COLLECTION = "BIND_COLLECTION";
 export const BIND_COLLECTIONS = "BIND_COLLECTIONS";
 
-export const REGISTER_WINDOW = "REGISTER_WINDOW";
 export const ACTIVATE_WINDOW = "ACTIVATE_WINDOW";
+export const DEACTIVATE_WINDOW = "DEACTIVATE_WINDOW";
+export const REGISTER_WINDOW = "REGISTER_WINDOW";
 export const UNREGISTER_WINDOW = "UNREGISTER_WINDOW";
 
 export function logout(msg = null) {
@@ -174,16 +174,6 @@ export function appClose(appKey, option = null) {
     };
 }
 
-export function appWindowActivate(appKey, option) {
-    return {
-        type: APP_WINDOW_ACTIVATE,
-        payload: {
-            appKey,
-            option
-        }
-    };
-}
-
 export function appConfig(appKey, configuration) {
     return {
         type: APP_CONFIG,
@@ -204,33 +194,67 @@ export function bindCollection(name, collection) {
     };
 }
 
-export function registerWindow(windowKey, window, appKey) {
-    return {
-        type: REGISTER_WINDOW,
-        payload: {
-            windowKey,
-            window,
-            appKey
-        }
-    };
-}
-
-export function activateWindow(windowKey, appKey) {
+/**
+ * Active window inside app.
+ * If no windowKey is provided, reducer will activate the last window in this app.
+ * @param {string} appKey
+ * @param {string} windowKey
+ */
+export function activateWindow(appKey, windowKey = null) {
     return {
         type: ACTIVATE_WINDOW,
         payload: {
-            windowKey,
-            appKey
+            appKey,
+            windowKey
         }
     };
 }
 
-export function unregisterWindow(windowKey, appKey) {
+/**
+ * Deactivate window. Reducer will activate the last window in this app, or the last window if no other window is inside this app.
+ * If windowKey is null, the last window not belongs to this app will be activated.
+ * If appKey is null, desktop will be activated.
+ * @param {string} appKey
+ * @param {string} windowKey
+ */
+export function deactivateWindow(appKey = null, windowKey = null) {
+    return {
+        type: DEACTIVATE_WINDOW,
+        payload: {
+            appKey,
+            windowKey
+        }
+    };
+}
+
+/**
+ * Register a window. Use when a window is mount. This window will add to the end of the chain and be activated (same thing).
+ * @param {string} appKey
+ * @param {*} windowKey
+ * @param {React.Component} window
+ */
+export function registerWindow(appKey, windowKey, window) {
+    return {
+        type: REGISTER_WINDOW,
+        payload: {
+            appKey,
+            windowKey,
+            window
+        }
+    };
+}
+
+/**
+ * Unregister a window. Use when a window will unmount. Reducer will also deactivate this window and activate the last window in chain.
+ * @param {string} appKey
+ * @param {string} windowKey
+ */
+export function unregisterWindow(appKey, windowKey) {
     return {
         type: UNREGISTER_WINDOW,
         payload: {
-            windowKey,
-            appKey
+            appKey,
+            windowKey
         }
     };
 }

@@ -94,6 +94,7 @@ class CustomerNew extends Component {
                 appKey={this.props.context.props.appKey}
                 title={R.Str("NEW_CUSTOMER")}
                 theme="light"
+                escToClose
             >
                 <div className="window-content-inner handle">
                     <AQUI.FieldItem context={this} schema={this.schema} name="name" />

@@ -1,56 +1,139 @@
-import * as ACTION from "../actions";
+import { REGISTER_WINDOW, UNREGISTER_WINDOW, ACTIVATE_WINDOW, DEACTIVATE_WINDOW, LOGOUT, deactivateWindow } from "../actions";
 import _ from "lodash";
 
-activateWindow = (state, appKey, windowKey) => {
-    for (let a in state) {
-        for (let w in state[a]) {
-            state[a][w].handleActivate(false);
-        }
-    }
-    if (!appKey) return;
-    if (windowKey && state[appKey][windowKey]) state[appKey][windowKey].handleActivate(true);
-    else if (!windowKey) {
-        let windows = state[appKey];
-        let windowCount = Object.keys(windows).length;
-        if (windowCount === 0) console.warn("TODO: No window in a opened app, start the app again.");
-        else windows[Object.keys(windows)[0]].handleActivate(true);
-    } else if (windowKey && !state[appKey][windowKey]) console.error(`Attempt to activating an window not listed in the reducer: ${appKey}:${windowKey}`);
+defaultState = {
+    system: {},
+    _awc: []
 };
 
-export default function(state = {}, action) {
+activeWindowChain = [];
+lAct = null; // Last Active Window (appKey::windowKey)
+cAct = null; // Current Active Window (appKey::windowKey)
+
+activeWindowChainPush = (state, appKey, windowKey) => {
+    if (activeWindowChain.length > 0 && activeWindowChain[activeWindowChain.length - 1] === appKey + "::" + windowKey) return;
+    lAct = getCurrent();
+    activeWindowChainRemove(state, appKey, windowKey);
+    activeWindowChain.push(appKey + "::" + windowKey);
+    cAct = getCurrent();
+};
+
+activeWindowChainRemove = (state, appKey, windowKey) => {
+    let index = activeWindowChainFetch(appKey, windowKey);
+    if (index === -1) return -1;
+    if (index === activeWindowChain.length - 1) {
+        lAct = getCurrent();
+    }
+    activeWindowChain.splice(index, 1);
+    cAct = getCurrent();
+    return index;
+};
+
+activeWindowChainFetch = (appKey, windowKey) => {
+    return activeWindowChain.indexOf(appKey + "::" + windowKey);
+};
+
+activateWindow = (state, appKey, windowKey) => {
+    if (!appKey) {
+        // If appKey is not set, throw an error
+        console.error("appKey is not set when activating window.");
+    } else if (windowKey) {
+        // Activate the appKey::windowKey.
+        activeWindowChainPush(state, appKey, windowKey);
+    } else {
+        // If windowKey is not set, active the last window in this app, if exist.
+        for (let i = activeWindowChain.length - 1; i >= 0; i--) {
+            if (activeWindowChain[i].split("::")[0] === appKey) {
+                activeWindowChainPush(state, appKey, activeWindowChain[i].split("::")[1]);
+                return;
+            }
+        }
+        console.warn(`Attempt to activate "${appKey}" without windowKey, but no window exist.`);
+    }
+};
+
+getCurrent = () => {
+    return activeWindowChain.length > 0 ? activeWindowChain[activeWindowChain.length - 1] : null;
+};
+
+deactivateWindow = (state, appKey, windowKey) => {
+    if (!appKey) {
+        activeWindowChainPush(state, "system", "desktop");
+        console.warn("Attempt to deactivate all windows, in what senario are you doing this?");
+    } else if (windowKey) {
+        activeWindowChainRemove(state, appKey, windowKey);
+    } else {
+        for (let i = activeWindowChain.length - 1; i >= 0; i--) {
+            if (activeWindowChain[i].split("::")[0] !== appKey) {
+                activeWindowChainPush(state, activeWindowChain[i].split("::")[0], activeWindowChain[i].split("::")[1]);
+                return;
+            }
+        }
+        activeWindowChainPush(state, "system", "desktop");
+    }
+};
+
+setStateToWindow = (keys, state, isActive) => {
+    if (!keys) return;
+    let [appKey, windowKey] = keys.split("::");
+
+    let app = state[appKey];
+    if (!app) return;
+    let window = app[windowKey];
+    if (!window) return;
+
+    if (window.state.isActive !== isActive) {
+        window.setState({ isActive });
+        if (isActive) window.restoreWindowPosition();
+    }
+};
+
+responsibleActionType = new Set([REGISTER_WINDOW, UNREGISTER_WINDOW, ACTIVATE_WINDOW, DEACTIVATE_WINDOW, LOGOUT]);
+
+export default function(state = defaultState, action) {
+    if (!responsibleActionType.has(action.type)) return state;
+
+    let { appKey, windowKey, window } = action.payload;
     switch (action.type) {
-        case ACTION.REGISTER_WINDOW: {
-            let appKey = action.payload.appKey;
-            let windowKey = action.payload.windowKey;
-            let window = action.payload.window;
+        case REGISTER_WINDOW: {
             if (!state[appKey]) state[appKey] = {};
             state[appKey][windowKey] = window;
             activateWindow(state, appKey, windowKey);
-            return { ...state };
+            break;
         }
-        case ACTION.APP_WINDOW_ACTIVATE:
-        case ACTION.ACTIVATE_WINDOW: {
-            let appKey = action.payload.appKey;
-            let windowKey = action.payload.windowKey;
-            activateWindow(state, appKey, windowKey);
-            return { ...state };
-        }
-        case ACTION.UNREGISTER_WINDOW: {
-            let appKey = action.payload.appKey;
-            let windowKey = action.payload.windowKey;
+        case UNREGISTER_WINDOW: {
             if (state[appKey]) {
                 delete state[appKey][windowKey];
+                deactivateWindow(state, appKey, windowKey);
             }
-            if (!state[appKey] || Object.keys(state[appKey]).length === 0) {
+            if (Object.keys(state[appKey]).length === 0) {
                 delete state[appKey];
             }
-            return { ...state };
+            break;
         }
-        // When logout, close all apps
-        case ACTION.LOGOUT: {
-            return {};
+        case ACTIVATE_WINDOW: {
+            activateWindow(state, appKey, windowKey);
+            break;
+        }
+        case DEACTIVATE_WINDOW: {
+            deactivateWindow(state, appKey, windowKey);
+            break;
+        }
+        case LOGOUT: {
+            // When logout, close all apps
+            activeWindowChain = [];
+            lAct = null;
+            cAct = null;
+            state = {};
+            break;
         }
         default:
-            return state;
+            break;
     }
+
+    setStateToWindow(lAct, state, false);
+    setStateToWindow(cAct, state, true);
+
+    state._awc = activeWindowChain;
+    return { ...state };
 }

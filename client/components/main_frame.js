@@ -7,7 +7,7 @@ import Launchpad from "./Launchpad/launchpad";
 import Dock from "./Dock";
 
 import { R } from "../resources_feeder";
-import { getActiveApp, getAppName, getAppShortCut, getInstalledApps } from "../app_utils";
+import { getAppName, getAppShortCut } from "../app_utils";
 import { Meteor } from "meteor/meteor";
 import hotkeys from "hotkeys-js";
 
@@ -31,20 +31,22 @@ class MainFrame extends Component {
         return launchpadApps;
     }
 
-    toolBarTitle = app => {
-        if (app) return getAppName(app.appKey, this.props.user);
-        else return R.Str("COMPANY_NAME"); // If no active app now, show company name
+    toolBarTitle = appKey => {
+        // If no active app now, show company name
+        if (!appKey || appKey === "system") return R.Str("COMPANY_NAME");
+        else return getAppName(appKey, this.props.user);
     };
 
     handleLogout = () => {
         Meteor.logout(error => this.props.logout(error));
     };
 
-    getMenuBarMenu = app => {
+    getMenuBarMenu = () => {
+        let appKey = this.getActiveApp();
         let windowMenu = [];
-        if (app) {
+        if (appKey) {
             let activeWindow = null;
-            let windows = this.props.windows[app.appKey];
+            let windows = this.props.windows[appKey];
             windowMenu = [];
 
             for (let w in windows) {
@@ -78,7 +80,6 @@ class MainFrame extends Component {
                         title: "Maximize",
                         extra: "⌘↩",
                         onClick: () => {
-                            if (!app) return;
                             activeWindow.handleMax();
                         },
                         disabled: !activeWindow || !activeWindow.props.canMaximize
@@ -87,7 +88,6 @@ class MainFrame extends Component {
                         title: "Minimize",
                         extra: "⌘M",
                         onClick: () => {
-                            if (!app) return;
                             activeWindow.handleMin();
                         },
                         disabled: !activeWindow || !activeWindow.props.canMinimize
@@ -96,7 +96,6 @@ class MainFrame extends Component {
                         title: "Close",
                         extra: "⌘⌫",
                         onClick: () => {
-                            if (!app) return;
                             activeWindow.handleClose();
                         },
                         disabled: !activeWindow || !activeWindow.props.canClose
@@ -128,24 +127,22 @@ class MainFrame extends Component {
                 ]
             },
             {
-                title: this.toolBarTitle(app),
+                title: this.toolBarTitle(appKey),
                 submenu: [
                     {
                         title: "Quit",
                         extra: "⌘⇧⌫",
                         onClick: () => {
-                            if (!app) return;
-                            this.props.appClose(app.appKey);
+                            this.props.appClose(appKey);
                         },
-                        disabled: !app
+                        disabled: !appKey
                     }
                 ]
             },
             {
                 title: R.Str("WINDOW"),
                 submenu: windowMenu
-            },
-            ...(app && app.manifest.menubar ? app.manifest.menubar : [])
+            }
         ];
         return mainMenuBarMenu;
     };
@@ -170,10 +167,9 @@ class MainFrame extends Component {
     };
 
     render() {
-        let activeApp = getActiveApp(this.props.apps);
         return (
             <>
-                <MenuBar menuBarMenu={this.getMenuBarMenu(activeApp)} menuBarExtra={this.getMenuBarExtra()} hide={this.props.system.menuBarHide} />
+                <MenuBar menuBarMenu={this.getMenuBarMenu()} menuBarExtra={this.getMenuBarExtra()} hide={this.props.system.menuBarHide} />
                 <Launchpad open={this.props.system.launchpadStatus} items={this.packLaunchpadApps()} close={() => this.props.launchPadControl(false)} />
                 <Dock />
             </>
@@ -216,18 +212,21 @@ class MainFrame extends Component {
         // Quit app
         hotkeys("cmd+shift+backspace,ctrl+shift+backspace", { keydown: true }, (event, handler) => {
             event.preventDefault();
-            let activeApp = getActiveApp(this.props.apps);
-            if (!activeApp) return;
-            let appKey = getActiveApp(this.props.apps).appKey;
+            let appKey = this.getActiveApp();
             this.props.appClose(appKey);
         });
     }
+
+    getActiveApp = () => {
+        let awc = this.props.windows._awc;
+        if (awc.length === 0) return null;
+        return awc[awc.length - 1].split("::")[0];
+    };
 }
 
 const mapStateToProps = state => ({
     system: state.system,
     user: state.user,
-    apps: state.apps,
     windows: state.windows,
     auth: state.auth
 });

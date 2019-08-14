@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import _ from "lodash";
 import hotkeys from "hotkeys-js";
-import { activateWindow, registerWindow, unregisterWindow } from "../../actions";
+import { activateWindow, deactivateWindow, registerWindow, unregisterWindow } from "../../actions";
 
 export const WINDOW_STATUS_INVALID = 0;
 export const WINDOW_STATUS_NORMAL = 1;
@@ -24,11 +24,10 @@ class Window extends Component {
         width: this.props.width,
         height: this.props.height,
         windowStatus: WINDOW_STATUS_NORMAL,
-        isActive: true,
-        lastActiveTime: new Date()
+        isActive: true
     };
 
-    id = this.props.appKey + "." + this.props._key;
+    id = this.props.appKey + "::" + this.props._key;
 
     tmp_top = null;
     tmp_left = null;
@@ -69,7 +68,7 @@ class Window extends Component {
      * Rander head of the window
      */
     renderHead = () => {
-        if (!this.props.noTitlebar && this.props.title) {
+        if (!this.props.noTitlebar) {
             // Both titlebar and toolbar
             return (
                 <div className="window-titlebar">
@@ -96,9 +95,9 @@ class Window extends Component {
      */
     renderContent = () => {
         let classList = ["window-content"];
-        if (this.props.titlebar && this.props.toolbar) {
+        if (!this.props.noTitlebar && this.props.toolbar) {
             classList.push("window-content-both");
-        } else if (this.props.titlebar) {
+        } else if (!this.props.noTitlebar) {
             classList.push("window-content-titlebar");
         } else if (this.props.toolbar) {
             classList.push("window-content-toolbar");
@@ -140,8 +139,6 @@ class Window extends Component {
         if (this.state.windowStatus === WINDOW_STATUS_NORMAL && this.props.canResize) classList.push("resizable");
         if (!this.state.isActive) classList.push("inactive");
         if (this.props.theme) classList.push(this.props.theme);
-
-        // Priority className
 
         return (
             <>
@@ -197,25 +194,15 @@ class Window extends Component {
         );
     };
 
-    handleActivate = isActive => {
-        if (isActive) this.restoreWindowPosition();
-        this.setState({ isActive, lastActiveTime: isActive ? new Date() : this.state.lastActiveTime });
-    };
-
     handleMouseDown = e => {
         if (e) e.stopPropagation();
-        if (this.windowRef.current && !this.state.isActive) {
-            this.props.activateWindow(this.props._key, this.props.appKey);
-        }
+        this.props.activateWindow(this.props.appKey, this.props._key);
     };
 
     // Move the window to the groups
     restoreWindowPosition = () => {
         let thisWindow = this.windowRef.current;
-        if (!thisWindow) {
-            console.error("Cannot restore window position, window is not rendered yet.");
-            return;
-        }
+        if (!thisWindow) return;
 
         let group = "normal-group";
         switch (this.props.windowPriority) {
@@ -274,7 +261,7 @@ class Window extends Component {
                     windowStatus: WINDOW_STATUS_MIN
                 });
             }
-            this.props.activateWindow(null, this.props.appKey);
+            this.props.deactivateWindow(this.props.appKey, this.props._key);
         } else {
             div.style.transition = "300ms ease-out";
             div.style.removeProperty("transform");
@@ -285,7 +272,7 @@ class Window extends Component {
                 left: this.tmp_left,
                 windowStatus: WINDOW_STATUS_NORMAL
             });
-            this.props.activateWindow(this.props._key, this.props.appKey);
+            this.props.activateWindow(this.props.appKey, this.props._key);
         }
         setTimeout(() => {
             div.style.transition = "0ms";
@@ -321,21 +308,16 @@ class Window extends Component {
         }, 300);
     };
 
-    registerWindow = () => {
-        this.props.registerWindow(this.props._key, this, this.props.appKey);
-    };
-
-    unregisterWindow = () => {
-        this.props.unregisterWindow(this.props._key, this.props.appKey);
-    };
-
     componentDidMount() {
         if (!this.props.appKey) {
             throw new Error("This window has no appKey set.");
         }
+        if (!this.props._key) {
+            throw new Error("This window has no windowKey (_key) set. Render window when _key is prepared.");
+        }
 
         // Register the window
-        this.registerWindow();
+        this.props.registerWindow(this.props.appKey, this.props._key, this);
 
         let div = this.windowRef.current;
         if (!div) return;
@@ -351,20 +333,18 @@ class Window extends Component {
         // Hotkeys
         hotkeys("cmd+enter,ctrl+enter", this.id, (event, handler) => {
             event.preventDefault();
-            if (this.state.isActive) this.handleMax();
+            this.handleMax();
         });
         hotkeys("cmd+m,ctrl+m", this.id, (event, handler) => {
             event.preventDefault();
-            if (this.state.isActive) this.handleMin();
+            this.handleMin();
         });
         hotkeys("cmd+backspace,ctrl+backspace", { scope: this.id, keydown: true }, (event, handler) => {
             event.preventDefault();
-            if (this.state.isActive) this.handleClose();
+            this.handleClose();
         });
         hotkeys("esc", { scope: this.id, keydown: true }, (event, handler) => {
-            if (!this.props.escToClose) return;
-            event.preventDefault();
-            event.stopPropagation();
+            if (!this.props.canClose || !this.props.escToClose) return;
             this.handleClose();
         });
     }
@@ -375,11 +355,11 @@ class Window extends Component {
         hotkeys.unbind("cmd+m,ctrl+m", this.id);
         hotkeys.unbind("cmd+backspace,ctrl+backspace", this.id);
         hotkeys.unbind("esc", this.id);
-        this.unregisterWindow();
+        this.props.unregisterWindow(this.props.appKey, this.props._key);
     }
 
     storeWindowProps = div => {
-        // Store the tamporary values
+        // Store the temporary values
         this.tmp_width = div.offsetWidth;
         this.tmp_height = div.offsetHeight;
         this.tmp_top = div.offsetTop + parseInt(div.dataset.y || 0);
@@ -397,6 +377,7 @@ const mapDispatchToProps = dispatch =>
     bindActionCreators(
         {
             activateWindow,
+            deactivateWindow,
             registerWindow,
             unregisterWindow
         },
@@ -410,7 +391,7 @@ export default connect(
 
 Window.defaultProps = {
     // Application context which enable this window do context related task
-    appKey: null,
+    appKey: "system",
 
     // Width of the window
     width: "auto",
