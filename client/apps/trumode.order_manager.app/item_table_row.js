@@ -110,7 +110,7 @@ class ItemTableRow extends React.Component {
                     >
                         {item.purchase_order}
                     </p>
-                    <p style={{ marginTop: "4px" }}>{item.provider}</p>
+                    <p style={{ marginTop: "4px" }}>{item.supplier}</p>
                 </UI.TableCell>
             </UI.TableRow>
         );

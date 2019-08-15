@@ -19,7 +19,7 @@ class MainFrame extends Component {
     };
 
     packLaunchpadApps() {
-        if (!this.props.auth || !this.props.auth.apps) return null;
+        if (!this.props.auth || !this.props.auth.apps) return [];
 
         let launchpadApps = [];
         this.props.auth.apps.map(app => {

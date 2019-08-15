@@ -40,7 +40,7 @@ class AccountSecurityTab extends React.Component {
             title: "Repeat New Password",
             type: "password",
             valid: {
-                $eq: "pwd"
+                $eq: "#pwd"
             }
         },
         pwd_validate: {

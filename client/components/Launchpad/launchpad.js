@@ -173,6 +173,6 @@ export default class Launchpad extends React.Component {
 
 Launchpad.propTypes = {
     items: PropTypes.array.isRequired,
-    open: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
     close: PropTypes.func.isRequired
 };

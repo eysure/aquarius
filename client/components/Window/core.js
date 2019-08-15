@@ -167,24 +167,25 @@ export class FieldItem extends Component {
         } else if (key === "$func") {
             return val(this.parentState[name]);
         } else if (key === "$eq") {
-            if (this.parentState[val] === undefined) {
-                throw new Error(
-                    `Exception when calculate single condition. When compare state.${name} and state.${val}, state.${val} is not exist in the state, maybe a typo, or not set.`
+            if (val.startsWith("#", 0)) return _.isEqual(this.parentState[name], this.parentState[val.slice(1)]);
+            else return _.isEqual(this.parentState[name], val);
+        } else if (key === "$neq") {
+            if (val.startsWith("#", 0)) return !_.isEqual(this.parentState[name], this.parentState[val.slice(1)]);
+            else return !_.isEqual(this.parentState[name], val);
+        } else if (key === "$not") {
+            if (!_.isObject(val) || Object.keys(val).length > 1) {
+                console.error(
+                    `Only single condition (object with one key) is acceptable when using "$not" as key. however, ${val} is given. False is returned.`
                 );
+                return false;
             }
-            return this.parentState[name] === this.parentState[val];
-        } else if (key === "$!eq") {
-            if (this.parentState[val] === undefined) {
-                throw new Error(
-                    `Exception when calculate single condition. When compare state.${name} and state.${val}, state.${val} is not exist in the state, maybe a typo, or not set.`
-                );
-            }
-            return this.parentState[name] !== this.parentState[val];
+            return !this.calculateSingleCondition(name, Object.keys(val)[0], val[Object.keys(val)[0]]);
         } else if (this.parentState[key] !== undefined) {
             if (val === "$valid") return this.calculateValid(key);
             else if (val === "$!valid") return !this.calculateValid(key);
             else if (val === "$disabled") return this.calculateDisable(key);
             else if (val === "$!disabled") return !this.calculateDisable(key);
+            else if (_.isObject(val)) return this.calculateConditions(key, val);
             else return this.parentState[key] === val;
         } else {
             console.error(
@@ -217,7 +218,7 @@ export class FieldItem extends Component {
     calculateDisable = name => {
         if (this.parentState.processing) return true;
         if (this.schema[name].disabled === true) return true;
-        if (!this.schema[name].disabled) return false;
+        if (this.schema[name].disabled === undefined) return false;
         return this.calculateConditions(name, this.schema[name].disabled);
     };
 
@@ -478,7 +479,7 @@ export class InputGroup extends Component {
 export function schemaDataPack(schema, state, fields = null) {
     let packedData = {};
     if (fields) {
-        if (!fields instanceof Array) throw new Error("fields should be an array");
+        if (!(fields instanceof Array)) throw new Error("fields should be an array");
         for (let field of fields) {
             packedData[field] = state[field];
         }
@@ -640,12 +641,12 @@ export class Table extends Component {
     autoDetectWidth = () => {
         let width = {};
         let { heads, headsHide, data } = this.state;
-        let { dataTranslator } = this.props;
+        let { headsTranslator, dataTranslator } = this.props;
 
         for (let i in heads) {
             let field = this.state.objectMode ? heads[i] : i;
             if (headsHide && headsHide.includes(field)) continue;
-            let maxLen = 0;
+            let maxLen = headsTranslator && headsTranslator.Str(field) ? headsTranslator.Str(field).length : field.length;
             for (let row of data) {
                 let col = row[field];
                 if (dataTranslator && dataTranslator[field]) {
@@ -815,7 +816,7 @@ export class Table extends Component {
     }
 
     componentDidMount() {
-        if (!this.props.data || !this.props.data instanceof Array) {
+        if (!this.props.data || !(this.props.data instanceof Array)) {
             throw new Error("Table data should be an Array, of arrays or objects");
         }
         this.setState({

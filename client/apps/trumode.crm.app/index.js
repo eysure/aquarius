@@ -4,9 +4,10 @@ import Window from "../../components/Window";
 import { ResourceFeeder } from "../../resources_feeder";
 
 export const TAB_CUSTOMERS = "TAB_CUSTOMERS";
-export const TAB_PROVIDERS = "TAB_PROVIDERS";
+export const TAB_SUPPLIERS = "TAB_SUPPLIERS";
 
 import Customers from "./customers";
+import Suppliers from "./suppliers";
 
 export const R = new ResourceFeeder(require("./resources/strings"), require("./resources/messages"));
 
@@ -17,7 +18,7 @@ class CustomerRelationshipManager extends Component {
     };
 
     renderSidebar = () => {
-        let tabs = [TAB_CUSTOMERS, TAB_PROVIDERS];
+        let tabs = [TAB_CUSTOMERS, TAB_SUPPLIERS];
         let sidebar = [];
 
         for (let tab of tabs) {
@@ -37,8 +38,8 @@ class CustomerRelationshipManager extends Component {
         switch (this.state.selected) {
             case TAB_CUSTOMERS:
                 return <Customers appKey={this.props.appKey} />;
-            case TAB_PROVIDERS:
-                return <div className="empty-page">PROVIDERS</div>;
+            case TAB_SUPPLIERS:
+                return <Suppliers appKey={this.props.appKey} />;
             default:
                 return <div className="empty-page">CRM</div>;
         }

@@ -391,7 +391,7 @@ class OrderDetail extends Component {
                             </UI.TableCell>
                             <UI.TableCell align="right" style={tableCellStyle}>
                                 <p style={{ fontWeight: 800 }}>{R.Str("PURCHASE_ORDER")}</p>
-                                <p>{R.Str("PROVIDER")}</p>
+                                <p>{R.Str("SUPPLIER")}</p>
                             </UI.TableCell>
                         </UI.TableRow>
                     </UI.TableHead>
@@ -524,7 +524,7 @@ OrderDetail.defaultProps = {
                 amount: 9000,
                 delivery_date: "2019-01-01",
                 purchase_order: "BB910482",
-                provider: "LiHuang"
+                supplier: "LiHuang"
             },
             {
                 image: "sample2.jpg",
@@ -538,7 +538,7 @@ OrderDetail.defaultProps = {
                 amount: 8000,
                 delivery_date: "2019-01-01",
                 purchase_order: "BB910482",
-                provider: "LiHuang"
+                supplier: "LiHuang"
             }
         ]
     }

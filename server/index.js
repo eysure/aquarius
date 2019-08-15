@@ -155,6 +155,16 @@ Meteor.publish("customerContacts", function(args) {
     return Collection("customers_contacts").find({ customer_id: args.customer_id });
 });
 
+Meteor.publish("allSuppliers", function() {
+    if (!this.userId) return null;
+    return Collection("suppliers").find();
+});
+
+Meteor.publish("supplierContacts", function(args) {
+    if (!this.userId) return null;
+    return Collection("suppliers_contacts").find({ supplier_id: args.supplier_id });
+});
+
 // Account log
 Accounts.config({
     loginExpirationInDays: 1,

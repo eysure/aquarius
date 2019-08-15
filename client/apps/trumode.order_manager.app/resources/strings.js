@@ -66,5 +66,5 @@ export default {
     ITEM_DESC: ["Item Description", "商品描述"],
     QTY: ["Qty", "数量"],
     PRICE: ["Price", "单价"],
-    PROVIDER: ["Provider", "供应商"]
+    SUPPLIER: ["Supplier", "供应商"]
 };

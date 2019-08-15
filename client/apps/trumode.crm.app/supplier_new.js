@@ -10,12 +10,14 @@ import * as AQUI from "../../components/Window/core";
 import { getCountryList } from "../../utils";
 import { R } from "./index";
 
-class CustomerNew extends Component {
+class SupplierNew extends Component {
     state = {
         abbr: "",
         name: "",
-        country: "",
-        type: "",
+        address: "",
+        city: "",
+        state: "",
+        country: "CN",
         remark: "",
         processing: false
     };
@@ -35,21 +37,38 @@ class CustomerNew extends Component {
             },
             placeholder: R.Str("NAME_PH")
         },
+        address: {
+            title: R.Str("address"),
+            valid: {
+                $regex: /.+/
+            }
+        },
+        city: {
+            title: R.Str("city"),
+            valid: {
+                $regex: /.+/
+            },
+            disabled: {
+                country: {
+                    $neq: "CN"
+                }
+            }
+        },
+        state: {
+            title: R.Str("state"),
+            valid: {
+                $regex: /.+/
+            },
+            disabled: {
+                country: {
+                    $neq: "CN"
+                }
+            }
+        },
         country: {
             title: R.Str("country"),
             type: "select",
             options: getCountryList()
-        },
-        type: {
-            title: R.Str("type"),
-            type: "select",
-            options: {
-                0: R.Str("type_0"),
-                1: R.Str("type_1"),
-                2: R.Str("type_2"),
-                3: R.Str("type_3"),
-                4: R.Str("type_4")
-            }
         },
         remark: {
             title: R.Str("remark"),
@@ -65,9 +84,7 @@ class CustomerNew extends Component {
             disabled: {
                 $or: {
                     abbr: "$!valid",
-                    name: "$!valid",
-                    country: "$!valid",
-                    type: "$!valid"
+                    name: "$!valid"
                 }
             },
             noUpload: true
@@ -78,26 +95,51 @@ class CustomerNew extends Component {
         this.setState({ processing: true });
         let packedData = AQUI.schemaDataPack(this.schema, this.state);
         packedData._id = new Mongo.ObjectID();
-        Meteor.call("addCustomer", packedData, err => {
-            this.setState({ processing: false });
-            if (err) {
-                this.props.throwMsg(R.Msg("SERVER_ERROR", err));
-            } else {
-                this.props.throwMsg(R.Msg("SAVED"));
-                this.props.onClose();
+        Meteor.call(
+            "edit",
+            {
+                db: "suppliers",
+                action: "insert",
+                data: packedData
+            },
+            err => {
+                this.setState({ processing: false });
+                if (err) {
+                    this.props.throwMsg(R.Msg("SERVER_ERROR", err));
+                } else {
+                    this.props.throwMsg(R.Msg("SAVED"));
+                    this.props.onClose();
+                }
             }
-        });
+        );
     };
 
     render() {
         return (
-            <Window onClose={this.props.onClose} _key={R.Str("NEW_CUSTOMER")} appKey={this.props.appKey} title={R.Str("NEW_CUSTOMER")} theme="light" escToClose>
+            <Window
+                onClose={this.props.onClose}
+                _key={R.Str("NEW_SUPPLIER")}
+                width={640}
+                appKey={this.props.appKey}
+                title={R.Str("NEW_SUPPLIER")}
+                theme="light"
+                escToClose
+            >
                 <div className="window-content-inner handle">
-                    <AQUI.FieldItem context={this} schema={this.schema} name="name" />
-                    <AQUI.FieldItem context={this} schema={this.schema} name="abbr" />
-                    <AQUI.FieldItem context={this} schema={this.schema} name="type" />
-                    <AQUI.FieldItem context={this} schema={this.schema} name="country" />
+                    <AQUI.InputGroup>
+                        <AQUI.FieldItem context={this} schema={this.schema} name="name" width="200%" />
+                        <AQUI.FieldItem context={this} schema={this.schema} name="abbr" />
+                    </AQUI.InputGroup>
+                    <AQUI.InputGroup>
+                        <AQUI.FieldItem context={this} schema={this.schema} name="address" />
+                    </AQUI.InputGroup>
+                    <AQUI.InputGroup>
+                        <AQUI.FieldItem context={this} schema={this.schema} name="city" />
+                        <AQUI.FieldItem context={this} schema={this.schema} name="state" />
+                        <AQUI.FieldItem context={this} schema={this.schema} name="country" />
+                    </AQUI.InputGroup>
                     <AQUI.FieldItem context={this} schema={this.schema} name="remark" />
+
                     <div className="hec">
                         <AQUI.FieldItem context={this} schema={this.schema} name="save" />
                     </div>
@@ -120,9 +162,9 @@ function mapStateToProps(state) {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(CustomerNew);
+)(SupplierNew);
 
-CustomerNew.propTypes = {
+SupplierNew.propTypes = {
     appKey: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
 

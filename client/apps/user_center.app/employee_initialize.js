@@ -91,7 +91,7 @@ export class EmployeeInitialize extends Component {
             title: "Repeat New Password",
             type: "password",
             valid: {
-                $eq: "pwd"
+                $eq: "#pwd"
             }
         },
         pwd_validate: {
@@ -834,6 +834,7 @@ export class EmployeeInitialize extends Component {
                 width={900}
                 height={700}
                 title={R.Str("EMPLOYEE_INITIALIZATION")}
+                noTitlebar
                 appKey={this.props.context.props.appKey}
                 windowPriority={WINDOW_PRIORITY_HIGH}
                 theme="dark"

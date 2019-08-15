@@ -245,9 +245,10 @@ export async function edit(args) {
     if (!this.userId) throw new Meteor.Error(401, "User is not loged in");
 
     let client = oss();
-    if (!client) return new Meteor.Error(500, "OSS cannot establish");
+    if (!client) throw new Meteor.Error(500, "OSS cannot establish");
 
     let { db, findOne, action, data } = args;
+    if (!db) throw new Meteor.Error(400, "Database is not set");
 
     // Auth check
     if (!_.get(getAuth(this.userId), `wr_${db}`, false)) {

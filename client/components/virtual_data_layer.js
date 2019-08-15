@@ -91,6 +91,7 @@ class VirtualDataLayer extends React.Component {
         });
         this.subscribeAndBind("jobTitleInfo", "job_title");
         this.subscribeAndBind("allCustomers", "customers");
+        this.subscribeAndBind("allSuppliers", "suppliers");
     }
 
     render() {
