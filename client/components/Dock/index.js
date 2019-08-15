@@ -1,28 +1,18 @@
+import _ from "lodash";
 import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import _ from "lodash";
-import FlipMove from "react-flip-move";
-
+import { activateWindow, appClose, appLaunch, launchPadControl } from "../../actions";
 import { getAppName } from "../../app_utils";
-
-import { appLaunch, appClose, appConfig, launchPadControl, activateWindow } from "../../actions";
-
+import { WINDOW_STATUS_MIN } from "../Window";
 import DockItem from "./dock_item";
-import { WINDOW_STATUS_MIN, WINDOW_STATUS_NORMAL } from "../Window";
+import PropTypes from "prop-types";
 
 class Dock extends React.Component {
     render() {
         return (
             <div id="dock-container" style={{ transform: this.props.system.dockHide ? "translate(0,80px)" : "translate(0,0)" }}>
-                <FlipMove
-                    id="dock"
-                    appearAnimation={null}
-                    enterAnimation={null}
-                    leaveAnimation={null}
-                    onContextMenu={this.onContextMenu}
-                    style={{ width: (Object.keys(this.props.apps).length + 1) * 72 }}
-                >
+                <div id="dock" style={{ width: (Object.keys(this.props.apps).length + 1) * 72 }} onContextMenu={this.onContextMenu}>
                     <DockItem
                         id="di-launchpad"
                         key="launchpad"
@@ -31,7 +21,7 @@ class Dock extends React.Component {
                         onClick={() => this.props.launchPadControl(!this.props.system.launchpadStatus)}
                     />
                     {this.renderDockItems()}
-                </FlipMove>
+                </div>
             </div>
         );
     }
@@ -52,9 +42,16 @@ class Dock extends React.Component {
     }
 
     handleDockItemClick = app => {
-        if (app.status === WINDOW_STATUS_MIN) {
-            this.props.appConfig(app.appKey, { status: WINDOW_STATUS_NORMAL }); // Make the window to the normal size
-        } else this.props.activateWindow(app.appKey);
+        // If all windows in this app are minimized
+        let allMinimized = true;
+        const windows = this.props.windows[app.appKey];
+        let firstWindow = null;
+        for (let windowKey in windows) {
+            if (!firstWindow) firstWindow = windows[windowKey];
+            allMinimized = allMinimized && windows[windowKey].state.windowStatus === WINDOW_STATUS_MIN;
+        }
+        if (allMinimized) firstWindow.handleMin();
+        else this.props.activateWindow(app.appKey);
     };
 
     onContextMenu = e => {
@@ -67,15 +64,27 @@ function mapStateToProps(state) {
     return {
         apps: state.apps,
         user: state.user,
-        system: state.system
+        system: state.system,
+        windows: state.windows
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ appLaunch, appClose, appConfig, launchPadControl, activateWindow }, dispatch);
+    return bindActionCreators({ appLaunch, appClose, launchPadControl, activateWindow }, dispatch);
 }
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(Dock);
+
+Dock.propTypes = {
+    apps: PropTypes.object,
+    user: PropTypes.object,
+    system: PropTypes.object,
+    windows: PropTypes.object,
+    appLaunch: PropTypes.func,
+    appClose: PropTypes.func,
+    launchPadControl: PropTypes.func,
+    activateWindow: PropTypes.func
+};

@@ -98,5 +98,7 @@ export default {
     WINDOW: ["Window", "窗口"],
     HELP: ["Help", "帮助"],
 
+    UNDER_CONSTRUCTION: ["Under Contruction...", "施工中..."],
+
     ...countries
 };

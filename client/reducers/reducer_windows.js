@@ -48,7 +48,6 @@ activateWindow = (state, appKey, windowKey) => {
                 return;
             }
         }
-        console.warn(`Attempt to activate "${appKey}" without windowKey, but no window exist.`);
     }
 };
 

@@ -1,16 +1,14 @@
+import _ from "lodash";
+import { Meteor } from "meteor/meteor";
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import _ from "lodash";
-import DropFile from "./DropFile";
-import { Meteor } from "meteor/meteor";
-
-import Menu from "./Menus";
-import { throwMsg, launchPadControl, activateWindow } from "../actions";
-import { oss, fileUploadVerify, upload } from "../utils";
+import { activateWindow, launchPadControl, logout, throwMsg } from "../actions";
 import { R } from "../resources_feeder";
-
-import * as ACTION from "../actions";
+import { fileUploadVerify, oss, upload } from "../utils";
+import DropFile from "./DropFile";
+import Menu from "./Menus";
 
 const desktopMainStyle = {
     width: "100%",
@@ -182,10 +180,19 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ throwMsg, launchPadControl, logout: ACTION.logout, activateWindow }, dispatch);
+    return bindActionCreators({ throwMsg, launchPadControl, logout, activateWindow }, dispatch);
 }
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(Desktop);
+
+Desktop.propTypes = {
+    user: PropTypes.object,
+    system: PropTypes.object,
+    throwMsg: PropTypes.func,
+    launchPadControl: PropTypes.func,
+    logout: PropTypes.func,
+    activateWindow: PropTypes.func
+};

@@ -46,12 +46,15 @@ export default {
     TAB_CUSTOMER_CONTACTS: ["Contacts", "联系人"],
     TAB_CUSTOMER_ANALYZE: ["Analyze", "分析"],
 
-    TAB_CUSTOMER_BASIC_INFO_ICON: ["folder_shared", "folder_shared"],
-    TAB_CUSTOMER_CONTACTS_ICON: ["folder_shared", "folder_shared"],
-    TAB_CUSTOMER_ANALYZE_ICON: ["folder_shared", "folder_shared"],
+    TAB_CUSTOMER_BASIC_INFO_ICON: ["assignment", "assignment"],
+    TAB_CUSTOMER_CONTACTS_ICON: ["assignment_ind", "assignment_ind"],
+    TAB_CUSTOMER_ANALYZE_ICON: ["assessment", "assessment"],
 
     // Customer Contact
+    NEW_CUSTOMER_CONTACT: ["New Customer Contact", "新建客户联系人"],
+
     // Field
+    customer_id: ["Belongs to Customer", "所属客户"],
     photo: ["Photo", "照片"],
     role: ["Role", "职位"],
     email: ["Email", "邮箱"],

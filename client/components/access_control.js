@@ -1,17 +1,16 @@
+import * as UI from "@material-ui/core";
+import { Meteor } from "meteor/meteor";
+import { Tracker } from "meteor/tracker";
+import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as UI from "@material-ui/core";
+import { appLaunch, bindUserInfo, changeLanguageLocal, clearMsg, logout, systemControl, throwMsg } from "../actions";
 import clientConfig from "../client_config";
-import Str, { getStr, getLanguage } from "./string_component";
-import { Meteor } from "meteor/meteor";
-import _ from "lodash";
 import { R } from "../resources_feeder";
-import Avatar from "./user_avatar";
-import { Tracker } from "meteor/tracker";
-
-import { clearMsg, logout, bindUserInfo, throwMsg, changeLanguageLocal, appLaunch, systemControl } from "../actions";
 import { generateEmailLinkToService } from "../utils";
+import Str, { getLanguage, getStr } from "./string_component";
+import Avatar from "./user_avatar";
 
 class AccessControl extends React.Component {
     constructor(props) {
@@ -292,6 +291,10 @@ class AccessControl extends React.Component {
     }
 }
 
+function mapStateToProps(state) {
+    return { user: state.user, system: state.system, auth: state.auth };
+}
+
 function mapDispatchToProps(dispatch) {
     return bindActionCreators(
         {
@@ -307,11 +310,21 @@ function mapDispatchToProps(dispatch) {
     );
 }
 
-function mapStateToProps(state) {
-    return { user: state.user, system: state.system, auth: state.auth };
-}
-
 export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(AccessControl);
+
+AccessControl.propTypes = {
+    user: PropTypes.object,
+    system: PropTypes.object,
+    auth: PropTypes.object,
+
+    clearMsg: PropTypes.func,
+    logout: PropTypes.func,
+    bindUserInfo: PropTypes.func,
+    throwMsg: PropTypes.func,
+    changeLanguageLocal: PropTypes.func,
+    appLaunch: PropTypes.func,
+    systemControl: PropTypes.func
+};

@@ -1,19 +1,16 @@
-import React, { Component } from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-
-import MenuBar from "./MenuBar/menu_bar";
-import Launchpad from "./Launchpad/launchpad";
-import Dock from "./Dock";
-
-import { R } from "../resources_feeder";
-import { getAppName, getAppShortCut } from "../app_utils";
-import { Meteor } from "meteor/meteor";
 import hotkeys from "hotkeys-js";
-
-import MenuBarTimeWidget from "./MenuBar/menu_bar_time_widget";
-
+import { Meteor } from "meteor/meteor";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import * as A from "../actions";
+import { getAppName, getAppShortCut } from "../app_utils";
+import { R } from "../resources_feeder";
+import Dock from "./Dock";
+import Launchpad from "./Launchpad/launchpad";
+import MenuBar from "./MenuBar/menu_bar";
+import MenuBarTimeWidget from "./MenuBar/menu_bar_time_widget";
 import { WINDOW_STATUS_MIN } from "./Window";
 
 class MainFrame extends Component {
@@ -178,39 +175,39 @@ class MainFrame extends Component {
 
     componentDidMount() {
         // Open Launcher
-        hotkeys("cmd+l,ctrl+l,f1", (event, handler) => {
+        hotkeys("cmd+l,ctrl+l,f1", event => {
             event.preventDefault();
             this.props.launchPadControl(!this.props.system.launchpadStatus);
         });
 
         // Logout
-        hotkeys("cmd+esc,ctrl+esc", (event, handler) => {
+        hotkeys("cmd+esc,ctrl+esc", event => {
             event.preventDefault();
             Meteor.logout(error => this.props.logout(error));
         });
 
         // Prevent Save
-        hotkeys("ctrl+s,cmd+s", function(event, handler) {
+        hotkeys("ctrl+s,cmd+s", function(event) {
             event.preventDefault();
         });
 
         // Prevent Print
-        hotkeys("ctrl+p,cmd+p", function(event, handler) {
+        hotkeys("ctrl+p,cmd+p", function(event) {
             event.preventDefault();
         });
 
         // Prevent Print
-        hotkeys("ctrl+d,cmd+d", function(event, handler) {
+        hotkeys("ctrl+d,cmd+d", function(event) {
             event.preventDefault();
         });
 
-        hotkeys("ctrl+p,cmd+p", function(event, handler) {
+        hotkeys("shift+f", function(event) {
             event.preventDefault();
             console.log("lightpick");
         });
 
         // Quit app
-        hotkeys("cmd+shift+backspace,ctrl+shift+backspace", { keydown: true }, (event, handler) => {
+        hotkeys("cmd+shift+backspace,ctrl+shift+backspace", { keydown: true }, event => {
             event.preventDefault();
             let appKey = this.getActiveApp();
             this.props.appClose(appKey);
@@ -239,3 +236,15 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(MainFrame);
+
+MainFrame.propTypes = {
+    system: PropTypes.object,
+    user: PropTypes.object,
+    windows: PropTypes.object,
+    auth: PropTypes.object,
+
+    logout: PropTypes.func,
+    appLaunch: PropTypes.func,
+    appClose: PropTypes.func,
+    launchPadControl: PropTypes.func
+};

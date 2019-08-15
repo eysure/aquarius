@@ -200,10 +200,12 @@ export class FieldItem extends Component {
         if (field.type === "select") {
             // When value is not one of the options, return false
             let options = field.options;
-            if (Array.isArray(options)) {
+            if (_.isArray(options)) {
                 if (!options.includes(this.parentState[name])) return false;
-            } else {
+            } else if (_.isObject(options)) {
                 if (!Object.keys(options).includes(this.parentState[name])) return false;
+            } else {
+                return false;
             }
         }
 
@@ -228,7 +230,7 @@ export class FieldItem extends Component {
 
     renderSelect = () => {
         let options = this.field.options;
-        if (Array.isArray(options)) {
+        if (_.isArray(options)) {
             return options.map(key => {
                 return (
                     <option key={key} value={key}>
@@ -236,7 +238,7 @@ export class FieldItem extends Component {
                     </option>
                 );
             });
-        } else {
+        } else if (_.isObject(options)) {
             return Object.keys(options).map(key => {
                 return (
                     <option key={key} value={key}>
@@ -244,6 +246,8 @@ export class FieldItem extends Component {
                     </option>
                 );
             });
+        } else {
+            return null;
         }
     };
 

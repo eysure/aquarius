@@ -1,6 +1,7 @@
 import React from "react";
-import SwipeableViews from "react-swipeable-views";
 import LaunchpadItem from "./launchpad_item";
+import hotkeys from "hotkeys-js";
+import PropTypes from "prop-types";
 
 export default class Launchpad extends React.Component {
     state = {
@@ -109,7 +110,7 @@ export default class Launchpad extends React.Component {
                 onTouchMove={this.onTouchMove}
                 onTouchEnd={this.onTouchEnd}
             >
-                <SwipeableViews
+                {/* <SwipeableViews
                     ref={this.swipeableViewsRef}
                     id="launchpad-carousel"
                     enableMouseEvents={!this.state.isItemHovering}
@@ -117,8 +118,11 @@ export default class Launchpad extends React.Component {
                     index={this.state.index}
                     onChangeIndex={index => this.setState({ index })}
                 >
-                    {this.renderLaunchpadPages()}
-                </SwipeableViews>
+                    
+                </SwipeableViews> */}
+
+                {this.renderLaunchpadPages()}
+
                 <div id="launchpad-navigator">{this.renderLaunchpadNavigator()}</div>
             </div>
         );
@@ -137,32 +141,38 @@ export default class Launchpad extends React.Component {
     componentDidMount() {
         this.updateWindowDimensions();
         window.addEventListener("resize", this.updateWindowDimensions);
-        hotkeys("escape", (event, handler) => {
+        hotkeys("escape", () => {
             if (this.props.open) this.close();
         });
-        hotkeys("left", (event, handler) => {
-            if (this.state.index === 0) {
-                this.swipeableViewsRef.current.containerNode.style.transform = "translate(10%,0)";
-                setTimeout(() => {
-                    this.swipeableViewsRef.current.containerNode.style.transform = "translate(0%,0)";
-                }, 200);
-                return;
-            }
-            this.setState({ index: this.state.index - 1 });
-        });
-        hotkeys("right", (event, handler) => {
-            if (this.state.index === this.pages - 1) {
-                this.swipeableViewsRef.current.containerNode.style.transform = `translate(${-(this.pages - 1) * 100 - 10}%,0)`;
-                setTimeout(() => {
-                    this.swipeableViewsRef.current.containerNode.style.transform = `translate(${-(this.pages - 1) * 100}%,0)`;
-                }, 200);
-                return;
-            }
-            this.setState({ index: this.state.index + 1 });
-        });
+        // hotkeys("left", () => {
+        //     if (this.state.index === 0) {
+        //         this.swipeableViewsRef.current.containerNode.style.transform = "translate(10%,0)";
+        //         setTimeout(() => {
+        //             this.swipeableViewsRef.current.containerNode.style.transform = "translate(0%,0)";
+        //         }, 200);
+        //         return;
+        //     }
+        //     this.setState({ index: this.state.index - 1 });
+        // });
+        // hotkeys("right", () => {
+        //     if (this.state.index === this.pages - 1) {
+        //         this.swipeableViewsRef.current.containerNode.style.transform = `translate(${-(this.pages - 1) * 100 - 10}%,0)`;
+        //         setTimeout(() => {
+        //             this.swipeableViewsRef.current.containerNode.style.transform = `translate(${-(this.pages - 1) * 100}%,0)`;
+        //         }, 200);
+        //         return;
+        //     }
+        //     this.setState({ index: this.state.index + 1 });
+        // });
     }
 
     componentWillUnmount() {
         window.removeEventListener("resize", this.updateWindowDimensions);
     }
 }
+
+Launchpad.propTypes = {
+    items: PropTypes.array.isRequired,
+    open: PropTypes.func.isRequired,
+    close: PropTypes.func.isRequired
+};

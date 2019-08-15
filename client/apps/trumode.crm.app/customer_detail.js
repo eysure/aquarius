@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import * as AQUI from "../../components/Window/core";
 import { R } from "./index";
 import _ from "lodash";
 
@@ -14,6 +13,8 @@ import CustomerContacts from "./customer_contacts";
 import CustomerAnalyze from "./customer_analyze";
 
 import { Collection } from "../../utils";
+import { Mongo } from "meteor/mongo";
+import PropTypes from "prop-types";
 
 class CustomerDetail extends Component {
     state = {
@@ -21,14 +22,11 @@ class CustomerDetail extends Component {
         open: true
     };
 
-    renderSidebar = () => {
-        let tabs = new Set();
-        tabs.add(TAB_CUSTOMER_BASIC_INFO);
-        tabs.add(TAB_CUSTOMER_CONTACTS);
-        tabs.add(TAB_CUSTOMER_ANALYZE);
+    tabs = [TAB_CUSTOMER_BASIC_INFO, TAB_CUSTOMER_CONTACTS, TAB_CUSTOMER_ANALYZE];
 
+    renderSidebar = () => {
         let sidebar = [];
-        for (let tab of tabs) {
+        for (let tab of this.tabs) {
             sidebar.push(
                 <li key={tab} className={this.state.selected == tab ? "active" : ""} onClick={() => this.setState({ selected: tab })}>
                     <i className="material-icons" style={{ marginRight: 16 }}>
@@ -44,11 +42,11 @@ class CustomerDetail extends Component {
     renderContent = () => {
         switch (this.state.selected) {
             case TAB_CUSTOMER_BASIC_INFO:
-                return <CustomerBasicInfo context={this.props.context} id={this.props.id} />;
+                return <CustomerBasicInfo appKey={this.props.appKey} customerId={this.props.customerId} onClose={this.props.onClose} />;
             case TAB_CUSTOMER_CONTACTS:
-                return <CustomerContacts context={this.props.context} id={this.props.id} />;
+                return <CustomerContacts appKey={this.props.appKey} customerId={this.props.customerId} />;
             case TAB_CUSTOMER_ANALYZE:
-                return <CustomerAnalyze context={this.props.context} id={this.props.id} />;
+                return <CustomerAnalyze appKey={this.props.appKey} customerId={this.props.customerId} />;
             default:
                 return <div className="empty-page">Customer Detail</div>;
         }
@@ -59,11 +57,11 @@ class CustomerDetail extends Component {
         return (
             <Window
                 onClose={this.props.onClose}
-                key={this.state._id._str}
-                _key={this.state._id._str}
+                key={this.props.customerId._str}
+                _key={this.props.customerId._str}
                 width={1000}
                 height={700}
-                appKey={this.props.context.props.appKey}
+                appKey={this.props.appKey}
                 title={this.state.name}
                 theme="light"
                 escToClose
@@ -79,11 +77,11 @@ class CustomerDetail extends Component {
     }
 
     componentDidMount() {
-        let customer = Collection("customers").findOne({ _id: this.props.id });
+        let customer = Collection("customers").findOne({ _id: this.props.customerId });
         this.setState(customer);
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps) {
         if (!_.isEqual(this.props, prevProps)) {
             this.componentDidMount();
         }
@@ -91,3 +89,9 @@ class CustomerDetail extends Component {
 }
 
 export default CustomerDetail;
+
+CustomerDetail.propTypes = {
+    appKey: PropTypes.string.isRequired,
+    customerId: PropTypes.instanceOf(Mongo.ObjectID).isRequired,
+    onClose: PropTypes.func.isRequired
+};

@@ -1,11 +1,7 @@
 import React, { Component } from "react";
-import * as AQUI from "../../components/Window/core";
-import { Meteor } from "meteor/meteor";
-import clientConfig from "../../client_config.js";
-
-import { ResourceFeeder } from "../../resources_feeder";
-
+import PropTypes from "prop-types";
 import Window from "../../components/Window";
+import { ResourceFeeder } from "../../resources_feeder";
 
 export const TAB_CUSTOMERS = "TAB_CUSTOMERS";
 export const TAB_PROVIDERS = "TAB_PROVIDERS";
@@ -21,11 +17,9 @@ class CustomerRelationshipManager extends Component {
     };
 
     renderSidebar = () => {
-        let tabs = new Set();
-        tabs.add(TAB_CUSTOMERS);
-        tabs.add(TAB_PROVIDERS);
-
+        let tabs = [TAB_CUSTOMERS, TAB_PROVIDERS];
         let sidebar = [];
+
         for (let tab of tabs) {
             sidebar.push(
                 <li key={tab} className={this.state.selected == tab ? "active" : ""} onClick={() => this.setState({ selected: tab })}>
@@ -36,13 +30,13 @@ class CustomerRelationshipManager extends Component {
                 </li>
             );
         }
-        return sidebar;
+        return <ul>{sidebar}</ul>;
     };
 
     renderContent = () => {
         switch (this.state.selected) {
             case TAB_CUSTOMERS:
-                return <Customers context={this} />;
+                return <Customers appKey={this.props.appKey} />;
             case TAB_PROVIDERS:
                 return <div className="empty-page">PROVIDERS</div>;
             default:
@@ -54,19 +48,16 @@ class CustomerRelationshipManager extends Component {
         if (!this.state.open) return null;
         return (
             <Window
-                key="Main"
+                appKey="trumode.crm"
                 _key="Main"
                 width={1200}
                 height={800}
-                title={R.Trans(CustomerRelationshipManager.manifest.appName)}
+                title={R.Trans(this.constructor.manifest.appName)}
                 noTitlebar
-                appKey={this.props.appKey}
-                onClose={e => this.setState({ open: false })}
+                onClose={() => this.setState({ open: false })}
             >
                 <div className="window-sidebar-container">
-                    <div className="window-sidebar">
-                        <ul>{this.renderSidebar()}</ul>
-                    </div>
+                    <div className="window-sidebar">{this.renderSidebar()}</div>
                     <div className="window-sidebar-content">{this.renderContent()}</div>
                 </div>
             </Window>
@@ -78,6 +69,10 @@ CustomerRelationshipManager.manifest = {
     appKey: "trumode.crm",
     appName: ["CRM", "客户与供应商"],
     icon: "/assets/apps/photo_gallery.svg"
+};
+
+CustomerRelationshipManager.propTypes = {
+    appKey: PropTypes.string.isRequired
 };
 
 export default CustomerRelationshipManager;

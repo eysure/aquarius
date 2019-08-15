@@ -6,6 +6,9 @@ import { appClose, throwMsg } from "../actions";
 import { getAppWithKey } from "../app_utils";
 import Application from "./Application";
 import { R } from "../resources_feeder";
+import { Meteor } from "meteor/meteor";
+
+import PropTypes from "prop-types";
 
 class AppHost extends Component {
     render() {
@@ -34,7 +37,7 @@ class AppHost extends Component {
                     });
 
                     return (
-                        <Application key={app.appKey} appKey={app.appKey} app={app} appInstance={appInstance} windows={this.props.windows[app.appKey]}>
+                        <Application key={app.appKey} app={app} windows={this.props.windows[app.appKey]}>
                             {appInstance}
                         </Application>
                     );
@@ -81,3 +84,12 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(AppHost);
+
+AppHost.propTypes = {
+    apps: PropTypes.object.isRequired,
+    system: PropTypes.object.isRequired,
+    windows: PropTypes.object.isRequired,
+    auth: PropTypes.object.isRequired,
+    throwMsg: PropTypes.func.isRequired,
+    appClose: PropTypes.func.isRequired
+};

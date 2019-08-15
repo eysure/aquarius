@@ -1,16 +1,16 @@
+import { Meteor } from "meteor/meteor";
+import { Mongo } from "meteor/mongo";
+import { Tracker } from "meteor/tracker";
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { Mongo } from "meteor/mongo";
-
-import { R } from "./index";
-import * as AQUI from "../../components/Window/core";
 import { activateWindow } from "../../actions";
-
-import CustomerContactsDetail from "./customer_contacts_detail";
-import { Meteor } from "meteor/meteor";
-import { Tracker } from "meteor/tracker";
+import * as AQUI from "../../components/Window/core";
 import { Collection } from "../../utils";
+import CustomerContactsDetail from "./customer_contacts_detail";
+import CustomerContactsNew from "./customer_contacts_new";
+import { R } from "./index";
 
 class CustomerContacts extends Component {
     state = {
@@ -25,7 +25,7 @@ class CustomerContacts extends Component {
                 <div className="handle roof-toolbar">
                     <div className="hbc h-full">
                         <div className="hcc">
-                            <button className="roof-toolbar-btn material-icons" onClick={e => this.setState({ renderedNewCustomer: true })}>
+                            <button className="roof-toolbar-btn material-icons" onClick={() => this.setState({ renderedNewCustomerContact: true })}>
                                 person_add
                             </button>
                         </div>
@@ -33,7 +33,7 @@ class CustomerContacts extends Component {
                 </div>
                 <div style={{ height: "calc(100% - 38px)", overflow: "auto" }}>
                     <AQUI.Table
-                        heads={["name", "role", "mobile", "email", "time_created", "time_modified"]}
+                        heads={["name", "role", "mobile", "email", "time_created", "time_modified", "remark"]}
                         headsHide={["time_created", "time_modified", "remark"]}
                         headsTranslator={R}
                         data={this.state.data}
@@ -48,7 +48,7 @@ class CustomerContacts extends Component {
                         rowDoubleClick={(e, row) => {
                             this.openCustomerContact(row._id);
                         }}
-                        rowContextMenu={(e, row) => {
+                        rowContextMenu={e => {
                             e.preventDefault();
                         }}
                         sortBy="name"
@@ -64,31 +64,29 @@ class CustomerContacts extends Component {
     renderNewCustomerContact = () => {
         if (!this.state.renderedNewCustomerContact) return;
 
-        let id = new Mongo.ObjectID();
         return (
-            // <CustomerNew
-            //     key={id._str}
-            //     context={this.props.context}
-            //     id={id}
-            //     onClose={e => {
-            //         this.setState({ renderedNewCustomer: false });
-            //     }}
-            // />
-            null
+            <CustomerContactsNew
+                appKey={this.props.appKey}
+                customerId={this.props.customerId}
+                onClose={() => {
+                    this.setState({ renderedNewCustomerContact: false });
+                }}
+            />
         );
     };
 
     renderCustomerContactDetails = () => {
         let windows = [];
-        for (let id of this.state.renderedCustomerContactDetails) {
+        for (let customerContactId of this.state.renderedCustomerContactDetails) {
             windows.push(
                 <CustomerContactsDetail
-                    key={id._str}
-                    context={this.props.context}
-                    id={id}
-                    onClose={e => {
+                    key={customerContactId._str}
+                    appKey={this.props.appKey}
+                    customerId={this.props.customerId}
+                    customerContactId={customerContactId}
+                    onClose={() => {
                         let ids = this.state.renderedCustomerContactDetails;
-                        ids.splice(ids.indexOf(id), 1);
+                        ids.splice(ids.indexOf(customerContactId), 1);
                         this.setState({ renderedCustomerContactDetails: ids });
                     }}
                 />
@@ -97,14 +95,14 @@ class CustomerContacts extends Component {
         return windows;
     };
 
-    openCustomerContact = id => {
-        if (this.state.renderedCustomerContactDetails.includes(id)) {
-            this.props.activateWindow(this.props.context.props.appKey, id._str);
-        } else this.setState({ renderedCustomerContactDetails: [...this.state.renderedCustomerContactDetails, id] });
+    openCustomerContact = customerContactId => {
+        if (this.state.renderedCustomerContactDetails.includes(customerContactId)) {
+            this.props.activateWindow(this.props.appKey, customerContactId._str);
+        } else this.setState({ renderedCustomerContactDetails: [...this.state.renderedCustomerContactDetails, customerContactId] });
     };
 
     componentDidMount() {
-        let customer_id = this.props.id;
+        let customer_id = this.props.customerId;
         Tracker.autorun(() => {
             Meteor.subscribe("customerContacts", { customer_id });
             let data = Collection("customers_contacts")
@@ -129,3 +127,10 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(CustomerContacts);
+
+CustomerContacts.propTypes = {
+    appKey: PropTypes.string.isRequired,
+    customerId: PropTypes.instanceOf(Mongo.ObjectID).isRequired,
+
+    activateWindow: PropTypes.func
+};

@@ -1,16 +1,15 @@
+import _ from "lodash";
+import { Meteor } from "meteor/meteor";
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as AQUI from "../../components/Window/core";
-import { R } from "./index";
-import _ from "lodash";
-
-import Window from "../../components/Window";
-import { getCountryList, upload, Collection, oss } from "../../utils";
-
 import { throwMsg } from "../../actions";
-import { Meteor } from "meteor/meteor";
+import * as AQUI from "../../components/Window/core";
 import Popup from "../../components/Window/popup";
+import { Collection, getCountryList, oss, upload } from "../../utils";
+import { R } from "./index";
+import { Mongo } from "meteor/mongo";
 
 class CustomerBasicInfo extends Component {
     state = {
@@ -46,28 +45,28 @@ class CustomerBasicInfo extends Component {
                     files[0],
                     {
                         db: "customers",
-                        findOne: { _id: this.props.id },
+                        findOne: { _id: this.props.customerId },
                         field: "logo"
                     },
                     () => {
                         this.props.throwMsg(
                             R.Msg("FILE_UPLOADING", {
-                                key: `CUSTOMER_LOGO_UPLOAD_${this.props.id._str}`
+                                key: `CUSTOMER_LOGO_UPLOAD_${this.props.customerId._str}`
                             })
                         );
                     },
-                    (err, res) => {
+                    err => {
                         if (err) {
                             this.props.throwMsg(
                                 R.Msg("SERVER_ERROR", {
-                                    key: `CUSTOMER_LOGO_UPLOAD_${this.props.id._str}`,
+                                    key: `CUSTOMER_LOGO_UPLOAD_${this.props.customerId._str}`,
                                     ...err
                                 })
                             );
                         } else {
                             this.props.throwMsg(
                                 R.Msg("FILE_UPLOADED", {
-                                    key: `CUSTOMER_LOGO_UPLOAD_${this.props.id._str}`
+                                    key: `CUSTOMER_LOGO_UPLOAD_${this.props.customerId._str}`
                                 })
                             );
                             return true;
@@ -131,17 +130,17 @@ class CustomerBasicInfo extends Component {
         delete: {
             title: R.Str("DELETE"),
             type: "button",
-            onClick: e => {
+            onClick: () => {
                 this.setState({ deleteDoubleCheck: true });
             }
         }
     };
 
-    handleSave = e => {
+    handleSave = () => {
         this.setState({ processing: true });
         let packedData = AQUI.schemaDataPack(this.schema, this.state);
         packedData._id = this.state._id;
-        Meteor.call("editCustomer", packedData, (err, res) => {
+        Meteor.call("editCustomer", packedData, err => {
             this.setState({ processing: false });
             if (err) {
                 this.props.throwMsg(R.Msg("SERVER_ERROR", err));
@@ -151,8 +150,8 @@ class CustomerBasicInfo extends Component {
         });
     };
 
-    handleDelete = e => {
-        Meteor.call("deleteCustomer", this.state._id, (err, res) => {
+    handleDelete = () => {
+        Meteor.call("deleteCustomer", this.state._id, err => {
             this.setState({ processing: false });
             if (err) {
                 this.props.throwMsg(R.Msg("SERVER_ERROR", err));
@@ -196,7 +195,7 @@ class CustomerBasicInfo extends Component {
                     context={this}
                     _key={this.state._id + "Delete Check"}
                     name="deleteDoubleCheck"
-                    appKey={this.props.context.props.appKey}
+                    appKey={this.props.appKey}
                     title={`Delete ${this.state.name} checking`}
                     content={R.Str("CUSTOMER_DELETE_DC", { name: this.state.name })}
                     onCheck={this.handleDelete}
@@ -206,19 +205,15 @@ class CustomerBasicInfo extends Component {
     }
 
     componentDidMount() {
-        let customer = Collection("customers").findOne({ _id: this.props.id });
+        let customer = Collection("customers").findOne({ _id: this.props.customerId });
         this.setState(customer);
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps) {
         if (!_.isEqual(this.props, prevProps)) {
             this.componentDidMount();
         }
     }
-}
-
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ throwMsg }, dispatch);
 }
 
 function mapStateToProps(state) {
@@ -227,7 +222,19 @@ function mapStateToProps(state) {
     };
 }
 
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ throwMsg }, dispatch);
+}
+
 export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(CustomerBasicInfo);
+
+CustomerBasicInfo.propTypes = {
+    appKey: PropTypes.string.isRequired,
+    customerId: PropTypes.instanceOf(Mongo.ObjectID).isRequired,
+    onClose: PropTypes.func.isRequired,
+
+    throwMsg: PropTypes.func
+};

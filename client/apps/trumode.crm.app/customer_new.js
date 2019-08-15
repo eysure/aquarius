@@ -1,16 +1,14 @@
+import { Meteor } from "meteor/meteor";
+import { Mongo } from "meteor/mongo";
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as AQUI from "../../components/Window/core";
-import { R } from "./index";
-import _ from "lodash";
-
-import Window from "../../components/Window";
-import { getCountryList } from "../../utils";
-
 import { throwMsg } from "../../actions";
-import { Meteor } from "meteor/meteor";
-import { Mongo } from "meteor/mongo";
+import Window from "../../components/Window";
+import * as AQUI from "../../components/Window/core";
+import { getCountryList } from "../../utils";
+import { R } from "./index";
 
 class CustomerNew extends Component {
     state = {
@@ -70,11 +68,11 @@ class CustomerNew extends Component {
         }
     };
 
-    handleSave = e => {
+    handleSave = () => {
         this.setState({ processing: true });
         let packedData = AQUI.schemaDataPack(this.schema, this.state);
         packedData._id = new Mongo.ObjectID();
-        Meteor.call("addCustomer", packedData, (err, res) => {
+        Meteor.call("addCustomer", packedData, err => {
             this.setState({ processing: false });
             if (err) {
                 this.props.throwMsg(R.Msg("SERVER_ERROR", err));
@@ -87,15 +85,7 @@ class CustomerNew extends Component {
 
     render() {
         return (
-            <Window
-                onClose={this.props.onClose}
-                key={R.Str("NEW_CUSTOMER")}
-                _key={R.Str("NEW_CUSTOMER")}
-                appKey={this.props.context.props.appKey}
-                title={R.Str("NEW_CUSTOMER")}
-                theme="light"
-                escToClose
-            >
+            <Window onClose={this.props.onClose} _key={R.Str("NEW_CUSTOMER")} appKey={this.props.appKey} title={R.Str("NEW_CUSTOMER")} theme="light" escToClose>
                 <div className="window-content-inner handle">
                     <AQUI.FieldItem context={this} schema={this.schema} name="name" />
                     <AQUI.FieldItem context={this} schema={this.schema} name="abbr" />
@@ -124,3 +114,10 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(CustomerNew);
+
+CustomerNew.propTypes = {
+    appKey: PropTypes.string.isRequired,
+    onClose: PropTypes.func.isRequired,
+
+    throwMsg: PropTypes.func
+};

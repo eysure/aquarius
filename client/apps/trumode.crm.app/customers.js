@@ -1,15 +1,14 @@
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { Mongo } from "meteor/mongo";
-
-import { R } from "./index";
-import * as AQUI from "../../components/Window/core";
-import Menu from "../../components/Menus";
 import { activateWindow } from "../../actions";
+import Menu from "../../components/Menus";
+import * as AQUI from "../../components/Window/core";
 import CustomerDetail from "./customer_detail";
 import CustomerNew from "./customer_new";
+import { R } from "./index";
 
 class Customers extends Component {
     state = {
@@ -32,7 +31,7 @@ class Customers extends Component {
                 <div className="handle roof-toolbar">
                     <div className="hbc h-full">
                         <div className="hcc">
-                            <button className="roof-toolbar-btn material-icons" onClick={e => this.setState({ renderedNewCustomer: true })}>
+                            <button className="roof-toolbar-btn material-icons" onClick={() => this.setState({ renderedNewCustomer: true })}>
                                 person_add
                             </button>
                         </div>
@@ -87,13 +86,10 @@ class Customers extends Component {
     renderNewCustomer = () => {
         if (!this.state.renderedNewCustomer) return;
 
-        let id = new Mongo.ObjectID();
         return (
             <CustomerNew
-                key={id._str}
-                context={this.props.context}
-                id={id}
-                onClose={e => {
+                appKey={this.props.appKey}
+                onClose={() => {
                     this.setState({ renderedNewCustomer: false });
                 }}
             />
@@ -102,15 +98,15 @@ class Customers extends Component {
 
     renderCustomerDetails = () => {
         let windows = [];
-        for (let id of this.state.renderedCustomerDetails) {
+        for (let customerId of this.state.renderedCustomerDetails) {
             windows.push(
                 <CustomerDetail
-                    key={id._str}
-                    context={this.props.context}
-                    id={id}
-                    onClose={e => {
+                    key={customerId._str}
+                    appKey={this.props.appKey}
+                    customerId={customerId}
+                    onClose={() => {
                         let customers = this.state.renderedCustomerDetails;
-                        customers.splice(customers.indexOf(id), 1);
+                        customers.splice(customers.indexOf(customerId), 1);
                         this.setState({ renderedCustomerDetails: customers });
                     }}
                 />
@@ -121,7 +117,7 @@ class Customers extends Component {
 
     openCustomer = id => {
         if (this.state.renderedCustomerDetails.includes(id)) {
-            this.props.activateWindow(this.props.context.props.appKey, id._str);
+            this.props.activateWindow(this.props.appKey, id._str);
         } else this.setState({ renderedCustomerDetails: [...this.state.renderedCustomerDetails, id] });
     };
 
@@ -130,7 +126,7 @@ class Customers extends Component {
         let customerTableContextMenu = [
             {
                 title: R.Str("OPEN"),
-                onClick: e => {
+                onClick: () => {
                     this.openCustomer(row._id);
                 }
             }
@@ -156,3 +152,9 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(Customers);
+
+Customers.propTypes = {
+    appKey: PropTypes.string.isRequired,
+    db: PropTypes.object.isRequired,
+    activateWindow: PropTypes.func.isRequired
+};

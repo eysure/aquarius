@@ -1,30 +1,25 @@
-import React, { Component } from "react";
-import { bindActionCreators } from "redux";
+import PropTypes from "prop-types";
+import { Component } from "react";
 import { connect } from "react-redux";
-
+import { bindActionCreators } from "redux";
+import { appClose, throwMsg } from "../../actions";
 import { R } from "../../resources_feeder";
-
-import { throwMsg, appClose } from "../../actions";
 
 export class Application extends Component {
     state = { hasError: false };
 
     render() {
         if (this.state.hasError) return null;
-
         return this.props.children;
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        let { appKey, app, windows } = this.props;
-
-        let option = app.option;
-        let manifest = app.manifest;
+    componentDidUpdate() {
+        let { windows, app } = this.props;
 
         // If not documentBased, close the app if no windows remains
-        if (!manifest.documentBase) {
+        if (!app.manifest.documentBase) {
             if (!windows || Object.keys(windows).length === 0) {
-                this.props.appClose(appKey);
+                this.props.appClose(app.appKey);
             }
         }
 
@@ -32,9 +27,9 @@ export class Application extends Component {
         // ...
 
         // Check if this user has the auth to run this app
-        if (this.props.auth.apps && !this.props.auth.apps.includes(appKey)) {
+        if (this.props.auth.apps && !this.props.auth.apps.includes(app.appKey)) {
             this.props.throwMsg(R.Msg("APPLICATION_PERMISSION_DENIED"));
-            this.props.appClose(appKey);
+            this.props.appClose(app.appKey);
         }
     }
 
@@ -42,10 +37,10 @@ export class Application extends Component {
     componentDidCatch(error, info) {
         let msgContent = error + "\n" + JSON.stringify(info);
         this.props.throwMsg(R.Msg("APP_CRASH", { msgContent }));
-        this.props.appClose(this.props.appKey);
+        this.props.appClose(this.props.app.appKey);
     }
 
-    static getDerivedStateFromError(error) {
+    static getDerivedStateFromError() {
         // Update state so the next render will show the fallback UI.
         return { hasError: true };
     }
@@ -55,11 +50,21 @@ const mapStateToProps = state => ({
     auth: state.auth
 });
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = dispatch => {
     return bindActionCreators({ throwMsg, appClose }, dispatch);
-}
+};
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(Application);
+
+Application.propTypes = {
+    app: PropTypes.object.isRequired,
+    windows: PropTypes.object,
+    children: PropTypes.node.isRequired,
+
+    auth: PropTypes.object,
+    throwMsg: PropTypes.func,
+    appClose: PropTypes.func
+};
