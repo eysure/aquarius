@@ -27,6 +27,7 @@ export default {
     time_modified: ["Last Modified Time", "最后修改时间"],
     name_cn: ["Name (CN)", "中文名称"],
     remark: ["Remark", "备注"],
+    tags: ["Tags", "标签"],
     NAME_PH: ["Full company name", "公司全名"],
     ABBR_PH: ["Brand abbrivation", "商标简称"],
 

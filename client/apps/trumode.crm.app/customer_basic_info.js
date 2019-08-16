@@ -96,11 +96,11 @@ class CustomerBasicInfo extends Component {
             title: R.Str("type"),
             type: "select",
             options: {
-                0: R.Str("type_0"),
-                1: R.Str("type_1"),
-                2: R.Str("type_2"),
-                3: R.Str("type_3"),
-                4: R.Str("type_4")
+                "0": R.Str("type_0"),
+                "1": R.Str("type_1"),
+                "2": R.Str("type_2"),
+                "3": R.Str("type_3"),
+                "4": R.Str("type_4")
             }
         },
         website: {
@@ -125,7 +125,8 @@ class CustomerBasicInfo extends Component {
             },
             onClick: e => {
                 this.handleSave(e);
-            }
+            },
+            callByEnter: true
         },
         delete: {
             title: R.Str("DELETE"),

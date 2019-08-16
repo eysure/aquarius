@@ -7,6 +7,8 @@ import _ from "lodash";
 import hotkeys from "hotkeys-js";
 import DropFile from "../DropFile";
 import Spinner from "../spinner";
+import Select from "react-select";
+import Fuse from "fuse.js";
 
 export class Button extends Component {
     render() {
@@ -124,7 +126,10 @@ export class Button extends Component {
 // }
 
 export class FieldItem extends Component {
-    state = {};
+    state = {
+        rawOptions: [],
+        fusedOptions: []
+    };
 
     schema = null;
     parentState = null;
@@ -200,14 +205,22 @@ export class FieldItem extends Component {
 
         if (field.type === "select") {
             // When value is not one of the options, return false
-            let options = field.options;
-            if (_.isArray(options)) {
-                if (!options.includes(this.parentState[name])) return false;
-            } else if (_.isObject(options)) {
-                if (!Object.keys(options).includes(this.parentState[name])) return false;
-            } else {
-                return false;
-            }
+            // let options = field.options;
+            // if (_.isArray(options)) {
+            //     if (!options.includes(this.parentState[name])) return false;
+            // } else if (_.isObject(options)) {
+            //     if (!Object.keys(options).includes(this.parentState[name])) return false;
+            // } else {
+            //     return false;
+            // }
+            if (_.isArray(this.parentState[name]) && field.multi) {
+                for (let v of this.parentState[name]) {
+                    if (!field.options[v]) return false;
+                }
+                return true;
+            } else if (!_.isArray(this.parentState[name]) && !field.multi) {
+                return field.options[this.parentState[name]] !== undefined;
+            } else return false;
         }
 
         if (this.schema[name].valid === undefined) return true;
@@ -222,7 +235,7 @@ export class FieldItem extends Component {
         return this.calculateConditions(name, this.schema[name].disabled);
     };
 
-    onChange = e => {
+    onChange = (e, name, val) => {
         if (!e) return;
         e.preventDefault();
         this.props.context.setState({ [e.target.name]: e.target.value });
@@ -252,10 +265,56 @@ export class FieldItem extends Component {
         }
     };
 
+    onSelectChange = (name, val) => {
+        let res = null;
+        if (_.isArray(val)) {
+            res = [];
+            for (let v of val) {
+                res.push(v.value);
+            }
+        } else res = val.value;
+        this.props.context.setState({ [name]: res });
+        if (!this.parentState["modified"]) this.props.context.setState({ modified: true });
+    };
+
+    processSelectValue = (name, parentState, options) => {
+        let res = null;
+        let value = parentState[name];
+        if (value instanceof Mongo.ObjectID) {
+            value = value._str;
+        }
+        if (_.isArray(value)) {
+            res = [];
+            for (let v of value) {
+                if (v instanceof Mongo.ObjectID) {
+                    v = v._str;
+                }
+                res.push({ value: v, label: options[v] });
+            }
+        } else res = { value: value, label: options[value] };
+        return res;
+    };
+
     renderImagePlaceholder = (src, load) => {
         if (!src) return <i className="material-icons">add_circle_outline</i>;
         if (!load) return <Spinner />;
         return null; // Only image
+    };
+
+    selectFuse = null;
+
+    // Filter the options powered by Fuse.js then auto select the first element
+    onSelectInputChange = val => {
+        let res = this.selectFuse.search(val);
+        if (val) {
+            this.setState({ fusedOptions: res }, () => {
+                this.inputRef.current.select.focusOption();
+            });
+        } else {
+            this.setState({ fusedOptions: this.state.rawOptions }, () => {
+                this.inputRef.current.select.focusOption();
+            });
+        }
     };
 
     render() {
@@ -315,10 +374,12 @@ export class FieldItem extends Component {
                 );
             }
             case "select": {
+                const value = this.processSelectValue(name, state, this.props.options || field.options) || null;
+                const options = this.state.fusedOptions;
                 return (
                     <div id={`${name}-input-item`} className="aqui-input-item vss" style={{ width: this.props.width || "100%" }}>
                         {field.title && <div className="hsc aqui-input-title">{field.title}</div>}
-                        <select
+                        {/* <select
                             ref={this.inputRef}
                             id={name}
                             name={name}
@@ -332,7 +393,25 @@ export class FieldItem extends Component {
                                 {field.placeholder || "Please Select"}
                             </option>
                             {this.renderSelect()}
-                        </select>
+                        </select> */}
+                        <Select
+                            ref={this.inputRef}
+                            className="h-full"
+                            classNamePrefix="aqui-rs"
+                            value={value}
+                            onChange={val => this.onSelectChange(name, val)}
+                            options={options}
+                            isDisabled={disabled}
+                            isMulti={this.props.multi || field.multi}
+                            maxMenuHeight={480}
+                            placeholder={field.placeholder}
+                            onInputChange={this.onSelectInputChange}
+                            filterOption={() => {
+                                return true;
+                            }}
+                            onKeyDown={this.onKeyDown}
+                            menuPortalTarget={document.body}
+                        />
                         {this.props.caption && <span className="aqui-input-caption">{this.props.caption}</span>}
                     </div>
                 );
@@ -429,11 +508,22 @@ export class FieldItem extends Component {
         if (e.keyCode === 27) {
             e.target.blur();
         }
+        // Enter
+        if (e.keyCode === 13 && e.target.tagName === "INPUT") {
+            for (let field in this.schema) {
+                // Only button with callByEnter and itself is not disabled can dispatch the onClick
+                if (this.schema[field].type === "button" && this.schema[field].callByEnter && !this.calculateDisable(field)) this.schema[field].onClick();
+            }
+        }
     };
 
     componentDidMount() {
         if (this.inputRef && this.inputRef.current && this.inputRef.current.tagName === "TEXTAREA") {
             this.textAreaAutoResize(this.inputRef.current);
+        }
+        if (this.field && this.field.options) {
+            let translatedOptions = processSelectOptions(this.field.options);
+            this.translateSelectAndSetFuse(translatedOptions);
         }
     }
 
@@ -441,11 +531,52 @@ export class FieldItem extends Component {
         if (this.inputRef && this.inputRef.current && this.inputRef.current.tagName === "TEXTAREA") {
             this.textAreaAutoResize(this.inputRef.current);
         }
+        let translatedOptions = processSelectOptions(this.field.options);
+        if (!_.isEqual(this.state.rawOptions, translatedOptions)) {
+            this.translateSelectAndSetFuse(translatedOptions);
+        }
+    }
+
+    translateSelectAndSetFuse(translatedOptions) {
+        this.setState({ rawOptions: translatedOptions, fusedOptions: translatedOptions });
+        this.selectFuse = new Fuse(translatedOptions, {
+            shouldSort: true,
+            threshold: 0.8,
+            location: 0,
+            distance: 100,
+            maxPatternLength: 32,
+            minMatchCharLength: 1,
+            keys: ["value", "tokenized", "initial"]
+        });
     }
 
     textAreaAutoResize(textarea) {
         if (textarea.scrollHeight < 500) textarea.style.height = textarea.scrollHeight + "px";
     }
+}
+
+import pinyin from "pinyin";
+
+// Translate object notated options to react-select options
+// { value-1: label-1, value-2: label-2, ...} => [ { value: value-1, label: label-1 }, { value: value-2, label: label-2 }, ...]
+export function processSelectOptions(options) {
+    if (!options) return [];
+    if (!_.isObject(options)) {
+        console.error(options);
+        throw new Error("Currently not accept original Select options format, use object instead { value: label }");
+    }
+    if (Object.keys(options).length === 0) return [];
+    let res = [];
+    const keys = Object.keys(options);
+    for (let key of keys) {
+        res.push({
+            value: key,
+            label: options[key],
+            tokenized: pinyin(options[key], { style: pinyin.STYLE_NORMAL }).join(""),
+            initial: pinyin(options[key], { style: pinyin.STYLE_FIRST_LETTER }).join("")
+        });
+    }
+    return res;
 }
 
 export function PanelItem(props) {
@@ -566,6 +697,7 @@ export class TableHead extends Component {
 }
 
 import Menu from "../Menus";
+import { Mongo } from "meteor/mongo";
 
 export class Table extends Component {
     state = {

@@ -69,7 +69,8 @@ class SupplierContactsNew extends Component {
                 },
                 onClick: e => {
                     this.handleSave(e);
-                }
+                },
+                callByEnter: true
             }
         };
     };

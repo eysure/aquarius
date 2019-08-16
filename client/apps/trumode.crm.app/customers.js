@@ -42,7 +42,21 @@ class Customers extends Component {
                 </div>
                 <div style={{ height: "calc(100% - 38px)", overflow: "auto" }}>
                     <AQUI.Table
-                        heads={["abbr", "name", "country", "type", "address", "tel", "website", "fax", "time_created", "time_modified", "name_cn", "remark"]}
+                        heads={[
+                            "abbr",
+                            "name",
+                            "country",
+                            "type",
+                            "address",
+                            "tel",
+                            "website",
+                            "fax",
+                            "time_created",
+                            "time_modified",
+                            "name_cn",
+                            "remark",
+                            "tags"
+                        ]}
                         headsHide={["address", "tel", "website", "fax", "time_modified", "name_cn", "remark"]}
                         headsTranslator={R}
                         data={this.props.db.customers}

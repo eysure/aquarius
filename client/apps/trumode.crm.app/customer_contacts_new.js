@@ -69,7 +69,8 @@ class CustomerContactsNew extends Component {
                 },
                 onClick: e => {
                     this.handleSave(e);
-                }
+                },
+                callByEnter: true
             }
         };
     };

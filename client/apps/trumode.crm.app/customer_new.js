@@ -70,7 +70,8 @@ class CustomerNew extends Component {
                     type: "$!valid"
                 }
             },
-            noUpload: true
+            noUpload: true,
+            callByEnter: true
         }
     };
 
@@ -91,7 +92,15 @@ class CustomerNew extends Component {
 
     render() {
         return (
-            <Window onClose={this.props.onClose} _key={R.Str("NEW_CUSTOMER")} appKey={this.props.appKey} title={R.Str("NEW_CUSTOMER")} theme="light" escToClose>
+            <Window
+                onClose={this.props.onClose}
+                _key={R.Str("NEW_CUSTOMER")}
+                appKey={this.props.appKey}
+                width={480}
+                title={R.Str("NEW_CUSTOMER")}
+                theme="light"
+                escToClose
+            >
                 <div className="window-content-inner handle">
                     <AQUI.FieldItem context={this} schema={this.schema} name="name" />
                     <AQUI.FieldItem context={this} schema={this.schema} name="abbr" />

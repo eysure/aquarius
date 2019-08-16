@@ -666,7 +666,7 @@
     transition: 150ms;
     box-sizing: border-box;
     font-weight: 300;
-    padding: 8px 12px;
+    padding: 8px 10px;
     width: 100%;
 }
 
@@ -674,12 +674,6 @@
 .window input:focus,
 .window .aqui-checkbox:focus {
     box-shadow: 0 0 1px 1px rgba(0, 122, 255, 0.5);
-}
-
-.window .input.disabled,
-.window input:disabled,
-.window .aqui-checkbox.disabled {
-    filter: brightness(0.5);
 }
 
 .dark .input,
@@ -693,7 +687,7 @@
 .dark input:disabled,
 .dark .aqui-checkbox.disabled {
     background: rgba(0, 0, 0, 0.15);
-    color: #eee;
+    color: #666;
 }
 
 .dark ::placeholder {
@@ -1054,4 +1048,125 @@ th.asc > div {
 }
 th.dsc > div {
     background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMCA3LjMzbDIuODI5LTIuODMgOS4xNzUgOS4zMzkgOS4xNjctOS4zMzkgMi44MjkgMi44My0xMS45OTYgMTIuMTd6Ii8+PC9zdmc+");
+}
+
+/*
+ * React Select Overwrite (react-select) ------------------------------------------------------------------------------------------------------------------------
+ */
+.aqui-rs__control {
+    border: 0 !important;
+    border-radius: 6px !important;
+    min-height: 34px !important;
+}
+.aqui-rs__control--is-focused {
+    border: 0 !important;
+    box-shadow: 0 0 1px 1px rgba(0, 122, 255, 0.5) !important;
+}
+.aqui-rs__value-container {
+    height: 100% !important;
+}
+.aqui-rs__indicator {
+    padding: 0 7px !important;
+}
+.aqui-rs__indicator svg {
+    padding: 3px !important;
+    border-radius: 50% !important;
+    transition: 150ms !important;
+}
+.aqui-rs__indicator-separator {
+    display: none !important;
+}
+.aqui-rs__input input {
+    transition: 0ms !important;
+    border-radius: 0 !important;
+}
+.aqui-rs__input input:focus {
+    box-shadow: none !important;
+}
+.aqui-rs__multi-value {
+    border-radius: 4px !important;
+}
+.aqui-rs__multi-value__label {
+    padding: 3px 6px !important;
+}
+.aqui-rs--is-disabled .aqui-rs__multi-value__remove {
+    display: none !important;
+}
+
+.light .aqui-rs__control {
+    background: rgba(0, 0, 0, 0.15) !important;
+}
+.light .aqui-rs__control .aqui-rs__single-value,
+.light .aqui-rs__control .aqui-rs__indicator {
+    color: black !important;
+}
+.light .aqui-rs--is-disabled .aqui-rs__control {
+    background: rgba(0, 0, 0, 0.05) !important;
+}
+.light .aqui-rs--is-disabled .aqui-rs__single-value,
+.light .aqui-rs--is-disabled .aqui-rs__indicator {
+    color: #999 !important;
+}
+.light .aqui-rs__multi-value {
+    background: rgba(0, 0, 0, 0.2) !important;
+}
+.light .aqui-rs__multi-value__label {
+    color: black !important;
+}
+.light .aqui-rs__indicator:hover svg {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.dark .aqui-rs__control {
+    background: rgba(0, 0, 0, 0.3) !important;
+}
+.dark .aqui-rs__control .aqui-rs__single-value,
+.dark .aqui-rs__control .aqui-rs__indicator {
+    color: white !important;
+}
+.dark .aqui-rs--is-disabled .aqui-rs__control {
+    background: rgba(0, 0, 0, 0.15) !important;
+}
+.dark .aqui-rs--is-disabled .aqui-rs__single-value,
+.dark .aqui-rs--is-disabled .aqui-rs__indicator {
+    color: #777 !important;
+}
+.dark .aqui-rs__multi-value {
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+.dark .aqui-rs__multi-value__label {
+    color: white;
+}
+.dark .aqui-rs__indicator:hover svg {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.aqui-rs__menu {
+    margin: 0 !important;
+    border-radius: 6px !important;
+}
+.aqui-rs__option {
+    padding: 6px 12px !important;
+}
+.aqui-rs__option--is-focused {
+    background: #007aff !important;
+    color: white !important;
+}
+.aqui-rs__option--is-selected {
+    background: rgba(0, 122, 255, 0.5) !important;
+    color: white !important;
+}
+
+.light .aqui-rs__menu {
+    color: black;
+    background: rgba(240, 240, 240, 1);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.15), 0 25px 60px 0 rgba(0, 0, 0, 0.45);
+}
+
+.dark .aqui-rs__menu {
+    color: rgba(255, 255, 255, 1);
+    background: rgba(40, 40, 40, 1);
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.52), inset 0 0 0 0.5px rgba(255, 255, 255, 0.28);
 }

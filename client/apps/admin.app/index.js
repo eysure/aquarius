@@ -1,14 +1,17 @@
+import PropTypes from "prop-types";
 import React from "react";
-import _ from "lodash";
 import { connect } from "react-redux";
+import Select from "react-select";
 import { bindActionCreators } from "redux";
-import * as Action from "../../actions";
 import Window from "../../components/Window";
-
-import UserManager from "./user_manager";
-import SystemManager from "./system_manager";
-
 import { ResourceFeeder } from "../../resources_feeder";
+import SystemManager from "./system_manager";
+import UserManager from "./user_manager";
+
+import * as AQUI from "../../components/Window/core";
+
+import pinyin from "pinyin";
+
 export const R = new ResourceFeeder(require("./resources/strings"), require("./resources/messages"));
 
 export const TAB_USER_MANAGER = "TAB_USER_MANAGER";
@@ -17,7 +20,12 @@ export const TAB_SYSTEM_MANAGER = "TAB_SYSTEM_MANAGER";
 class Admin extends React.Component {
     state = {
         selected: null,
-        open: true
+        open: true,
+
+        disabled: false,
+        multivalue: false,
+        light: true,
+        selectedOption: "strawberry"
     };
 
     renderSidebar = () => {
@@ -45,11 +53,73 @@ class Admin extends React.Component {
             case TAB_SYSTEM_MANAGER:
                 return <SystemManager context={this} />;
             default:
-                return <div className="empty-page">Admin</div>;
+                return this.renderDefaultPage();
         }
     };
 
-    handleClose = e => {};
+    onInputChange = val => {
+        this.setState({ openMenu: true });
+        console.log(val);
+    };
+
+    options = {
+        "0": "中文测试",
+        "1": "效果拔群",
+        "2": "天旋地转",
+        "3": "人仰马翻",
+        "4": "Also Contains English inside :)"
+    };
+
+    schema() {
+        return {
+            pytest: {
+                title: "Pinyin Test",
+                type: "select",
+                options: {
+                    "0": "中文测试",
+                    "1": "效果拔群",
+                    "2": "天旋地转",
+                    "3": "人仰马翻",
+                    "4": "Also Contains English inside :)"
+                },
+                onInputChange: val => this.onInputChange(val),
+                // menuIsOpen: this.state.menuIsOpen
+                filterOption: (option, input) => {
+                    const label = pinyin(option.label, { style: pinyin.STYLE_NORMAL }).join("");
+                    return label.match(input);
+                }
+            }
+        };
+    }
+
+    renderDefaultPage = () => {
+        const options = [{ value: "chocolate", label: "Chocolate" }, { value: "strawberry", label: "Strawberry" }, { value: "vanilla", label: "Vanilla" }];
+
+        return (
+            <div style={{ padding: 4 }}>
+                <Select
+                    classNamePrefix="aqui-rs"
+                    value={this.state.selectedOption}
+                    onChange={val => this.setState({ selectedOption: val })}
+                    options={options}
+                    isMulti={false}
+                />
+                ; disabled
+                <input type="checkbox" value={this.state.disabled} onChange={e => this.setState({ disabled: !this.state.disabled })} />
+                multiValue
+                <input type="checkbox" value={this.state.multivalue} onChange={e => this.setState({ multivalue: !this.state.disabled })} />
+                <hr />
+                theme
+                <input type="checkbox" value={this.state.light} onChange={e => this.setState({ light: !this.state.light })} />
+                {this.state.selectedOption.toString()}
+                <input value={this.state.pyinput} onChange={e => this.setState({ pyinput: e.target.value })} />
+                {pinyin(this.state.pyinput)}
+                <AQUI.FieldItem context={this} schema={this.schema()} name="pytest" />
+            </div>
+        );
+    };
+
+    handleClose = () => {};
 
     render() {
         if (!this.state.open) return null;
@@ -62,8 +132,8 @@ class Admin extends React.Component {
                 appKey={this.props.appKey}
                 title={R.Trans(Admin.manifest.appName)}
                 noTitlebar
-                theme="dark"
-                onClose={e => this.setState({ open: false })}
+                theme={this.state.light ? "light" : "dark"}
+                onClose={() => this.setState({ open: false })}
             >
                 <div className="window-sidebar-container">
                     <div className="window-sidebar">
@@ -81,7 +151,7 @@ const mapStateToProps = state => ({
     auth: state.auth
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(Action, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch);
 
 Admin.manifest = {
     appKey: "admin",
@@ -93,3 +163,9 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(Admin);
+
+Admin.propTypes = {
+    appKey: PropTypes.string.isRequired,
+    user: PropTypes.object,
+    auth: PropTypes.object
+};

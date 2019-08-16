@@ -108,7 +108,8 @@ class SupplierBasicInfo extends Component {
                     name: "$!valid"
                 }
             },
-            noUpload: true
+            noUpload: true,
+            callByEnter: true
         },
         delete: {
             title: R.Str("DELETE"),

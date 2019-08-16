@@ -87,7 +87,8 @@ class SupplierNew extends Component {
                     name: "$!valid"
                 }
             },
-            noUpload: true
+            noUpload: true,
+            callByEnter: true
         }
     };
 
