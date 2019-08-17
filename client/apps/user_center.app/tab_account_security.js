@@ -58,20 +58,20 @@ class AccountSecurityTab extends React.Component {
     };
 
     handlePasswordSubmit = () => {
-        if ((!checkAuth("change_password"), R.Str("CHANGE_PASSWORD"), this)) return;
+        if ((!checkAuth("change_password"), R.get("CHANGE_PASSWORD"), this)) return;
 
         let { old_pwd, pwd, pwd2 } = this.state;
         this.setState({ processing: true });
 
         if (!old_pwd || !pwd || !pwd2 || pwd !== pwd2) {
             this.setState({ processing: false });
-            this.props.throwMsg(R.Msg("NEW_PASSWORD_NOT_MATCH"));
+            this.props.throwMsg(R.get("NEW_PASSWORD_NOT_MATCH"));
             return;
         }
 
         if (!passwordValidation(pwd)) {
             this.setState({ processing: false });
-            this.props.throwMsg(R.Msg("NEW_PASSWORD_NOT_VALID"));
+            this.props.throwMsg(R.get("NEW_PASSWORD_NOT_VALID"));
             return;
         }
 
@@ -79,12 +79,12 @@ class AccountSecurityTab extends React.Component {
             this.setState({ processing: false });
             if (err) {
                 this.props.throwMsg(
-                    R.Msg("CHANGE_PASSWORD_FAILED", {
+                    R.get("CHANGE_PASSWORD_FAILED", {
                         error: err.reason
                     })
                 );
             } else {
-                this.props.throwMsg(R.Msg("CHANGE_PASSWORD_SUCCESSFUL"));
+                this.props.throwMsg(R.get("CHANGE_PASSWORD_SUCCESSFUL"));
                 this.setState({
                     old_pwd: "",
                     pwd: "",
@@ -98,8 +98,8 @@ class AccountSecurityTab extends React.Component {
     render() {
         return (
             <div className="window-content-inner">
-                <div className="panel-title">{R.Str("CHANGE_PASSWORD")}</div>
-                <div className="panel-title">{R.Str("PASSWORD_REQUIREMENT")}</div>
+                <div className="panel-title">{R.get("CHANGE_PASSWORD")}</div>
+                <div className="panel-title">{R.get("PASSWORD_REQUIREMENT")}</div>
                 <ul
                     style={{
                         background: "rgba(180,180,180,0.5)",
@@ -109,15 +109,15 @@ class AccountSecurityTab extends React.Component {
                         color: "#444"
                     }}
                 >
-                    <li>{R.Str("PASSWORD_REQUIREMENT_1")}</li>
-                    <li>{R.Str("PASSWORD_REQUIREMENT_2")}</li>
+                    <li>{R.get("PASSWORD_REQUIREMENT_1")}</li>
+                    <li>{R.get("PASSWORD_REQUIREMENT_2")}</li>
                     <ul>
-                        <li>{R.Str("PASSWORD_REQUIREMENT_3")}</li>
-                        <li>{R.Str("PASSWORD_REQUIREMENT_4")}</li>
-                        <li>{R.Str("PASSWORD_REQUIREMENT_5")}</li>
-                        <li>{R.Str("PASSWORD_REQUIREMENT_6")}</li>
+                        <li>{R.get("PASSWORD_REQUIREMENT_3")}</li>
+                        <li>{R.get("PASSWORD_REQUIREMENT_4")}</li>
+                        <li>{R.get("PASSWORD_REQUIREMENT_5")}</li>
+                        <li>{R.get("PASSWORD_REQUIREMENT_6")}</li>
                     </ul>
-                    <li>{R.Str("PASSWORD_REQUIREMENT_7")}</li>
+                    <li>{R.get("PASSWORD_REQUIREMENT_7")}</li>
                 </ul>
 
                 <div className="vsc h-full">

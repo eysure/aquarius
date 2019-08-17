@@ -1,6 +1,7 @@
 export default {
     // Support Languages
-    LANGUAGES: ["en-US", "zh-CN"],
+    $LANGUAGE: ["en,en-US", "zh,zh-CN"],
+    APP_NAME: ["User Center", "用户中心"],
 
     // Tabs
     TAB_ACCOUNT_BASIC: ["Basic Info", "基本信息"],

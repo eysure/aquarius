@@ -11,8 +11,9 @@ import { ResourceFeeder } from "../../resources_feeder";
 
 import { computeJobInfo } from "../../utils";
 
-import { R } from "../../resources_feeder";
 import { getAppName } from "../../app_utils.js";
+
+const R = new ResourceFeeder(require("./resources/strings").default, null);
 
 class Contacts extends Component {
     state = { open: true };
@@ -74,11 +75,11 @@ class Contacts extends Component {
             >
                 <div className="window-content-inner" style={{ maxWidth: 1600 }}>
                     <div className="panel" style={{ gridColumnGap: 0 }}>
-                        <AQUI.PanelItem title={R.Str("NAME")} value={R.Str("NICKNAME")} span={3} />
-                        <AQUI.PanelItem title={R.Str("JOB_TITLE")} span={3} />
-                        <AQUI.PanelItem title={R.Str("EMAIL")} span={3} />
-                        <AQUI.PanelItem title={R.Str("MOBILE")} span={2} />
-                        <AQUI.PanelItem title={R.Str("EXT")} span={1} />
+                        <AQUI.PanelItem title={R.get("NAME")} value={R.get("NICKNAME")} span={3} />
+                        <AQUI.PanelItem title={R.get("JOB_TITLE")} span={3} />
+                        <AQUI.PanelItem title={R.get("EMAIL")} span={3} />
+                        <AQUI.PanelItem title={R.get("MOBILE")} span={2} />
+                        <AQUI.PanelItem title={R.get("EXT")} span={1} />
                         {this.renderList()}
                     </div>
                 </div>
@@ -110,7 +111,7 @@ function mapStateToProps(state) {
 
 Contacts.manifest = {
     appKey: "trumode.contacts",
-    appName: ["Contacts", "联系人"],
+    appName: R.get("APP_NAME"),
     icon: "/assets/apps/contacts.svg"
 };
 

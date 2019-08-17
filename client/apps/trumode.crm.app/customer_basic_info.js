@@ -32,7 +32,7 @@ class CustomerBasicInfo extends Component {
 
     schema = {
         logo: {
-            title: R.Str("logo"),
+            title: R.get("logo"),
             type: "image",
             style: {
                 width: 181,
@@ -50,7 +50,7 @@ class CustomerBasicInfo extends Component {
                     },
                     () => {
                         this.props.throwMsg(
-                            R.Msg("FILE_UPLOADING", {
+                            R.get("FILE_UPLOADING", {
                                 key: `CUSTOMER_LOGO_UPLOAD_${this.props.customerId._str}`
                             })
                         );
@@ -58,14 +58,14 @@ class CustomerBasicInfo extends Component {
                     err => {
                         if (err) {
                             this.props.throwMsg(
-                                R.Msg("SERVER_ERROR", {
+                                R.get("SERVER_ERROR", {
                                     key: `CUSTOMER_LOGO_UPLOAD_${this.props.customerId._str}`,
                                     ...err
                                 })
                             );
                         } else {
                             this.props.throwMsg(
-                                R.Msg("FILE_UPLOADED", {
+                                R.get("FILE_UPLOADED", {
                                     key: `CUSTOMER_LOGO_UPLOAD_${this.props.customerId._str}`
                                 })
                             );
@@ -76,43 +76,43 @@ class CustomerBasicInfo extends Component {
             }
         },
         abbr: {
-            title: R.Str("abbr"),
+            title: R.get("abbr"),
             valid: {
                 $regex: /.+/
             }
         },
         name: {
-            title: R.Str("name"),
+            title: R.get("name"),
             valid: {
                 $regex: /.+/
             }
         },
         country: {
-            title: R.Str("country"),
+            title: R.get("country"),
             type: "select",
             options: getCountryList()
         },
         type: {
-            title: R.Str("type"),
+            title: R.get("type"),
             type: "select",
             options: {
-                "0": R.Str("type_0"),
-                "1": R.Str("type_1"),
-                "2": R.Str("type_2"),
-                "3": R.Str("type_3"),
-                "4": R.Str("type_4")
+                "0": R.get("type_0"),
+                "1": R.get("type_1"),
+                "2": R.get("type_2"),
+                "3": R.get("type_3"),
+                "4": R.get("type_4")
             }
         },
         website: {
-            title: R.Str("website")
+            title: R.get("website")
         },
         remark: {
-            title: R.Str("remark"),
+            title: R.get("remark"),
             type: "textarea",
-            placeholder: R.Str("remark")
+            placeholder: R.get("remark")
         },
         save: {
-            title: R.Str("SAVE"),
+            title: R.get("SAVE"),
             type: "button",
             disabled: {
                 $or: {
@@ -129,7 +129,7 @@ class CustomerBasicInfo extends Component {
             callByEnter: true
         },
         delete: {
-            title: R.Str("DELETE"),
+            title: R.get("DELETE"),
             type: "button",
             onClick: () => {
                 this.setState({ deleteDoubleCheck: true });
@@ -144,9 +144,9 @@ class CustomerBasicInfo extends Component {
         Meteor.call("editCustomer", packedData, err => {
             this.setState({ processing: false });
             if (err) {
-                this.props.throwMsg(R.Msg("SERVER_ERROR", err));
+                this.props.throwMsg(R.get("SERVER_ERROR", err));
             } else {
-                this.props.throwMsg(R.Msg("SAVED"));
+                this.props.throwMsg(R.get("SAVED"));
             }
         });
     };
@@ -155,9 +155,9 @@ class CustomerBasicInfo extends Component {
         Meteor.call("deleteCustomer", this.state._id, err => {
             this.setState({ processing: false });
             if (err) {
-                this.props.throwMsg(R.Msg("SERVER_ERROR", err));
+                this.props.throwMsg(R.get("SERVER_ERROR", err));
             } else {
-                this.props.throwMsg(R.Msg("DELETED"));
+                this.props.throwMsg(R.get("DELETED"));
                 this.props.onClose();
             }
         });
@@ -198,7 +198,7 @@ class CustomerBasicInfo extends Component {
                     name="deleteDoubleCheck"
                     appKey={this.props.appKey}
                     title={`Delete ${this.state.name} checking`}
-                    content={R.Str("CUSTOMER_DELETE_DC", { name: this.state.name })}
+                    content={R.get("CUSTOMER_DELETE_DC", { name: this.state.name })}
                     onCheck={this.handleDelete}
                 />
             </>

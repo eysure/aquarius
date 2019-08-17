@@ -8,7 +8,7 @@ import Window from "../../components/Window";
 
 import { ResourceFeeder } from "../../resources_feeder";
 import { getAppName } from "../../app_utils";
-const R = new ResourceFeeder(require("./resources/strings"), null);
+const R = new ResourceFeeder(require("./resources/strings").default, null);
 
 class Preference extends Component {
     state = { open: true };
@@ -22,7 +22,7 @@ class Preference extends Component {
                 appKey={this.props.appKey}
                 width={800}
                 height={600}
-                title={R.Trans(Preference.manifest.appName)}
+                title={R.trans(Preference.manifest.appName)}
                 onClose={e => this.setState({ open: false })}
             >
                 <div>Preferences</div>
@@ -39,7 +39,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({ throwMsg }, dispatch
 
 Preference.manifest = {
     appKey: "preference",
-    appName: ["Preference", "偏好设置"],
+    appName: R.get("APP_NAME"),
     icon: "/assets/apps/gear 2.svg",
     tabs: [
         {

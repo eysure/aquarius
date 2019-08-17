@@ -11,7 +11,7 @@ import Window from "../../components/Window";
 import { throwMsg } from "../../actions";
 
 import { ResourceFeeder } from "../../resources_feeder";
-export const R = new ResourceFeeder(require("./resources/strings"), require("./resources/messages"));
+export const R = new ResourceFeeder(require("./resources/strings").default, require("./resources/messages").default);
 
 class OrderManager extends Component {
     state = {
@@ -50,10 +50,6 @@ class OrderManager extends Component {
         });
     };
 
-    componentDidMount = () => {
-        this.props.throwMsg(R.Msg("APP_NOT_READY"));
-    };
-
     render() {
         if (!this.state.open) return null;
         return (
@@ -63,7 +59,7 @@ class OrderManager extends Component {
                 width="80vw"
                 height="80vh"
                 appKey={this.props.appKey}
-                title={R.Trans(OrderManager.manifest.appName)}
+                title={R.trans(OrderManager.manifest.appName)}
                 noTitlebar
                 theme="dark"
                 onClose={e => this.setState({ open: false })}
@@ -81,9 +77,9 @@ class OrderManager extends Component {
                             }
                         >
                             <UI.ListItemIcon>
-                                <i className="material-icons">{R.Str("SALES_ORDER_ICON")}</i>
+                                <i className="material-icons">{R.get("SALES_ORDER_ICON")}</i>
                             </UI.ListItemIcon>
-                            <UI.ListItemText primary={R.Str("SALES_ORDER")} />
+                            <UI.ListItemText primary={R.get("SALES_ORDER")} />
                             <i className="material-icons">{this.state.salesOrderGroupOpen ? "expand_less" : "expand_more"}</i>
                         </UI.ListItem>
 
@@ -93,25 +89,25 @@ class OrderManager extends Component {
                                     <UI.ListItemIcon>
                                         <i className="material-icons">select_all</i>
                                     </UI.ListItemIcon>
-                                    <UI.ListItemText primary={R.Str("ALL_ORDERS")} />
+                                    <UI.ListItemText primary={R.get("ALL_ORDERS")} />
                                 </UI.ListItem>
                                 <UI.ListItem button className="li-nested">
                                     <UI.ListItemIcon>
                                         <i className="material-icons">assignment_ind</i>
                                     </UI.ListItemIcon>
-                                    <UI.ListItemText primary={R.Str("MY_ORDERS")} />
+                                    <UI.ListItemText primary={R.get("MY_ORDERS")} />
                                 </UI.ListItem>
                                 <UI.ListItem button className="li-nested">
                                     <UI.ListItemIcon>
                                         <i className="material-icons">assignment</i>
                                     </UI.ListItemIcon>
-                                    <UI.ListItemText primary={R.Str("GROUP_ORDERS")} />
+                                    <UI.ListItemText primary={R.get("GROUP_ORDERS")} />
                                 </UI.ListItem>
                                 <UI.ListItem button className="li-nested">
                                     <UI.ListItemIcon>
                                         <i className="material-icons">star</i>
                                     </UI.ListItemIcon>
-                                    <UI.ListItemText primary={R.Str("BOOKMARK_ORDERS")} />
+                                    <UI.ListItemText primary={R.get("BOOKMARK_ORDERS")} />
                                 </UI.ListItem>
                             </UI.List>
                         </UI.Collapse>
@@ -125,9 +121,9 @@ class OrderManager extends Component {
                             }
                         >
                             <UI.ListItemIcon>
-                                <i className="material-icons">{R.Str("PURCHASE_ORDER_ICON")}</i>
+                                <i className="material-icons">{R.get("PURCHASE_ORDER_ICON")}</i>
                             </UI.ListItemIcon>
-                            <UI.ListItemText primary={R.Str("PURCHASE_ORDER")} />
+                            <UI.ListItemText primary={R.get("PURCHASE_ORDER")} />
                             <i className="material-icons">{this.state.purchaseOrderGroupOpen ? "expand_less" : "expand_more"}</i>
                         </UI.ListItem>
 
@@ -137,25 +133,25 @@ class OrderManager extends Component {
                                     <UI.ListItemIcon>
                                         <i className="material-icons">select_all</i>
                                     </UI.ListItemIcon>
-                                    <UI.ListItemText primary={R.Str("ALL_ORDERS")} />
+                                    <UI.ListItemText primary={R.get("ALL_ORDERS")} />
                                 </UI.ListItem>
                                 <UI.ListItem button className="li-nested">
                                     <UI.ListItemIcon>
                                         <i className="material-icons">assignment_ind</i>
                                     </UI.ListItemIcon>
-                                    <UI.ListItemText primary={R.Str("MY_ORDERS")} />
+                                    <UI.ListItemText primary={R.get("MY_ORDERS")} />
                                 </UI.ListItem>
                                 <UI.ListItem button className="li-nested">
                                     <UI.ListItemIcon>
                                         <i className="material-icons">assignment</i>
                                     </UI.ListItemIcon>
-                                    <UI.ListItemText primary={R.Str("GROUP_ORDERS")} />
+                                    <UI.ListItemText primary={R.get("GROUP_ORDERS")} />
                                 </UI.ListItem>
                                 <UI.ListItem button className="li-nested">
                                     <UI.ListItemIcon>
                                         <i className="material-icons">star</i>
                                     </UI.ListItemIcon>
-                                    <UI.ListItemText primary={R.Str("BOOKMARK_ORDERS")} />
+                                    <UI.ListItemText primary={R.get("BOOKMARK_ORDERS")} />
                                 </UI.ListItem>
                             </UI.List>
                         </UI.Collapse>
@@ -219,7 +215,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({ throwMsg }, dispatch
 
 OrderManager.manifest = {
     appKey: "trumode.order_manager",
-    appName: ["Order Manager", "订单管理"],
+    appName: R.get("APP_NAME"),
     icon: "/assets/apps/documents.svg"
 };
 

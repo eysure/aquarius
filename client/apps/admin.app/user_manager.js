@@ -14,9 +14,9 @@ export class UserManager extends Component {
     render() {
         return (
             <div className="window-content-inner">
-                <div className="panel-title">{R.Str("ADD_USER")}</div>
+                <div className="panel-title">{R.get("ADD_USER")}</div>
                 <div className="panel">
-                    <AQUI.PanelItem title={R.Str("ADD_USER")} onClick={() => this.setState({ openNewUserWindow: true })} />
+                    <AQUI.PanelItem title={R.get("ADD_USER")} onClick={() => this.setState({ openNewUserWindow: true })} />
                 </div>
                 {this.renderNewUserWindow()}
             </div>

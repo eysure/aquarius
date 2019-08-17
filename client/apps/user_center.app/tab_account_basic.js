@@ -10,18 +10,18 @@ export class AccountBasicTab extends Component {
     render() {
         return (
             <div className="window-content-inner">
-                <div className="panel-title">{R.Str("TAB_ACCOUNT_BASIC")}</div>
+                <div className="panel-title">{R.get("TAB_ACCOUNT_BASIC")}</div>
                 <div className="panel">
-                    <AQUI.PanelItem title={R.Str("EMAIL")} value={this.props.user.email} />
-                    <AQUI.PanelItem title={R.Str("ENG_FN")} value={this.props.user.fname} span={4} />
-                    <AQUI.PanelItem title={R.Str("ENG_MN")} value={this.props.user.mname} span={4} />
-                    <AQUI.PanelItem title={R.Str("ENG_LN")} value={this.props.user.lname} span={4} />
-                    <AQUI.PanelItem title={R.Str("NICKNAME")} value={this.props.user.nickname} />
-                    <AQUI.PanelItem title={R.Str("MOBILE")} value={this.props.user.mobile} />
-                    <AQUI.PanelItem title={R.Str("EXT")} value={this.props.user.ext} />
+                    <AQUI.PanelItem title={R.get("EMAIL")} value={this.props.user.email} />
+                    <AQUI.PanelItem title={R.get("ENG_FN")} value={this.props.user.fname} span={4} />
+                    <AQUI.PanelItem title={R.get("ENG_MN")} value={this.props.user.mname} span={4} />
+                    <AQUI.PanelItem title={R.get("ENG_LN")} value={this.props.user.lname} span={4} />
+                    <AQUI.PanelItem title={R.get("NICKNAME")} value={this.props.user.nickname} />
+                    <AQUI.PanelItem title={R.get("MOBILE")} value={this.props.user.mobile} />
+                    <AQUI.PanelItem title={R.get("EXT")} value={this.props.user.ext} />
                 </div>
 
-                <div className="panel-title">{R.Str("JOB_INFO")}</div>
+                <div className="panel-title">{R.get("JOB_INFO")}</div>
                 {this.renderJobInfo()}
             </div>
         );
@@ -33,11 +33,11 @@ export class AccountBasicTab extends Component {
         return jobs.map(jobInfo => {
             return (
                 <div className="panel" key={`jobInfo ${index++}`}>
-                    <AQUI.PanelItem title={R.Str("DEPARTMENT")} value={jobInfo.deptName} />
-                    <AQUI.PanelItem title={R.Str("GROUP")} value={jobInfo.groupName} />
-                    <AQUI.PanelItem title={R.Str("JOB_TITLE")} value={jobInfo.jobTitle} />
-                    <AQUI.PanelItem title={R.Str("JOB_TYPE")} span={6} value={jobInfo.jobType} />
-                    <AQUI.PanelItem title={R.Str("TIME_START")} span={6} value={jobInfo.startTime && jobInfo.startTime.toLocaleString()} />
+                    <AQUI.PanelItem title={R.get("DEPARTMENT")} value={jobInfo.deptName} />
+                    <AQUI.PanelItem title={R.get("GROUP")} value={jobInfo.groupName} />
+                    <AQUI.PanelItem title={R.get("JOB_TITLE")} value={jobInfo.jobTitle} />
+                    <AQUI.PanelItem title={R.get("JOB_TYPE")} span={6} value={jobInfo.jobType} />
+                    <AQUI.PanelItem title={R.get("TIME_START")} span={6} value={jobInfo.startTime && jobInfo.startTime.toLocaleString()} />
                 </div>
             );
         });

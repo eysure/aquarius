@@ -19,7 +19,7 @@ export class AccountAdvancedTab extends Component {
     render() {
         return (
             <div className="window-content-inner">
-                <div className="panel-title">{R.Str("AUTHORITY_TABLE")}</div>
+                <div className="panel-title">{R.get("AUTHORITY_TABLE")}</div>
                 <div className="panel">{this.renderAuths()}</div>
             </div>
         );

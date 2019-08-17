@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import { ResourceFeeder } from "../resources_feeder";
-const R = new ResourceFeeder(null);
+import { ResourceFeeder } from "../../resources_feeder";
+const R = new ResourceFeeder(require("./resources/strings").default, null);
 
-import Window, { WINDOW_PRIORITY_HIGH } from "../components/Window";
+import Window, { WINDOW_PRIORITY_HIGH } from "../../components/Window";
 import ReactJson from "react-json-view";
 
 class Debugger extends Component {
@@ -23,7 +23,7 @@ class Debugger extends Component {
                 height={600}
                 x={"70vw"}
                 y={"0px"}
-                title={R.Trans(Debugger.manifest.appName)}
+                title={R.trans(Debugger.manifest.appName)}
                 theme="dark"
                 windowPriority={WINDOW_PRIORITY_HIGH}
                 contentStyle={{ background: "rgba(39, 40, 34, 0.8)" }}
@@ -59,7 +59,7 @@ function mapStateToProps(state) {
 
 Debugger.manifest = {
     appKey: "debugger",
-    appName: ["Debugger", "调试器"],
+    appName: R.get("APP_NAME"),
     icon: "/assets/apps/daycare.svg",
     defaultOption: {
         alwaysOnFront: true

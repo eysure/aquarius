@@ -2,8 +2,8 @@ import countries from "./countries";
 
 export default {
     // Support Languages
-    LANGUAGES: ["en-US", "zh-CN"],
-    LAN: [0, 1],
+    $LANGUAGE: ["en,en-US", "zh,zh-CN"],
+
     NULL: ["", ""],
     DATE_FORMAT: ["MM/dd/yyyy", "yyyy-MM-dd"],
     COMPANY_NAME: ["AquariusOS", "AquariusOS"],
@@ -11,7 +11,7 @@ export default {
     NEW_MESSAGE: ["New Message", "新消息"],
     LOGIN: ["Login", "登录"],
     LOGOUT: ["Logout", "注销"],
-    LOGOUT_WITH_NAME: ["Log Out ${user}...", "注销 ${user}..."],
+    LOGOUT_WITH_NAME: [args => `Log Out ${args.user}...`, args => `注销 ${args.user}...`],
     SWITCH_USER: ["Switch User", "切换用户"],
     ENTER_PASSWORD: ["Enter Password", "输入密码"],
     DONE: ["DONE", "完成"],
@@ -63,8 +63,6 @@ export default {
     PRINT: ["Print", "打印"],
     BOOKMARK: ["Bookmark", "收藏"],
     SYSTEM: ["System", "系统"],
-    USD: "$",
-    RMB: "¥",
     INVALID_DATE: ["Invalid date", "请输入正确的日期"],
     REFRESH: ["Refresh", "刷新"],
     CHANGE_DESKTOP_BACKGROUND: ["Change Desktop Background", "更改桌面背景"],
@@ -93,12 +91,13 @@ export default {
 
     // Menu Bar Menu
     FILE: ["File", "文件"],
-    EDIT: ["Edit", "编辑"],
     VIEW: ["View", "视图"],
     WINDOW: ["Window", "窗口"],
     HELP: ["Help", "帮助"],
 
     UNDER_CONSTRUCTION: ["Under Contruction...", "施工中..."],
+
+    RAW_DATA: ["Raw Data", "原始数据"],
 
     ...countries
 };

@@ -19,7 +19,7 @@ import Avatar from "../../components/user_avatar";
 import DropFile from "../../components/DropFile";
 import Window, { WINDOW_PRIORITY_HIGH } from "../../components/Window";
 
-export const R = new ResourceFeeder(require("./resources/strings"), require("./resources/messages"));
+export const R = new ResourceFeeder(require("./resources/strings").default, require("./resources/messages").default);
 
 const TAB_ACCOUNT_BASIC = "TAB_ACCOUNT_BASIC";
 const TAB_ACCOUNT_SECURITY = "TAB_ACCOUNT_SECURITY";
@@ -63,7 +63,7 @@ class UserCenter extends Component {
             },
             () => {
                 this.props.throwMsg(
-                    R.Msg("FILE_UPLOADING", {
+                    R.get("FILE_UPLOADING", {
                         key: "DESKTOP_UPLOAD"
                     })
                 );
@@ -84,7 +84,7 @@ class UserCenter extends Component {
                     );
 
                     this.props.throwMsg(
-                        R.Msg("FILE_UPLOADED", {
+                        R.get("FILE_UPLOADED", {
                             key: "DESKTOP_UPLOAD"
                         })
                     );
@@ -100,7 +100,7 @@ class UserCenter extends Component {
             return (
                 <UI.ListItem key={tab[1].name} button selected={this.state.selectedTab === tab[0]} onClick={e => this.setState({ selectedTab: tab[0] })}>
                     <i className="material-icons">{tab[1].icon}</i>
-                    <UI.ListItemText primary={R.Str(tab[1].name)} />
+                    <UI.ListItemText primary={R.get(tab[1].name)} />
                 </UI.ListItem>
             );
         });
@@ -119,7 +119,7 @@ class UserCenter extends Component {
                     width={960}
                     height={720}
                     appKey={this.props.appKey}
-                    title={R.Trans(UserCenter.manifest.appName)}
+                    title={R.trans(UserCenter.manifest.appName)}
                     noTitlebar
                     theme="light"
                     onClose={e => this.setState({ open: false })}
@@ -150,7 +150,7 @@ class UserCenter extends Component {
                                             Meteor.logout(error => this.props.logout(error));
                                         }}
                                     >
-                                        {R.Str("LOGOUT")}
+                                        {R.get("LOGOUT")}
                                     </button>
                                 </div>
                             </div>
@@ -164,7 +164,7 @@ class UserCenter extends Component {
             return <EmployeeInitialize context={this} />;
         } else {
             this.props.throwMsg(
-                R.Msg("EMPLOYEE_STATUS_INVALID", {
+                R.get("EMPLOYEE_STATUS_INVALID", {
                     status: this.props.user.status
                 })
             );
@@ -196,7 +196,7 @@ function mapStateToProps(state) {
 
 UserCenter.manifest = {
     appKey: "user_center",
-    appName: ["User Center", "个人中心"],
+    appName: R.get("APP_NAME"),
     icon: "/assets/apps/id.svg"
 };
 

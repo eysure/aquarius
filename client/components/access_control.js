@@ -52,23 +52,23 @@ class AccessControl extends React.Component {
 
         switch (error.error) {
             case 400: {
-                content = R.Str("LOGIN_FAILED_INVALID_INPUT");
+                content = R.get("LOGIN_FAILED_INVALID_INPUT");
                 break;
             }
             case 403: {
-                content = R.Str("LOGIN_FAILED_WRONG_PASSWORD");
+                content = R.get("LOGIN_FAILED_WRONG_PASSWORD");
                 break;
             }
             case 1000: {
-                content = R.Str("LOGIN_FAILED_NO_EMPLOYEE");
+                content = R.get("LOGIN_FAILED_NO_EMPLOYEE");
                 break;
             }
             case 1001: {
-                content = R.Str("LOGIN_FAILED_DISABLED");
+                content = R.get("LOGIN_FAILED_DISABLED");
                 break;
             }
             case 1002: {
-                content = R.Str("NOT_AUTHORIZED_LOGIN");
+                content = R.get("NOT_AUTHORIZED_LOGIN");
                 break;
             }
             default:
@@ -76,7 +76,7 @@ class AccessControl extends React.Component {
         }
 
         this.props.throwMsg(
-            R.Msg("LOGIN_FAILED", {
+            R.get("LOGIN_FAILED", {
                 content,
                 moreUri: generateEmailLinkToService("登录失败请求帮助", `账户: ${this.state.email}%0D%0A错误信息: ${content}`),
                 moreButton: "Email"
@@ -275,7 +275,7 @@ class AccessControl extends React.Component {
     componentDidMount() {
         // Demo only
         if (clientConfig.demo) {
-            this.props.throwMsg(R.Msg("DEMO_WELCOME"));
+            this.props.throwMsg(R.get("DEMO_WELCOME"));
             this.setState({
                 email: "tester@xyzhu.me",
                 password: "Xyzhu_8888"
@@ -285,7 +285,7 @@ class AccessControl extends React.Component {
         Tracker.autorun(() => {
             // Server logout
             if (this.props.system.loginFlag && !Meteor.userId()) {
-                this.props.logout(R.Msg("SERVER_LOG_OUT"));
+                this.props.logout(R.get("SERVER_LOG_OUT"));
             }
         });
     }

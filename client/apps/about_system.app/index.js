@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import clientConfig from "../../client_config.js";
 
 import { ResourceFeeder } from "../../resources_feeder";
-const R = new ResourceFeeder(require("./resources/strings"), require("./resources/messages"));
+const R = new ResourceFeeder(require("./resources/strings").default, require("./resources/messages").default);
 
 import Window from "../../components/Window";
 
@@ -22,7 +22,7 @@ class AboutSystem extends Component {
                 canMaximize={false}
                 canResize={false}
                 onClose={e => this.setState({ open: false })}
-                title={R.Trans(AboutSystem.manifest.appName)}
+                title={R.trans(AboutSystem.manifest.appName)}
                 noTitlebar
                 escToClose
             >
@@ -38,8 +38,8 @@ class AboutSystem extends Component {
                     }}
                 >
                     <img style={{ textAlign: "center", width: "240px", marginBottom: "16px" }} src="/assets/os_logo2.png" />
-                    <p style={{ margin: "8px 0" }}>{R.Str("VERSION") + " " + clientConfig.version}</p>
-                    <p style={{ margin: "8px 0" }}>{R.Str("COPY_RIGHT")}</p>
+                    <p style={{ margin: "8px 0" }}>{R.get("VERSION") + " " + clientConfig.version}</p>
+                    <p style={{ margin: "8px 0" }}>{R.get("COPY_RIGHT")}</p>
                 </div>
             </Window>
         );
@@ -48,7 +48,7 @@ class AboutSystem extends Component {
 
 AboutSystem.manifest = {
     appKey: "about_system",
-    appName: ["About System", "关于系统"],
+    appName: R.get("APP_NAME"),
     icon: "/assets/apps/ramdac.svg"
 };
 

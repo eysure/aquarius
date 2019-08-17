@@ -30,9 +30,9 @@ class SupplierDetail extends Component {
             sidebar.push(
                 <li key={tab} className={this.state.selected == tab ? "active" : ""} onClick={() => this.setState({ selected: tab })}>
                     <i className="material-icons" style={{ marginRight: 16 }}>
-                        {R.Str(tab + "_ICON")}
+                        {R.get(tab + "_ICON")}
                     </i>
-                    {R.Str(tab)}
+                    {R.get(tab)}
                 </li>
             );
         }

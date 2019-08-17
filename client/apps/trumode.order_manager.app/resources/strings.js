@@ -1,5 +1,7 @@
 export default {
-    LANGUAGES: ["en-US", "zh-CN"],
+    $LANGUAGE: ["en,en-US", "zh,zh-CN"],
+    APP_NAME: ["Order Manager", "订单管理"],
+
     SALES_ORDER: ["Sales Order", "销售订单"],
     PURCHASE_ORDER: ["Purchase Order", "采购订单"],
 

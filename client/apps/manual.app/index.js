@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import { ResourceFeeder } from "../../resources_feeder";
-const R = new ResourceFeeder(require("./resources/strings"), require("./resources/messages"));
+const R = new ResourceFeeder(require("./resources/strings").default, require("./resources/messages").default);
 
 import Window from "../../components/Window/index.js";
 
@@ -16,7 +16,7 @@ class Manual extends Component {
                 width={"40vmin"}
                 height={"60vmin"}
                 appKey={this.props.appKey}
-                title={R.Trans(Manual.manifest.appName)}
+                title={R.trans(Manual.manifest.appName)}
                 onClose={e => this.setState({ open: false })}
             >
                 <div className="app-template-fill">
@@ -31,7 +31,7 @@ class Manual extends Component {
 
 Manual.manifest = {
     appKey: "manual",
-    appName: ["Manual", "使用手册"],
+    appName: R.get("APP_NAME"),
     icon: "/assets/apps/brochure.svg"
 };
 

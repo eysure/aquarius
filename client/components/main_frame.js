@@ -30,7 +30,7 @@ class MainFrame extends Component {
 
     toolBarTitle = appKey => {
         // If no active app now, show company name
-        if (!appKey || appKey === "system") return R.Str("COMPANY_NAME");
+        if (!appKey || appKey === "system") return R.get("COMPANY_NAME");
         else return getAppName(appKey, this.props.user);
     };
 
@@ -112,12 +112,12 @@ class MainFrame extends Component {
                     getAppShortCut("app_manager", this),
                     { divider: true },
                     {
-                        title: R.Str("REFRESH"),
+                        title: R.get("REFRESH"),
                         extra: "⌘R",
                         onClick: () => location.reload()
                     },
                     {
-                        title: R.Str("LOGOUT_WITH_NAME", { user: this.props.user.nickname }),
+                        title: R.get("LOGOUT_WITH_NAME", { user: this.props.user.nickname }),
                         extra: "⌘⎋",
                         onClick: () => Meteor.logout(error => this.props.logout(error))
                     }
@@ -137,7 +137,7 @@ class MainFrame extends Component {
                 ]
             },
             {
-                title: R.Str("WINDOW"),
+                title: R.get("WINDOW"),
                 submenu: windowMenu
             }
         ];
@@ -246,5 +246,6 @@ MainFrame.propTypes = {
     logout: PropTypes.func,
     appLaunch: PropTypes.func,
     appClose: PropTypes.func,
-    launchPadControl: PropTypes.func
+    launchPadControl: PropTypes.func,
+    throwMsg: PropTypes.func
 };

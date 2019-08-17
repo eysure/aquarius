@@ -37,7 +37,7 @@ export const REGISTER_WINDOW = "REGISTER_WINDOW";
 export const UNREGISTER_WINDOW = "UNREGISTER_WINDOW";
 
 export function logout(msg = null) {
-    msg = msg ? msg : R.Msg("LOGOUT_OK");
+    msg = msg ? msg : R.get("LOGOUT_OK");
     return {
         type: LOGOUT,
         payload: {
@@ -52,10 +52,7 @@ export function bindUserInfo(user) {
     return {
         type: BIND_USER_INFO,
         payload: {
-            data: user,
-            msg: R.Msg("LOGIN_SUCCESSFUL", {
-                username: user.username || user.email
-            })
+            data: user
         }
     };
 }

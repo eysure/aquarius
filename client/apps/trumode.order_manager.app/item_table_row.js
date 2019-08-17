@@ -80,14 +80,14 @@ class ItemTableRow extends React.Component {
                         disabled={!this.props.editMode}
                         InputProps={{
                             className: "order-detail-item-input",
-                            startAdornment: <UI.InputAdornment position="start">{R.Str(item.currency)}</UI.InputAdornment>
+                            startAdornment: <UI.InputAdornment position="start">{R.get(item.currency)}</UI.InputAdornment>
                         }}
                         value={item.price}
                         onChange={e => this.props.onChange(item.item_no, "price", e.target.value, "float")}
                     />
                 </UI.TableCell>
                 <UI.TableCell align="left" style={tableCellStyle}>
-                    {R.Str(item.currency) + (item.qty * item.price).toFixed(2)}
+                    {R.get(item.currency) + (item.qty * item.price).toFixed(2)}
                 </UI.TableCell>
                 <UI.TableCell align="left" style={tableCellStyle}>
                     <UI.TextField

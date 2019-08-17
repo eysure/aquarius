@@ -32,27 +32,27 @@ class SupplierBasicInfo extends Component {
 
     schema = {
         abbr: {
-            title: R.Str("abbr"),
+            title: R.get("abbr"),
             valid: {
                 $regex: /.+/
             },
-            placeholder: R.Str("ABBR_PH")
+            placeholder: R.get("ABBR_PH")
         },
         name: {
-            title: R.Str("name"),
+            title: R.get("name"),
             valid: {
                 $regex: /.+/
             },
-            placeholder: R.Str("NAME_PH")
+            placeholder: R.get("NAME_PH")
         },
         address: {
-            title: R.Str("address"),
+            title: R.get("address"),
             valid: {
                 $regex: /.+/
             }
         },
         city: {
-            title: R.Str("city"),
+            title: R.get("city"),
             valid: {
                 $regex: /.+/
             },
@@ -63,7 +63,7 @@ class SupplierBasicInfo extends Component {
             }
         },
         state: {
-            title: R.Str("state"),
+            title: R.get("state"),
             valid: {
                 $regex: /.+/
             },
@@ -74,30 +74,30 @@ class SupplierBasicInfo extends Component {
             }
         },
         country: {
-            title: R.Str("country"),
+            title: R.get("country"),
             type: "select",
             options: getCountryList()
         },
         website: {
-            title: R.Str("website")
+            title: R.get("website")
         },
         email: {
-            title: R.Str("email"),
+            title: R.get("email"),
             type: "email"
         },
         tel: {
-            title: R.Str("tel")
+            title: R.get("tel")
         },
         fax: {
-            title: R.Str("fax")
+            title: R.get("fax")
         },
         remark: {
-            title: R.Str("remark"),
+            title: R.get("remark"),
             type: "textarea",
-            placeholder: R.Str("remark")
+            placeholder: R.get("remark")
         },
         save: {
-            title: R.Str("SAVE"),
+            title: R.get("SAVE"),
             type: "button",
             onClick: e => {
                 this.handleSave(e);
@@ -112,7 +112,7 @@ class SupplierBasicInfo extends Component {
             callByEnter: true
         },
         delete: {
-            title: R.Str("DELETE"),
+            title: R.get("DELETE"),
             type: "button",
             onClick: () => {
                 this.setState({ deleteDoubleCheck: true });
@@ -134,9 +134,9 @@ class SupplierBasicInfo extends Component {
             err => {
                 this.setState({ processing: false });
                 if (err) {
-                    this.props.throwMsg(R.Msg("SERVER_ERROR", err));
+                    this.props.throwMsg(R.get("SERVER_ERROR", err));
                 } else {
-                    this.props.throwMsg(R.Msg("SAVED"));
+                    this.props.throwMsg(R.get("SAVED"));
                 }
             }
         );
@@ -146,9 +146,9 @@ class SupplierBasicInfo extends Component {
         Meteor.call("deleteSupplier", this.state._id, err => {
             this.setState({ processing: false });
             if (err) {
-                this.props.throwMsg(R.Msg("SERVER_ERROR", err));
+                this.props.throwMsg(R.get("SERVER_ERROR", err));
             } else {
-                this.props.throwMsg(R.Msg("DELETED"));
+                this.props.throwMsg(R.get("DELETED"));
                 this.props.onClose();
             }
         });
@@ -189,7 +189,7 @@ class SupplierBasicInfo extends Component {
                     name="deleteDoubleCheck"
                     appKey={this.props.appKey}
                     title={`Delete ${this.state.name} checking`}
-                    content={R.Str("SUPPLIER_DELETE_DC", { name: this.state.name })}
+                    content={R.get("SUPPLIER_DELETE_DC", { name: this.state.name })}
                     onCheck={this.handleDelete}
                 />
             </>

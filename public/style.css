@@ -135,6 +135,16 @@
     src: url("./sanfranciscodisplay/sanfranciscodisplay-black-webfont.woff2") format("woff2");
 }
 
+code {
+    background: #666;
+    padding: 2px 6px;
+    font-family: monaco, menlo, monospace;
+    color: #e0e0e0;
+    border-radius: 4px;
+    margin: 2px 6px;
+    font-size: 0.8rem;
+}
+
 i,
 .material-icons {
     font-family: "Material Icons";

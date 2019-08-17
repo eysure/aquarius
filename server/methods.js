@@ -15,6 +15,10 @@ getEmailById = userId => {
     if (!user) return null;
     return user.emails[0].address;
 };
+getEmployeeByUserId = userId => {
+    if (!userId) return null;
+    return Collection("employees").findOne({ email: getEmailById(userId) });
+};
 
 /**
  * Return the system collection default auth
@@ -216,6 +220,8 @@ export function upload(args, file) {
     let oldUri = _.get(target, field, null);
     let newUri = uuidv4() + "." + name.split(".").pop();
 
+    let employeeId = getEmployeeByUserId(this.userId)._id;
+
     async function deleteFile() {
         try {
             await client.delete(oldUri);
@@ -227,7 +233,12 @@ export function upload(args, file) {
     async function put() {
         try {
             await client.put(prefix + newUri, new Buffer(file, "binary"));
-            Collection(db).update(findOne, { $set: { [field]: prefix + newUri } });
+            let data = {
+                [field]: prefix + newUri,
+                time_modified: new Date(),
+                employee_modified: employeeId
+            };
+            Collection(db).update(findOne, { $set: data });
             if (oldUri) deleteFile();
             return {
                 status: 200,
@@ -257,14 +268,18 @@ export async function edit(args) {
 
     // TODO: Schema Validation
 
+    let employeeId = getEmployeeByUserId(this.userId)._id;
+
     try {
         if (action === "insert" || action === "add") {
             if (!data._id) data._id = new Mongo.ObjectID();
             data.time_created = new Date();
             data.time_modified = new Date();
-            Collection(db).insert(data);
+            data.employee_created = employeeId;
+            data.employee_modified = employeeId;
         } else if (action === "update" || action === "edit") {
             data.time_modified = new Date();
+            data.employee_modified = employeeId;
             Collection(db).update(findOne, { $set: data });
         } else if (action === "delete" || action === "remove") {
             Collection(db).remove(findOne);

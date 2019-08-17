@@ -1,6 +1,9 @@
 import React from "react";
 import clientConfig from "../client_config";
 import * as UI from "@material-ui/core";
+import Spinner from "./spinner";
+import ReactJson from "react-json-view";
+import { R } from "../resources_feeder";
 
 const notificationStyle = {
     position: "relative",
@@ -8,8 +11,7 @@ const notificationStyle = {
     marginBottom: "20px",
     width: "360px",
     backgroundColor: "#dadada",
-    border: 0,
-    borderRadius: "8px",
+    borderRadius: "6px",
     float: "right",
     clear: "both",
     boxShadow: "0 5px 40px 5px rgba(0,0,0,0.2)",
@@ -62,7 +64,7 @@ class Notif extends React.Component {
             <div id={this.props._key} style={notificationStyle}>
                 <div className="msg-header">
                     <div className="flex-start">
-                        {this.props.progressBar ? this.renderProgressBar() : null}
+                        {this.renderProgressBar()}
                         {this.props.icon || this.props.class ? (
                             <UI.Icon className="msg-header-icon">{this.props.icon || msgClsIconMap[this.props.class]}</UI.Icon>
                         ) : null}
@@ -81,24 +83,42 @@ class Notif extends React.Component {
                         )}
                     </div>
                 </div>
-                {this.props.content ? <div style={contentStyle}>{this.props.content} </div> : null}
+                {this.props.content && <div style={contentStyle}>{this.props.content}</div>}
+                {this.renderJsonView()}
             </div>
         );
     }
 
+    renderJsonView() {
+        if (!this.props.raw) return null;
+
+        return (
+            <ReactJson
+                style={{
+                    fontSize: "12px",
+                    lineHeight: "16px",
+                    fontFamily: "monaco",
+                    marginTop: 8,
+                    marginBottom: 4,
+                    padding: 8,
+                    borderRadius: 4
+                }}
+                src={this.props.raw}
+                theme="monokai"
+                name={R.get("RAW_DATA")}
+                collapsed={true}
+                displayObjectSize={false}
+                displayDataTypes={false}
+                enableClipboard={false}
+            />
+        );
+    }
+
     renderProgressBar = () => {
-        if (!this.props.progressBar) {
-            return null;
-        }
+        if (!this.props.progressBar) return null;
 
         if (!this.props.progress) {
-            return (
-                <div className="lds-ripple">
-                    <div />
-                    <div />
-                    <div />
-                </div>
-            );
+            return <Spinner style={{ transform: "scale(0.5)" }} />;
         } else
             return (
                 <UI.CircularProgress

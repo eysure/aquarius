@@ -25,41 +25,41 @@ class SupplierContactsNew extends Component {
     schema = () => {
         return {
             supplier_id: {
-                title: R.Str("supplier_id"),
+                title: R.get("supplier_id"),
                 type: "select",
                 options: this.state.suppliersOptions
             },
             name: {
-                title: R.Str("name"),
+                title: R.get("name"),
                 valid: {
                     $regex: /.+/
                 }
             },
             mobile: {
-                title: R.Str("mobile"),
+                title: R.get("mobile"),
                 valid: {
                     $regex: /.+/
                 }
             },
             email: {
-                title: R.Str("email"),
+                title: R.get("email"),
                 valid: {
                     $regex: /.+/
                 }
             },
             role: {
-                title: R.Str("role"),
+                title: R.get("role"),
                 valid: {
                     $regex: /.+/
                 }
             },
             remark: {
-                title: R.Str("remark"),
+                title: R.get("remark"),
                 type: "textarea",
-                placeholder: R.Str("remark")
+                placeholder: R.get("remark")
             },
             save: {
-                title: R.Str("SAVE"),
+                title: R.get("SAVE"),
                 type: "button",
                 disabled: {
                     $or: {
@@ -90,9 +90,9 @@ class SupplierContactsNew extends Component {
             err => {
                 this.setState({ processing: false });
                 if (err) {
-                    this.props.throwMsg(R.Msg("SERVER_ERROR", err));
+                    this.props.throwMsg(R.get("SERVER_ERROR", err));
                 } else {
-                    this.props.throwMsg(R.Msg("SAVED"));
+                    this.props.throwMsg(R.get("SAVED"));
                     this.props.onClose();
                 }
             }
@@ -105,10 +105,10 @@ class SupplierContactsNew extends Component {
         return (
             <Window
                 onClose={this.props.onClose}
-                key={R.Str("NEW_SUPPLIER_CONTACT")}
-                _key={R.Str("NEW_SUPPLIER_CONTACT")}
+                key={R.get("NEW_SUPPLIER_CONTACT")}
+                _key={R.get("NEW_SUPPLIER_CONTACT")}
                 appKey={this.props.appKey}
-                title={R.Str("NEW_SUPPLIER_CONTACT")}
+                title={R.get("NEW_SUPPLIER_CONTACT")}
                 theme="light"
                 escToClose
             >

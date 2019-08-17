@@ -58,6 +58,7 @@ class Search extends Component {
                 y={"10vh"}
                 width={600}
                 title={"Search"}
+                noTitlebar
                 noControl
                 escToClose
                 onClose={e => this.setState({ open: false })}
@@ -84,7 +85,7 @@ class Search extends Component {
 
 Search.manifest = {
     appKey: "search",
-    appName: ["Search", "搜索"],
+    appName: "LightPeek",
     icon: "/assets/apps/binoculars.svg"
 };
 

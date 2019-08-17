@@ -1,6 +1,7 @@
 export default {
     // Support Languages
-    LANGUAGES: ["en-US", "zh-CN"],
+    $LANGUAGE: ["en,en-US", "zh,zh-CN"],
+    APP_NAME: ["Admin", "管理员"],
 
     // Tabs
     TAB_USER_MANAGER: ["User Manager", "用户管理"],

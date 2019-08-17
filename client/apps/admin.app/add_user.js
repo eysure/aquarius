@@ -19,22 +19,22 @@ export class AddUser extends Component {
 
     schema = {
         username: {
-            title: R.Str("USERNAME"),
+            title: R.get("USERNAME"),
             valid: {
                 $regex: /.{5,}/
             },
-            placeholder: R.Str("USERNAME")
+            placeholder: R.get("USERNAME")
         },
         email: {
-            title: R.Str("EMAIL"),
+            title: R.get("EMAIL"),
             valid: {
                 $regex: /\S+@\S+\.\S+/
             },
-            placeholder: R.Str("EMAIL")
+            placeholder: R.get("EMAIL")
         },
         create: {
             type: "button",
-            title: R.Str("CREATE"),
+            title: R.get("CREATE"),
             disabled: {
                 $or: {
                     username: "$!valid",
@@ -46,7 +46,7 @@ export class AddUser extends Component {
     };
 
     handleSubmit = e => {
-        if (!checkAuth("user_admin", R.Str("ADD_USER"), this.props.context)) return;
+        if (!checkAuth("user_admin", R.get("ADD_USER"), this.props.context)) return;
 
         let { username, email } = this.state;
 
@@ -54,9 +54,9 @@ export class AddUser extends Component {
         Meteor.call("addUser", username, email, (err, res) => {
             this.setState({ processing: false });
             if (err) {
-                this.props.context.props.throwMsg(R.Msg("ERR", { err }));
+                this.props.context.props.throwMsg(R.get("ERR", { err }));
             } else {
-                this.props.context.props.throwMsg(R.Msg("USER_ADDED"));
+                this.props.context.props.throwMsg(R.get("USER_ADDED"));
             }
         });
     };
@@ -69,12 +69,12 @@ export class AddUser extends Component {
                 _key={"add_user"}
                 width={480}
                 appKey={this.props.context.props.appKey}
-                title={R.Str("ADD_USER")}
+                title={R.get("ADD_USER")}
                 theme="dark"
                 escToClose
             >
                 <div className="window-content-inner handle">
-                    <h1>{R.Str("CREATE_NEW_USER")}</h1>
+                    <h1>{R.get("CREATE_NEW_USER")}</h1>
 
                     <AQUI.FieldItem context={this} schema={this.schema} name="username" />
                     <AQUI.FieldItem context={this} schema={this.schema} name="email" />

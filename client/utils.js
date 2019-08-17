@@ -71,7 +71,7 @@ export function fileUploadVerify(file, throwMsg = null) {
     if (!clientConfig.acceptableFileFormat.includes(ext)) {
         if (throwMsg) {
             throwMsg(
-                R.Msg("FILE_UPLOAD_FAILED_FORMAT", {
+                R.get("FILE_UPLOAD_FAILED_FORMAT", {
                     ext,
                     acceptableFileFormat: clientConfig.acceptableFileFormat.join(", ")
                 })
@@ -85,7 +85,7 @@ export function fileUploadVerify(file, throwMsg = null) {
     if (file.size > clientConfig.maxFileSize * 1024 * 1024) {
         if (throwMsg) {
             throwMsg(
-                R.Msg("FILE_UPLOAD_FAILED_SIZE", {
+                R.get("FILE_UPLOAD_FAILED_SIZE", {
                     fileSize: (file.size / 1048576).toFixed(2),
                     maxFileSize: clientConfig.maxFileSize
                 })
@@ -157,9 +157,9 @@ export function computeJobInfo(user_id, db) {
             let jobTitle = db.job_title[jobTitleKey];
 
             res.push({
-                groupName: R.Trans(group.name),
-                deptName: R.Trans(dept.name),
-                jobTitle: R.Trans(jobTitle.name),
+                groupName: R.trans(group.name),
+                deptName: R.trans(dept.name),
+                jobTitle: R.trans(jobTitle.name),
                 jobType: job_type,
                 startTime: new Date(time_start)
             });
@@ -171,7 +171,7 @@ export function computeJobInfo(user_id, db) {
 export function checkAuth(auth, operation = null, context) {
     if (!_.get(context.props.auth, auth)) {
         context.props.throwMsg(
-            R.Msg("OPD", {
+            R.get("OPD", {
                 auth,
                 operation: operation || ""
             })
@@ -184,7 +184,7 @@ export function checkAuth(auth, operation = null, context) {
 export function getCountryList() {
     let list = {};
     for (let code in Countries) {
-        list[code] = R.Str(code);
+        list[code] = R.get(code);
     }
     return list;
 }

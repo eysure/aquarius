@@ -22,42 +22,42 @@ class CustomerNew extends Component {
 
     schema = {
         abbr: {
-            title: R.Str("abbr"),
+            title: R.get("abbr"),
             valid: {
                 $regex: /.+/
             },
-            placeholder: R.Str("ABBR_PH")
+            placeholder: R.get("ABBR_PH")
         },
         name: {
-            title: R.Str("name"),
+            title: R.get("name"),
             valid: {
                 $regex: /.+/
             },
-            placeholder: R.Str("NAME_PH")
+            placeholder: R.get("NAME_PH")
         },
         country: {
-            title: R.Str("country"),
+            title: R.get("country"),
             type: "select",
             options: getCountryList()
         },
         type: {
-            title: R.Str("type"),
+            title: R.get("type"),
             type: "select",
             options: {
-                0: R.Str("type_0"),
-                1: R.Str("type_1"),
-                2: R.Str("type_2"),
-                3: R.Str("type_3"),
-                4: R.Str("type_4")
+                0: R.get("type_0"),
+                1: R.get("type_1"),
+                2: R.get("type_2"),
+                3: R.get("type_3"),
+                4: R.get("type_4")
             }
         },
         remark: {
-            title: R.Str("remark"),
+            title: R.get("remark"),
             type: "textarea",
-            placeholder: R.Str("remark")
+            placeholder: R.get("remark")
         },
         save: {
-            title: R.Str("SAVE"),
+            title: R.get("SAVE"),
             type: "button",
             onClick: e => {
                 this.handleSave(e);
@@ -82,9 +82,10 @@ class CustomerNew extends Component {
         Meteor.call("addCustomer", packedData, err => {
             this.setState({ processing: false });
             if (err) {
-                this.props.throwMsg(R.Msg("SERVER_ERROR", err));
+                console.log(err);
+                this.props.throwMsg(R.get("SERVER_ERROR", err));
             } else {
-                this.props.throwMsg(R.Msg("SAVED"));
+                this.props.throwMsg(R.get("SAVED"));
                 this.props.onClose();
             }
         });
@@ -94,10 +95,10 @@ class CustomerNew extends Component {
         return (
             <Window
                 onClose={this.props.onClose}
-                _key={R.Str("NEW_CUSTOMER")}
+                _key={R.get("NEW_CUSTOMER")}
                 appKey={this.props.appKey}
                 width={480}
-                title={R.Str("NEW_CUSTOMER")}
+                title={R.get("NEW_CUSTOMER")}
                 theme="light"
                 escToClose
             >

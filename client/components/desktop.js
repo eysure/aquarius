@@ -56,14 +56,14 @@ class Desktop extends Component {
     renderContextMenu() {
         let contextMenu = [
             {
-                title: R.Str("LAUNCHPAD"),
+                title: R.get("LAUNCHPAD"),
                 extra: "⌘L",
                 onClick: () => {
                     this.props.launchPadControl(true);
                 }
             },
             {
-                title: R.Str("SEARCH"),
+                title: R.get("SEARCH"),
                 onClick: () => {
                     this.props.launchPadControl(true);
                 }
@@ -72,12 +72,12 @@ class Desktop extends Component {
         ];
 
         // Recently used apps
-        contextMenu.push({ title: R.Str("RECENTLY_USED_APPS"), isTitle: true });
-        contextMenu.push({ title: R.Str("NONE"), isTitle: true });
+        contextMenu.push({ title: R.get("RECENTLY_USED_APPS"), isTitle: true });
+        contextMenu.push({ title: R.get("NONE"), isTitle: true });
         contextMenu.push({ divider: true });
 
         contextMenu.push({
-            title: R.Str("LOGOUT_WITH_NAME", { user: this.props.user.nickname }),
+            title: R.get("LOGOUT_WITH_NAME", { user: this.props.user.nickname }),
             extra: "⌘⎋",
             onClick: () => Meteor.logout(error => this.props.logout(error))
         });
@@ -89,7 +89,7 @@ class Desktop extends Component {
                 x={this.state.contextMenuX}
                 y={this.state.contextMenuY}
                 content={contextMenu}
-                emptyMenuText={R.Str("EMPTY_MENU")}
+                emptyMenuText={R.get("EMPTY_MENU")}
             />
         );
     }
@@ -108,7 +108,7 @@ class Desktop extends Component {
             },
             () => {
                 this.props.throwMsg(
-                    R.Msg("FILE_UPLOADING", {
+                    R.get("FILE_UPLOADING", {
                         key: "DESKTOP_UPLOAD"
                     })
                 );
@@ -116,14 +116,14 @@ class Desktop extends Component {
             (err, res) => {
                 if (err) {
                     this.props.throwMsg(
-                        R.Msg("SERVER_ERROR", {
+                        R.get("SERVER_ERROR", {
                             key: "DESKTOP_UPLOAD",
                             ...err
                         })
                     );
                 } else {
                     this.props.throwMsg(
-                        R.Msg("FILE_UPLOADED", {
+                        R.get("FILE_UPLOADED", {
                             key: "DESKTOP_UPLOAD"
                         })
                     );

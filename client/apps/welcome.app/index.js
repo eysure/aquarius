@@ -6,7 +6,7 @@ import { appClose } from "../../actions";
 import Window from "../../components/Window";
 import { ResourceFeeder } from "../../resources_feeder";
 
-const R = new ResourceFeeder(require("./resources/strings"), require("./resources/messages"));
+const R = new ResourceFeeder(require("./resources/strings").default, require("./resources/messages").default);
 
 class Welcome extends Component {
     state = { open: true, index: 0 };
@@ -20,7 +20,7 @@ class Welcome extends Component {
                 width={"80vmin"}
                 height={"60vmin"}
                 appKey={this.props.appKey}
-                title={R.Trans(Welcome.manifest.appName)}
+                title={R.trans(Welcome.manifest.appName)}
                 noTitlebar
                 canResize={false}
                 canMaximize={false}
@@ -116,7 +116,7 @@ mapDispatchToProps = dispatch => bindActionCreators({ appClose }, dispatch);
 
 Welcome.manifest = {
     appKey: "welcome",
-    appName: ["Welcome", "欢迎"],
+    appName: R.get("APP_NAME"),
     icon: "/assets/apps/cardiology.svg",
     menubar: [{ title: "test" }]
 };

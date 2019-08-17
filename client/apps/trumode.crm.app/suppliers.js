@@ -54,10 +54,10 @@ class Suppliers extends Component {
                                 return new Date(val).toLocaleString();
                             },
                             country: val => {
-                                return R.Str(val);
+                                return R.get(val);
                             },
                             type: val => {
-                                return R.Str(`type_${val}`);
+                                return R.get(`type_${val}`);
                             }
                         }}
                         rowDoubleClick={(e, row) => {
@@ -125,7 +125,7 @@ class Suppliers extends Component {
         let row = this.state.supplierTableContextMenuSelect;
         let supplierTableContextMenu = [
             {
-                title: R.Str("OPEN"),
+                title: R.get("OPEN"),
                 onClick: () => {
                     this.openSupplier(row._id);
                 }

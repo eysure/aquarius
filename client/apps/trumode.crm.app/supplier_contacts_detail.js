@@ -31,12 +31,12 @@ class SupplierContactsDetail extends Component {
     schema = () => {
         return {
             supplier_id: {
-                title: R.Str("supplier_id"),
+                title: R.get("supplier_id"),
                 type: "select",
                 options: this.state.suppliersOptions
             },
             photo: {
-                title: R.Str("photo"),
+                title: R.get("photo"),
                 type: "image",
                 style: {
                     width: 191,
@@ -53,7 +53,7 @@ class SupplierContactsDetail extends Component {
                         },
                         () => {
                             this.props.throwMsg(
-                                R.Msg("FILE_UPLOADING", {
+                                R.get("FILE_UPLOADING", {
                                     key: `SUPPLIER_CONTACT_IMAGE_UPLOAD_${this.props.supplierContactId._str}`
                                 })
                             );
@@ -61,14 +61,14 @@ class SupplierContactsDetail extends Component {
                         err => {
                             if (err) {
                                 this.props.throwMsg(
-                                    R.Msg("SERVER_ERROR", {
+                                    R.get("SERVER_ERROR", {
                                         key: `SUPPLIER_CONTACT_IMAGE_UPLOAD_${this.props.supplierContactId._str}`,
                                         ...err
                                     })
                                 );
                             } else {
                                 this.props.throwMsg(
-                                    R.Msg("FILE_UPLOADED", {
+                                    R.get("FILE_UPLOADED", {
                                         key: `SUPPLIER_CONTACT_IMAGE_UPLOAD_${this.props.supplierContactId._str}`
                                     })
                                 );
@@ -79,36 +79,36 @@ class SupplierContactsDetail extends Component {
                 }
             },
             name: {
-                title: R.Str("name"),
+                title: R.get("name"),
                 valid: {
                     $regex: /.+/
                 }
             },
             mobile: {
-                title: R.Str("mobile"),
+                title: R.get("mobile"),
                 valid: {
                     $regex: /.+/
                 }
             },
             email: {
-                title: R.Str("email"),
+                title: R.get("email"),
                 valid: {
                     $regex: /.+/
                 }
             },
             role: {
-                title: R.Str("role"),
+                title: R.get("role"),
                 valid: {
                     $regex: /.+/
                 }
             },
             remark: {
-                title: R.Str("remark"),
+                title: R.get("remark"),
                 type: "textarea",
-                placeholder: R.Str("remark")
+                placeholder: R.get("remark")
             },
             save: {
-                title: R.Str("SAVE"),
+                title: R.get("SAVE"),
                 type: "button",
                 disabled: {
                     $or: {
@@ -122,7 +122,7 @@ class SupplierContactsDetail extends Component {
                 callByEnter: true
             },
             delete: {
-                title: R.Str("DELETE"),
+                title: R.get("DELETE"),
                 type: "button",
                 onClick: () => {
                     this.setState({ deleteDoubleCheck: true });
@@ -147,9 +147,9 @@ class SupplierContactsDetail extends Component {
             err => {
                 this.setState({ processing: false });
                 if (err) {
-                    this.props.throwMsg(R.Msg("SERVER_ERROR", err));
+                    this.props.throwMsg(R.get("SERVER_ERROR", err));
                 } else {
-                    this.props.throwMsg(R.Msg("SAVED"));
+                    this.props.throwMsg(R.get("SAVED"));
                 }
             }
         );
@@ -167,9 +167,9 @@ class SupplierContactsDetail extends Component {
             err => {
                 this.setState({ processing: false });
                 if (err) {
-                    this.props.throwMsg(R.Msg("SERVER_ERROR", err));
+                    this.props.throwMsg(R.get("SERVER_ERROR", err));
                 } else {
-                    this.props.throwMsg(R.Msg("DELETED"));
+                    this.props.throwMsg(R.get("DELETED"));
                     this.props.onClose();
                 }
             }
@@ -222,7 +222,7 @@ class SupplierContactsDetail extends Component {
                     name="deleteDoubleCheck"
                     appKey={this.props.appKey}
                     title={`Delete ${this.state.name} checking`}
-                    content={R.Str("SUPPLIER_CONTACT_DELETE_DC", { name: this.state.name })}
+                    content={R.get("SUPPLIER_CONTACT_DELETE_DC", { name: this.state.name })}
                     onCheck={this.handleDelete}
                 />
             </Window>

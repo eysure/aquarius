@@ -68,10 +68,10 @@ class Customers extends Component {
                                 return new Date(val).toLocaleString();
                             },
                             country: val => {
-                                return R.Str(val);
+                                return R.get(val);
                             },
                             type: val => {
-                                return R.Str(`type_${val}`);
+                                return R.get(`type_${val}`);
                             }
                         }}
                         rowDoubleClick={(e, row) => {
@@ -139,7 +139,7 @@ class Customers extends Component {
         let row = this.state.customerTableContextMenuSelect;
         let customerTableContextMenu = [
             {
-                title: R.Str("OPEN"),
+                title: R.get("OPEN"),
                 onClick: () => {
                     this.openCustomer(row._id);
                 }

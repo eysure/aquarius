@@ -473,13 +473,13 @@ export class EmployeeInitialize extends Component {
 
         if (!old_pwd || !pwd || !pwd2 || pwd !== pwd2) {
             this.setState({ processing: false });
-            this.props.context.props.throwMsg(R.Msg("NEW_PASSWORD_NOT_MATCH"));
+            this.props.context.props.throwMsg(R.get("NEW_PASSWORD_NOT_MATCH"));
             return;
         }
 
         if (!passwordValidation(pwd)) {
             this.setState({ processing: false });
-            this.props.context.props.throwMsg(R.Msg("NEW_PASSWORD_NOT_VALID"));
+            this.props.context.props.throwMsg(R.get("NEW_PASSWORD_NOT_VALID"));
             return;
         }
 
@@ -487,12 +487,12 @@ export class EmployeeInitialize extends Component {
             this.setState({ processing: false });
             if (err) {
                 this.props.context.props.throwMsg(
-                    R.Msg("CHANGE_PASSWORD_FAILED", {
+                    R.get("CHANGE_PASSWORD_FAILED", {
                         error: err.reason
                     })
                 );
             } else {
-                this.props.context.props.throwMsg(R.Msg("CHANGE_PASSWORD_SUCCESSFUL"));
+                this.props.context.props.throwMsg(R.get("CHANGE_PASSWORD_SUCCESSFUL"));
                 this.setState({ page: this.state.page + 1 });
             }
         });
@@ -505,7 +505,7 @@ export class EmployeeInitialize extends Component {
         const validationResult = ajv.validate(EmployeeInitializeSchema, packedData);
         if (!validationResult) {
             this.props.throwMsg(
-                R.Msg("EMPLOYEE_REGISTER_ERR", {
+                R.get("EMPLOYEE_REGISTER_ERR", {
                     error: ajv.errorsText()
                 })
             );
@@ -517,19 +517,19 @@ export class EmployeeInitialize extends Component {
         // Server-side validation
         Meteor.call("employee_register", packedData, (error, res) => {
             this.setState({ processing: false });
-            if (error) this.props.throwMsg(R.Msg("EMPLOYEE_REGISTER_ERR", { error }));
+            if (error) this.props.throwMsg(R.get("EMPLOYEE_REGISTER_ERR", { error }));
             else if (res && res.status === 200) {
-                this.props.throwMsg(R.Msg("EMPLOYEE_REGISTER_SUCCESSFUL"));
+                this.props.throwMsg(R.get("EMPLOYEE_REGISTER_SUCCESSFUL"));
                 this.setState({ page: this.state.page + 1 });
             } else if (res && res.status === 400) {
                 this.props.throwMsg(
-                    R.Msg("EMPLOYEE_REGISTER_ERR", {
+                    R.get("EMPLOYEE_REGISTER_ERR", {
                         error: res.err
                     })
                 );
             } else {
                 this.props.throwMsg(
-                    R.Msg("EMPLOYEE_REGISTER_ERR", {
+                    R.get("EMPLOYEE_REGISTER_ERR", {
                         error: res
                     })
                 );
@@ -543,12 +543,12 @@ export class EmployeeInitialize extends Component {
                 return (
                     <div className="window-content-inner handle vbc v-full h-full">
                         <div className="vcc v-full">
-                            <h1 style={{ fontSize: "3rem", marginBottom: 8 }}>{R.Str("UCI_WELCOME_TITLE")}</h1>
-                            <p>{R.Str("UCI_WELCOME_DESCRIPTION")}</p>
+                            <h1 style={{ fontSize: "3rem", marginBottom: 8 }}>{R.get("UCI_WELCOME_TITLE")}</h1>
+                            <p>{R.get("UCI_WELCOME_DESCRIPTION")}</p>
                         </div>
                         <div>
                             <button className="aqui-btn " onClick={e => this.setState({ page: this.state.page + 1 })}>
-                                {R.Str("CONTINUE")}
+                                {R.get("CONTINUE")}
                             </button>
                         </div>
                     </div>
@@ -574,15 +574,15 @@ export class EmployeeInitialize extends Component {
                                 color: "#444"
                             }}
                         >
-                            <li>{R.Str("PASSWORD_REQUIREMENT_1")}</li>
-                            <li>{R.Str("PASSWORD_REQUIREMENT_2")}</li>
+                            <li>{R.get("PASSWORD_REQUIREMENT_1")}</li>
+                            <li>{R.get("PASSWORD_REQUIREMENT_2")}</li>
                             <ul>
-                                <li>{R.Str("PASSWORD_REQUIREMENT_3")}</li>
-                                <li>{R.Str("PASSWORD_REQUIREMENT_4")}</li>
-                                <li>{R.Str("PASSWORD_REQUIREMENT_5")}</li>
-                                <li>{R.Str("PASSWORD_REQUIREMENT_6")}</li>
+                                <li>{R.get("PASSWORD_REQUIREMENT_3")}</li>
+                                <li>{R.get("PASSWORD_REQUIREMENT_4")}</li>
+                                <li>{R.get("PASSWORD_REQUIREMENT_5")}</li>
+                                <li>{R.get("PASSWORD_REQUIREMENT_6")}</li>
                             </ul>
-                            <li>{R.Str("PASSWORD_REQUIREMENT_7")}</li>
+                            <li>{R.get("PASSWORD_REQUIREMENT_7")}</li>
                         </ul>
 
                         <div className="vsc h-full" style={{ maxWidth: "480px" }}>
@@ -833,7 +833,7 @@ export class EmployeeInitialize extends Component {
                 _key={"Employee Initialize"}
                 width={900}
                 height={700}
-                title={R.Str("EMPLOYEE_INITIALIZATION")}
+                title={R.get("EMPLOYEE_INITIALIZATION")}
                 noTitlebar
                 appKey={this.props.context.props.appKey}
                 windowPriority={WINDOW_PRIORITY_HIGH}

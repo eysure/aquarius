@@ -68,7 +68,7 @@ class OrderDetail extends Component {
     renderBlankPage() {
         return (
             <div style={blankContainerStyle}>
-                <UI.Icon style={blankContainerIconStyle}>{R.Str("SALES_ORDER_ICON")}</UI.Icon>
+                <UI.Icon style={blankContainerIconStyle}>{R.get("SALES_ORDER_ICON")}</UI.Icon>
             </div>
         );
     }
@@ -94,13 +94,13 @@ class OrderDetail extends Component {
         return (
             <div style={{ padding: "16px" }}>
                 <UI.Typography variant="title" gutterBottom>
-                    {R.Str("CONFIRM_DELETE_TITLE")}
+                    {R.get("CONFIRM_DELETE_TITLE")}
                 </UI.Typography>
-                <UI.Typography variant="body1">{R.Str("CONFIRM_DELETE_TIP")}</UI.Typography>
+                <UI.Typography variant="body1">{R.get("CONFIRM_DELETE_TIP")}</UI.Typography>
                 <UI.TextField
                     variant="outlined"
                     name="deleteConfirmOrderID"
-                    label={R.Str("ORDER_ID")}
+                    label={R.get("ORDER_ID")}
                     value={this.state.deleteConfirmOrderID}
                     onChange={this.handleDeleteConfirmOrderIDChange}
                     margin="normal"
@@ -108,9 +108,9 @@ class OrderDetail extends Component {
                     error={this.state.deleteConfirmOrderIDError}
                 />
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                    <UI.Button onClick={this.handleDeleteCancel}>{R.Str("CANCEL")}</UI.Button>
+                    <UI.Button onClick={this.handleDeleteCancel}>{R.get("CANCEL")}</UI.Button>
                     <UI.Button color="secondary" onClick={this.handleDeleteConfirm}>
-                        {R.Str("DELETE")}
+                        {R.get("DELETE")}
                     </UI.Button>
                 </div>
             </div>
@@ -168,7 +168,7 @@ class OrderDetail extends Component {
     renderToolBarEditButton() {
         return (
             <div>
-                <UI.Tooltip title={R.Str("DELETE")} enterDelay={200}>
+                <UI.Tooltip title={R.get("DELETE")} enterDelay={200}>
                     <UI.Button color="secondary" aria-label="Delete" style={toolbarButtonStyle} onClick={this.handleDelete}>
                         <i className="material-icons">delete</i>
                     </UI.Button>
@@ -190,12 +190,12 @@ class OrderDetail extends Component {
                 >
                     {this.renderDeleteConfirmDialog()}
                 </UI.Popover>
-                <UI.Tooltip title={R.Str("CANCEL")} enterDelay={200}>
+                <UI.Tooltip title={R.get("CANCEL")} enterDelay={200}>
                     <UI.Button aria-label="Cancel" style={toolbarButtonStyle} onClick={this.handleCancel}>
                         <i className="material-icons">clear</i>
                     </UI.Button>
                 </UI.Tooltip>
-                <UI.Tooltip title={R.Str("SAVE")} enterDelay={200}>
+                <UI.Tooltip title={R.get("SAVE")} enterDelay={200}>
                     <UI.Button aria-label="Save" style={toolbarButtonStyle} onClick={this.handleSave}>
                         <i className="material-icons">save</i>
                     </UI.Button>
@@ -207,17 +207,17 @@ class OrderDetail extends Component {
     renderToolBarNonEditButton() {
         return (
             <div>
-                <UI.Tooltip title={R.Str("BOOKMARK")} enterDelay={200}>
+                <UI.Tooltip title={R.get("BOOKMARK")} enterDelay={200}>
                     <UI.Button aria-label="Bookmark" style={toolbarButtonStyle} onClick={this.handleBookMark}>
                         <i className="material-icons">star_border</i>
                     </UI.Button>
                 </UI.Tooltip>
-                <UI.Tooltip title={R.Str("PRINT")} enterDelay={200}>
+                <UI.Tooltip title={R.get("PRINT")} enterDelay={200}>
                     <UI.Button aria-label="Print" style={toolbarButtonStyle} onClick={this.handlePrint}>
                         <i className="material-icons">print</i>
                     </UI.Button>
                 </UI.Tooltip>
-                <UI.Tooltip title={R.Str("EDIT")} enterDelay={200}>
+                <UI.Tooltip title={R.get("EDIT")} enterDelay={200}>
                     <UI.Button aria-label="Edit" style={toolbarButtonStyle} onClick={this.handleEditModeOn}>
                         <i className="material-icons">edit</i>
                     </UI.Button>
@@ -235,7 +235,7 @@ class OrderDetail extends Component {
             <UI.Grid container spacing={24}>
                 <UI.Grid item xs={12}>
                     <UI.Typography variant="caption" gutterBottom>
-                        {R.Str("BASIC_INFO")}
+                        {R.get("BASIC_INFO")}
                     </UI.Typography>
                     <UI.Paper className="order-detail-paper">
                         <UI.Grid container spacing={24}>
@@ -243,7 +243,7 @@ class OrderDetail extends Component {
                                 <UI.TextField
                                     name="order_id"
                                     className="order-detail-input"
-                                    label={R.Str("ORDER_ID")}
+                                    label={R.get("ORDER_ID")}
                                     value={this.state.orderDetail.order_id}
                                     margin="normal"
                                     fullWidth
@@ -257,7 +257,7 @@ class OrderDetail extends Component {
                                     select
                                     name="order_status"
                                     className="order-detail-input"
-                                    label={R.Str("ORDER_STATUS")}
+                                    label={R.get("ORDER_STATUS")}
                                     value={this.state.orderDetail.order_status}
                                     margin="normal"
                                     fullWidth
@@ -265,25 +265,25 @@ class OrderDetail extends Component {
                                     onChange={this.handleChange}
                                 >
                                     <UI.MenuItem key="ORDER_STATUS_DRAFT" value="ORDER_STATUS_DRAFT">
-                                        {R.Str("ORDER_STATUS_DRAFT")}
+                                        {R.get("ORDER_STATUS_DRAFT")}
                                     </UI.MenuItem>
                                     <UI.MenuItem key="ORDER_STATUS_ESTABLISHED" value="ORDER_STATUS_ESTABLISHED">
-                                        {R.Str("ORDER_STATUS_ESTABLISHED")}
+                                        {R.get("ORDER_STATUS_ESTABLISHED")}
                                     </UI.MenuItem>
                                     <UI.MenuItem key="ORDER_STATUS_IN_PRODUCTION" value="ORDER_STATUS_IN_PRODUCTION">
-                                        {R.Str("ORDER_STATUS_IN_PRODUCTION")}
+                                        {R.get("ORDER_STATUS_IN_PRODUCTION")}
                                     </UI.MenuItem>
                                     <UI.MenuItem key="ORDER_STATUS_SHIPPED" value="ORDER_STATUS_SHIPPED">
-                                        {R.Str("ORDER_STATUS_SHIPPED")}
+                                        {R.get("ORDER_STATUS_SHIPPED")}
                                     </UI.MenuItem>
                                     <UI.MenuItem key="ORDER_STATUS_ARREARS" value="ORDER_STATUS_ARREARS">
-                                        {R.Str("ORDER_STATUS_ARREARS")}
+                                        {R.get("ORDER_STATUS_ARREARS")}
                                     </UI.MenuItem>
                                     <UI.MenuItem key="ORDER_STATUS_FINISHED" value="ORDER_STATUS_FINISHED">
-                                        {R.Str("ORDER_STATUS_FINISHED")}
+                                        {R.get("ORDER_STATUS_FINISHED")}
                                     </UI.MenuItem>
                                     <UI.MenuItem key="ORDER_STATUS_ABNORMAL" value="ORDER_STATUS_ABNORMAL">
-                                        {R.Str("ORDER_STATUS_ABNORMAL")}
+                                        {R.get("ORDER_STATUS_ABNORMAL")}
                                     </UI.MenuItem>
                                 </UI.TextField>
                             </UI.Grid>
@@ -292,7 +292,7 @@ class OrderDetail extends Component {
                                 <UI.TextField
                                     name="create_date"
                                     className="order-detail-input"
-                                    label={R.Str("CREATE_DATE")}
+                                    label={R.get("CREATE_DATE")}
                                     type="date"
                                     fullWidth
                                     value={this.state.orderDetail.create_date}
@@ -306,7 +306,7 @@ class OrderDetail extends Component {
                                 <UI.TextField
                                     name="sales"
                                     className="order-detail-input"
-                                    label={R.Str("SALES")}
+                                    label={R.get("SALES")}
                                     value={this.state.orderDetail.sales}
                                     margin="normal"
                                     fullWidth
@@ -319,7 +319,7 @@ class OrderDetail extends Component {
                                 <UI.TextField
                                     name="customer"
                                     className="order-detail-input"
-                                    label={R.Str("CUSTOMER")}
+                                    label={R.get("CUSTOMER")}
                                     value={this.state.orderDetail.customer}
                                     margin="normal"
                                     fullWidth
@@ -333,23 +333,23 @@ class OrderDetail extends Component {
 
                 <UI.Grid item xs={12}>
                     <UI.Typography variant="caption" gutterBottom>
-                        {R.Str("COMMODITIES_DETAIL")}
+                        {R.get("COMMODITIES_DETAIL")}
                     </UI.Typography>
                     {this.renderOrderItemList()}
                 </UI.Grid>
 
                 <UI.Grid item xs={12}>
                     <UI.Typography variant="caption" gutterBottom>
-                        {R.Str("PAYMENT_DETAIL")}
+                        {R.get("PAYMENT_DETAIL")}
                     </UI.Typography>
-                    <UI.Paper className="order-detail-paper">{R.Str("PAYMENT_DETAIL")}</UI.Paper>
+                    <UI.Paper className="order-detail-paper">{R.get("PAYMENT_DETAIL")}</UI.Paper>
                 </UI.Grid>
 
                 <UI.Grid item xs={12}>
                     <UI.Typography variant="caption" gutterBottom>
-                        {R.Str("SHIPPING_DETAIL")}
+                        {R.get("SHIPPING_DETAIL")}
                     </UI.Typography>
-                    <UI.Paper className="order-detail-paper">{R.Str("SHIPPING_DETAIL")}</UI.Paper>
+                    <UI.Paper className="order-detail-paper">{R.get("SHIPPING_DETAIL")}</UI.Paper>
                 </UI.Grid>
             </UI.Grid>
         );
@@ -368,30 +368,30 @@ class OrderDetail extends Component {
                                     </UI.IconButton>
                                 </UI.TableCell>
                             ) : null}
-                            <UI.TableCell style={itemImageCellStyle}>{R.Str("IMAGE")}</UI.TableCell>
+                            <UI.TableCell style={itemImageCellStyle}>{R.get("IMAGE")}</UI.TableCell>
                             <UI.TableCell style={tableCellStyle}>
-                                <p style={{ fontWeight: 800 }}>{R.Str("ITEM_NO")}</p>
-                                <p>{R.Str("PO_NO")}</p>
+                                <p style={{ fontWeight: 800 }}>{R.get("ITEM_NO")}</p>
+                                <p>{R.get("PO_NO")}</p>
                             </UI.TableCell>
                             <UI.TableCell style={tableCellStyle}>
-                                <p style={{ fontWeight: 800 }}>{R.Str("ITEM_NAME")}</p>
-                                <p>{R.Str("ITEM_DESC")}</p>
+                                <p style={{ fontWeight: 800 }}>{R.get("ITEM_NAME")}</p>
+                                <p>{R.get("ITEM_DESC")}</p>
                             </UI.TableCell>
                             <UI.TableCell align="right" style={tableCellStyle}>
-                                {R.Str("QTY")}
+                                {R.get("QTY")}
                             </UI.TableCell>
                             <UI.TableCell align="right" style={tableCellStyle}>
-                                {R.Str("PRICE")}
+                                {R.get("PRICE")}
                             </UI.TableCell>
                             <UI.TableCell align="right" style={tableCellStyle}>
-                                {R.Str("AMOUNT")}
+                                {R.get("AMOUNT")}
                             </UI.TableCell>
                             <UI.TableCell align="right" style={tableCellStyle}>
-                                {R.Str("DELIVERY_DATE")}
+                                {R.get("DELIVERY_DATE")}
                             </UI.TableCell>
                             <UI.TableCell align="right" style={tableCellStyle}>
-                                <p style={{ fontWeight: 800 }}>{R.Str("PURCHASE_ORDER")}</p>
-                                <p>{R.Str("SUPPLIER")}</p>
+                                <p style={{ fontWeight: 800 }}>{R.get("PURCHASE_ORDER")}</p>
+                                <p>{R.get("SUPPLIER")}</p>
                             </UI.TableCell>
                         </UI.TableRow>
                     </UI.TableHead>

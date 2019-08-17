@@ -2,14 +2,14 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as UI from "@material-ui/core";
-import { getAppName } from "../app_utils";
+import { getAppName } from "../../app_utils";
 import _ from "lodash";
-import { ResourceFeeder } from "../resources_feeder";
-const R = new ResourceFeeder(null);
+import { ResourceFeeder } from "../../resources_feeder";
+const R = new ResourceFeeder(require("./resources/strings").default, null);
 
-import { appClose, activateWindow } from "../actions";
+import { appClose, activateWindow } from "../../actions";
 
-import Window, { WINDOW_PRIORITY_TOP } from "../components/Window";
+import Window, { WINDOW_PRIORITY_TOP } from "../../components/Window";
 
 class AppManager extends Component {
     state = { open: true };
@@ -21,7 +21,7 @@ class AppManager extends Component {
                 key="Main"
                 _key="Main"
                 appKey={this.props.appKey}
-                title={R.Trans(AppManager.manifest.appName)}
+                title={AppManager.manifest.appName}
                 windowPriority={WINDOW_PRIORITY_TOP}
                 onClose={e => this.setState({ open: false })}
             >
@@ -92,7 +92,7 @@ function mapDispatchToProps(dispatch) {
 
 AppManager.manifest = {
     appKey: "app_manager",
-    appName: ["App Manager", "应用管理器"],
+    appName: R.get("APP_NAME"),
     icon: "/assets/apps/storyboard.svg",
     defaultOption: {
         alwaysOnFront: true

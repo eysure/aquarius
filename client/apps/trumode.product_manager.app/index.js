@@ -3,6 +3,7 @@ import * as UI from "@material-ui/core";
 import clientConfig from "../../client_config.js";
 
 import { ResourceFeeder } from "../../resources_feeder";
+const R = new ResourceFeeder(require("./resources/strings").default, null);
 
 import Window from "../../components/Window";
 
@@ -33,7 +34,7 @@ class ProductManager extends Component {
 
 ProductManager.manifest = {
     appKey: "trumode.product_manager",
-    appName: ["Product Manager", "产品管理"],
+    appName: R.get("APP_NAME"),
     icon: "/assets/apps/clothing_label.svg"
 };
 

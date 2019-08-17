@@ -735,7 +735,7 @@ export class Table extends Component {
                 <TableHead
                     key={i}
                     width={autoWidths && autoWidths[field] && autoWidths[field] * 9 + 10}
-                    content={this.props.headsTranslator ? this.props.headsTranslator.Str(heads[i]) : heads[i]}
+                    content={this.props.headsTranslator ? this.props.headsTranslator.get(heads[i]) : heads[i]}
                     onClick={e => {
                         this.setState({ sortBy: field, asc: this.state.sortBy === field ? !this.state.asc : false });
                     }}
@@ -778,7 +778,7 @@ export class Table extends Component {
         for (let i in heads) {
             let field = this.state.objectMode ? heads[i] : i;
             if (headsHide && headsHide.includes(field)) continue;
-            let maxLen = headsTranslator && headsTranslator.Str(field) ? headsTranslator.Str(field).length : field.length;
+            let maxLen = headsTranslator && headsTranslator.get(field) ? headsTranslator.get(field).length : field.length;
             for (let row of data) {
                 let col = row[field];
                 if (dataTranslator && dataTranslator[field]) {
@@ -853,7 +853,7 @@ export class Table extends Component {
 
         // Add filter
         if (field !== "empty") {
-            let fieldTitle = this.props.headsTranslator ? this.props.headsTranslator.Str(field) : field;
+            let fieldTitle = this.props.headsTranslator ? this.props.headsTranslator.get(field) : field;
             contextMenu.push(
                 {
                     title: `Sort By ${fieldTitle}`,
@@ -916,7 +916,7 @@ export class Table extends Component {
         for (let head of heads) {
             let hided = headsHide.includes(head);
             contextMenu.push({
-                title: this.props.headsTranslator ? this.props.headsTranslator.Str(head) : head,
+                title: this.props.headsTranslator ? this.props.headsTranslator.get(head) : head,
                 prefix: hided ? "" : "✓",
                 onClick: e => {
                     if (hided) headsHide.splice(headsHide.indexOf(head), 1);

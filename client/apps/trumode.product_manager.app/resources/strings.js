@@ -1,4 +1,4 @@
 export default {
     $LANGUAGE: ["en,en-US", "zh,zh-CN"],
-    APP_NAME: ["Preference", "系统偏好设置"]
+    APP_NAME: ["Product Manager", "商品管理"]
 };

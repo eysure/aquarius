@@ -1,150 +1,92 @@
 import sysStrings from "./resources/string";
 import sysMessages from "./resources/messages";
+import _ from "lodash";
 
 export class ResourceFeeder {
-    lanIndex = 0;
-    sysLanIndex = 0;
-    strings = null;
-    messages = null;
-    isFallbackToSystemResources = true;
+    strs = {};
+    language = "en-US";
 
-    constructor(strs, msgs = null, isFallbackToSystemResources = true) {
-        this.strings = strs ? strs.default : null;
-        this.messages = msgs ? msgs.default : null;
-        this.sysLanIndex = this.getLanguageIndex(sysStrings["LANGUAGES"]);
-        this.lanIndex = strs ? this.getLanguageIndex(this.strings["LANGUAGES"]) : this.sysLanIndex;
-        this.isFallbackToSystemResources = isFallbackToSystemResources;
+    constructor(...strs) {
+        this.language = localStorage.getItem("language") || window.navigator.language;
+        this.addStrings(sysStrings);
+        this.addStrings(sysMessages);
+        for (let str of strs) {
+            this.addStrings(str);
+        }
     }
 
-    Str = (strKey, args = null) => {
-        if (!this.strings && !this.isFallbackToSystemResources) {
-            console.error("No Strings given in this ResourceFeeder!");
-            return null;
+    addStrings(strs) {
+        if (!strs) return;
+        let tmpStrings = {};
+        let lan = strs["$LANGUAGE"];
+        if (!lan) {
+            console.error("strs doesn't include a $LANGUAGE field. can't be added into this resource feeder", strs);
+            return;
         }
-        let str = null;
-        if (this.strings) {
-            str = this.strings[strKey];
-            if (str) {
-                str = str[this.lanIndex];
-            }
-        }
-        if (!str && this.isFallbackToSystemResources) {
-            str = sysStrings[strKey];
-            if (str) {
-                str = str[this.sysLanIndex];
-            }
-        }
-        if (!str) {
-            if (strKey instanceof Array) {
-                str = strKey[this.sysLanIndex];
-            }
-        }
-        if (!str) {
-            console.error("String fetch failed. Key: " + strKey);
-            return strKey;
-        }
-        if (args) {
-            str = replaceAll(str, args);
-        }
-        return str;
-    };
-
-    Strs = strKeys => {
-        let res = [];
-        for (let strKey of strKeys) {
-            res.push(this.Str(strKey));
-        }
-        return res;
-    };
-
-    Msg = (msgKey, args = null) => {
-        if (!this.messages && !this.isFallbackToSystemResources) {
-            console.error("No Messages given in this ResourceFeeder!");
-            return null;
-        }
-        let msgTmp = null,
-            msg = null;
-        if (this.messages) {
-            msgTmp = this.messages[msgKey];
-            if (msgTmp) {
-                msg = {};
-                for (let key in msgTmp) {
-                    if (msgTmp[key] instanceof Array) {
-                        msg[key] = msgTmp[key][this.lanIndex];
-                    } else msg[key] = msgTmp[key];
+        if (_.isArray(lan)) {
+            // Multiple Languages
+            for (let key in strs) {
+                tmpStrings[key] = {};
+                if (!_.isArray(strs[key]) || strs[key].length !== lan.length) {
+                    console.error(
+                        `Resource translation value can only be array with the same length to $LANGUAGE. But got: `,
+                        strs[key],
+                        `\nLanguage are [${lan.join(" / ")}]. This key will not add.`
+                    );
+                    continue;
                 }
-            }
-        }
-        if (!msgTmp && this.isFallbackToSystemResources) {
-            msgTmp = sysMessages[msgKey];
-            if (msgTmp) {
-                msg = {};
-                for (let key in msgTmp) {
-                    if (msgTmp[key] instanceof Array) {
-                        msg[key] = msgTmp[key][this.sysLanIndex];
-                    } else msg[key] = msgTmp[key];
+                for (let i in strs[key]) {
+                    lan[i].split(",").forEach(l => {
+                        let lt = l.trim();
+                        tmpStrings[key][lt] = strs[key][i];
+                    });
                 }
-            }
-        }
-        if (!msg) {
-            console.error("Message fetch failed. Key: " + msgKey);
-            return {
-                title: msgKey
-            };
-        }
-        if (args) {
-            for (let key in msg) {
-                msg[key] = replaceAll(msg[key], args);
-            }
-        }
-        return msg;
-    };
-
-    Trans = strArr => {
-        if (strArr instanceof Array) {
-            if (this.lanIndex >= strArr.length) {
-                console.warn("Resource feeder translator: current language is not support for this string: ", strArr);
-                return strArr[0];
-            } else {
-                return strArr[this.lanIndex];
             }
         } else {
-            console.warn("Resource feeder translator accept a non array parameter");
-            return strArr;
-        }
-    };
-
-    getLanguageIndex = supportedLanguages => {
-        let language = localStorage.getItem("language") || window.navigator.language;
-        for (let i = 0; i < supportedLanguages.length; i++) {
-            if (supportedLanguages[i] === language) {
-                return i;
+            // Single Languages
+            for (let key in strs) {
+                tmpStrings[key] = {};
+                lan.split(",").forEach(l => {
+                    let lt = l.trim();
+                    tmpStrings[key][lt] = strs[key];
+                });
             }
         }
-        console.warn(`Your language is not support in this app. Use default language: ${supportedLanguages[0]}`);
-        return 0;
-    };
-}
 
-function replaceAll(str, vals) {
-    if (!str || !vals) return str;
-    if (!(typeof str === "string" || str instanceof String)) return str;
-
-    if (vals instanceof Object) {
-        let newStr = str.slice(0);
-        for (let key in vals) {
-            let value = vals[key];
-            if (!(typeof vals[key] === "string" || vals[key] instanceof String)) {
-                value = JSON.stringify(vals[key]);
-            }
-            let result = newStr.replace(new RegExp("\\$\\{" + key + "\\}", "g"), value);
-            newStr = result;
+        // assign
+        for (let key in tmpStrings) {
+            this.strs[key] = { ...this.strs[key], ...tmpStrings[key] };
         }
-        return newStr;
-    } else {
-        console.error("Uncapable type of arguments.");
-        console.error(args);
-        return str;
+    }
+
+    get(key, args = null) {
+        if (!this.strs[key] || Object.keys(this.strs[key]).length === 0) {
+            console.warn(`The key "${key}" can't be find inside this resource feeder. Return the key itself instead.`);
+            return key;
+        }
+        let res = this.strs[key][this.language];
+        if (!res) {
+            console.warn(`The key "${key}" can't find a supported string in this resource feeder. Return default language "${Object.keys(this.strs[key])[0]}"`);
+            return this.strs[key][Object.keys(this.strs[key])[0]];
+        }
+        if (_.isFunction(res)) return res(args);
+        return res;
+    }
+
+    Str(key, args = null) {
+        console.warn("R.Str is deprecated, condier using R.get instead");
+        return this.get(key, args);
+    }
+
+    Msg(key, args = null) {
+        console.warn("R.get is deprecated, consider using R.get instead");
+        return this.get(key, args);
+    }
+
+    trans(obj, args = null) {
+        let res = obj[this.language];
+        if (_.isFunction(res)) return res(args);
+        return res;
     }
 }
 

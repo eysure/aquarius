@@ -20,7 +20,7 @@ class AppHost extends Component {
                     let appClass = getAppWithKey(app.appKey);
                     if (!appClass) {
                         this.props.throwMsg(
-                            R.Msg("APP_LAUNCH_FAILED", {
+                            R.get("APP_LAUNCH_FAILED", {
                                 msgContent: "No appKey found in appList." + app.appKey
                             })
                         );

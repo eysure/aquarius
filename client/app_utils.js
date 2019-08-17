@@ -40,7 +40,7 @@ export function getAppName(appKey, userProps) {
     }
     let manifest = getAppManifest(appKey);
     if (!manifest) return appKey;
-    return manifest.appName[getLanguage(userProps)];
+    return manifest.appName;
 }
 
 export function getAppIcon(appKey, userProps, size, style = null) {

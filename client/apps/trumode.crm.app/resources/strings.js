@@ -1,6 +1,7 @@
 export default {
     // Support Languages
-    LANGUAGES: ["en-US", "zh-CN"],
+    $LANGUAGE: ["en,en-US", "zh,zh-CN"],
+    APP_NAME: ["CRM", "客户关系管理"],
 
     // Tabs
     TAB_CUSTOMERS: ["Customers", "客户"],

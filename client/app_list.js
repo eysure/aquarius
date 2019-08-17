@@ -1,8 +1,8 @@
 // System Apps
 import AboutSystem from "./apps/about_system.app";
 import Admin from "./apps/admin.app";
-import AppManager from "./apps/app_manager";
-import Debugger from "./apps/debugger";
+import AppManager from "./apps/app_manager.app";
+import Debugger from "./apps/debugger.app";
 import Preference from "./apps/preference.app";
 import Search from "./apps/search";
 import UserCenter from "./apps/user_center.app";

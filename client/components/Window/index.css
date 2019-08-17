@@ -981,6 +981,8 @@ th {
     font-weight: 400;
     text-align: left;
     font-size: 0.7rem;
+    overflow: hidden;
+    white-space: nowrap;
 }
 th:active {
     background: #eaeaea;

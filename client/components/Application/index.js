@@ -28,15 +28,26 @@ export class Application extends Component {
 
         // Check if this user has the auth to run this app
         if (this.props.auth.apps && !this.props.auth.apps.includes(app.appKey)) {
-            this.props.throwMsg(R.Msg("APPLICATION_PERMISSION_DENIED"));
+            this.props.throwMsg(
+                R.get("OPD", {
+                    type: "APP",
+                    requiredAuth: `app.${app.appKey}`
+                })
+            );
             this.props.appClose(app.appKey);
         }
     }
 
     // When this app crash, generate the error message and send
     componentDidCatch(error, info) {
-        let msgContent = error + "\n" + JSON.stringify(info);
-        this.props.throwMsg(R.Msg("APP_CRASH", { msgContent }));
+        this.props.throwMsg(
+            R.get("APP_CRASH", {
+                raw: {
+                    error: error.toString(),
+                    info
+                }
+            })
+        );
         this.props.appClose(this.props.app.appKey);
     }
 

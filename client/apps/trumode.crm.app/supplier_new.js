@@ -24,27 +24,27 @@ class SupplierNew extends Component {
 
     schema = {
         abbr: {
-            title: R.Str("abbr"),
+            title: R.get("abbr"),
             valid: {
                 $regex: /.+/
             },
-            placeholder: R.Str("ABBR_PH")
+            placeholder: R.get("ABBR_PH")
         },
         name: {
-            title: R.Str("name"),
+            title: R.get("name"),
             valid: {
                 $regex: /.+/
             },
-            placeholder: R.Str("NAME_PH")
+            placeholder: R.get("NAME_PH")
         },
         address: {
-            title: R.Str("address"),
+            title: R.get("address"),
             valid: {
                 $regex: /.+/
             }
         },
         city: {
-            title: R.Str("city"),
+            title: R.get("city"),
             valid: {
                 $regex: /.+/
             },
@@ -55,7 +55,7 @@ class SupplierNew extends Component {
             }
         },
         state: {
-            title: R.Str("state"),
+            title: R.get("state"),
             valid: {
                 $regex: /.+/
             },
@@ -66,17 +66,17 @@ class SupplierNew extends Component {
             }
         },
         country: {
-            title: R.Str("country"),
+            title: R.get("country"),
             type: "select",
             options: getCountryList()
         },
         remark: {
-            title: R.Str("remark"),
+            title: R.get("remark"),
             type: "textarea",
-            placeholder: R.Str("remark")
+            placeholder: R.get("remark")
         },
         save: {
-            title: R.Str("SAVE"),
+            title: R.get("SAVE"),
             type: "button",
             onClick: e => {
                 this.handleSave(e);
@@ -106,9 +106,10 @@ class SupplierNew extends Component {
             err => {
                 this.setState({ processing: false });
                 if (err) {
-                    this.props.throwMsg(R.Msg("SERVER_ERROR", err));
+                    console.error(err);
+                    this.props.throwMsg(R.get("SERVER_ERROR", err));
                 } else {
-                    this.props.throwMsg(R.Msg("SAVED"));
+                    this.props.throwMsg(R.get("SAVED"));
                     this.props.onClose();
                 }
             }
@@ -119,10 +120,10 @@ class SupplierNew extends Component {
         return (
             <Window
                 onClose={this.props.onClose}
-                _key={R.Str("NEW_SUPPLIER")}
+                _key={R.get("NEW_SUPPLIER")}
                 width={640}
                 appKey={this.props.appKey}
-                title={R.Str("NEW_SUPPLIER")}
+                title={R.get("NEW_SUPPLIER")}
                 theme="light"
                 escToClose
             >

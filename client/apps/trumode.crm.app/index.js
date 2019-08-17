@@ -9,7 +9,7 @@ export const TAB_SUPPLIERS = "TAB_SUPPLIERS";
 import Customers from "./customers";
 import Suppliers from "./suppliers";
 
-export const R = new ResourceFeeder(require("./resources/strings"), require("./resources/messages"));
+export const R = new ResourceFeeder(require("./resources/strings").default, require("./resources/messages").default);
 
 class CustomerRelationshipManager extends Component {
     state = {
@@ -25,9 +25,9 @@ class CustomerRelationshipManager extends Component {
             sidebar.push(
                 <li key={tab} className={this.state.selected == tab ? "active" : ""} onClick={() => this.setState({ selected: tab })}>
                     <i className="material-icons" style={{ marginRight: 16 }}>
-                        {R.Str(tab + "_ICON")}
+                        {R.get(tab + "_ICON")}
                     </i>
-                    {R.Str(tab)}
+                    {R.get(tab)}
                 </li>
             );
         }
@@ -53,7 +53,7 @@ class CustomerRelationshipManager extends Component {
                 _key="Main"
                 width={1200}
                 height={800}
-                title={R.Trans(this.constructor.manifest.appName)}
+                title={R.trans(this.constructor.manifest.appName)}
                 noTitlebar
                 onClose={() => this.setState({ open: false })}
             >
@@ -68,7 +68,7 @@ class CustomerRelationshipManager extends Component {
 
 CustomerRelationshipManager.manifest = {
     appKey: "trumode.crm",
-    appName: ["CRM", "客户与供应商"],
+    appName: R.get("APP_NAME"),
     icon: "/assets/apps/photo_gallery.svg"
 };
 
