@@ -277,6 +277,7 @@ export async function edit(args) {
             data.time_modified = new Date();
             data.employee_created = employeeId;
             data.employee_modified = employeeId;
+            Collection(db).insert(data);
         } else if (action === "update" || action === "edit") {
             data.time_modified = new Date();
             data.employee_modified = employeeId;

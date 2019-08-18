@@ -5,13 +5,15 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as A from "../actions";
-import { getAppName, getAppShortCut } from "../app_utils";
+import { getAppName, getAppShortCut, validateAppWithKey } from "../app_utils";
 import { R } from "../resources_feeder";
 import Dock from "./Dock";
 import Launchpad from "./Launchpad/launchpad";
 import MenuBar from "./MenuBar/menu_bar";
 import MenuBarTimeWidget from "./MenuBar/menu_bar_time_widget";
 import { WINDOW_STATUS_MIN } from "./Window";
+import Cardinal, { addCommand, addRootOptions } from "./cardinal";
+import { Collection } from "../utils";
 
 class MainFrame extends Component {
     state = {
@@ -22,8 +24,10 @@ class MainFrame extends Component {
         if (!this.props.auth || !this.props.auth.apps) return [];
 
         let launchpadApps = [];
-        this.props.auth.apps.map(app => {
-            launchpadApps.push(getAppShortCut(app, this));
+        this.props.auth.apps.map(appKey => {
+            if (!validateAppWithKey(appKey).result) {
+                console.error("Cannot validate appKey:", appKey, "\nIt's Highly possible when auth.app contains a typo.");
+            } else launchpadApps.push(getAppShortCut(appKey, this));
         });
         return launchpadApps;
     }
@@ -144,11 +148,56 @@ class MainFrame extends Component {
         return mainMenuBarMenu;
     };
 
+    ac = () => {
+        addCommand(
+            "sup",
+            Collection("suppliers")
+                .find()
+                .fetch(),
+            { keys: ["name", "abbr"] },
+            item => ({
+                title: item.name,
+                subtitle: item.abbr,
+                onSelect: () => {
+                    console.log("Supplier select: ", item);
+                }
+            }),
+            {
+                pinyinTokenized: true
+            }
+        );
+        addCommand("sys", Object.keys(this.props.system).map(key => ({ key, value: this.props.system[key].toString() })), { keys: ["key", "value"] }, item => ({
+            title: item.key,
+            subtitle: item.value
+        }));
+        addRootOptions(
+            "pytest1",
+            {
+                title: "华为"
+            },
+            { pinyinTokenized: true }
+        );
+        addRootOptions(
+            "pytest2",
+            {
+                title: "中兴"
+            },
+            { pinyinTokenized: true }
+        );
+    };
+
     getMenuBarExtra = () => {
         return [
+            { key: "addCommand", title: "Add Command", onClick: this.ac },
             { key: "full-screen-btn", title: <i>{this.state.fullscreen ? "fullscreen_exit" : "fullscreen"}</i>, onClick: this.toggleFullscreen },
             { key: "time", title: <MenuBarTimeWidget /> },
-            { key: "search", title: <i>search</i>, onClick: () => this.props.appLaunch("search") },
+            {
+                key: "search",
+                title: <i>search</i>,
+                onClick: () => {
+                    this.props.systemControl({ cardinalOpen: !this.props.system.cardinalOpen });
+                }
+            },
             { key: "toggle-notification-center", title: <i>list</i> }
         ];
     };
@@ -169,6 +218,7 @@ class MainFrame extends Component {
                 <MenuBar menuBarMenu={this.getMenuBarMenu()} menuBarExtra={this.getMenuBarExtra()} hide={this.props.system.menuBarHide} />
                 <Launchpad open={this.props.system.launchpadStatus} items={this.packLaunchpadApps()} close={() => this.props.launchPadControl(false)} />
                 <Dock />
+                <Cardinal ref={this.cardinalRef} onClose={() => this.props.systemControl({ cardinalOpen: false })} open={this.props.system.cardinalOpen} />
             </>
         );
     }
@@ -201,10 +251,10 @@ class MainFrame extends Component {
             event.preventDefault();
         });
 
-        hotkeys("shift+f", function(event) {
-            event.preventDefault();
-            console.log("lightpick");
-        });
+        // hotkeys("ctrl+space,cmd+space", event => {
+        //     event.preventDefault();
+        //     this.props.systemControl({ cardinalOpen: !this.props.system.cardinalOpen });
+        // });
 
         // Quit app
         hotkeys("cmd+shift+backspace,ctrl+shift+backspace", { keydown: true }, event => {
@@ -212,7 +262,19 @@ class MainFrame extends Component {
             let appKey = this.getActiveApp();
             this.props.appClose(appKey);
         });
+
+        document.addEventListener("keydown", this.keydownListerner);
     }
+
+    componentWillUnmount() {
+        document.removeEventListener("keydown", this.keydownListerner);
+    }
+
+    keydownListerner = e => {
+        if (e.keyCode === 32 && e.metaKey) {
+            this.props.systemControl({ cardinalOpen: !this.props.system.cardinalOpen });
+        }
+    };
 
     getActiveApp = () => {
         let awc = this.props.windows._awc;
@@ -247,5 +309,6 @@ MainFrame.propTypes = {
     appLaunch: PropTypes.func,
     appClose: PropTypes.func,
     launchPadControl: PropTypes.func,
-    throwMsg: PropTypes.func
+    throwMsg: PropTypes.func,
+    systemControl: PropTypes.func
 };

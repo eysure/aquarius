@@ -4,7 +4,6 @@ import Admin from "./apps/admin.app";
 import AppManager from "./apps/app_manager.app";
 import Debugger from "./apps/debugger.app";
 import Preference from "./apps/preference.app";
-import Search from "./apps/search";
 import UserCenter from "./apps/user_center.app";
 import Manual from "./apps/manual.app";
 import Welcome from "./apps/welcome.app";
@@ -22,7 +21,6 @@ const INSTALLED_APPS = [
     Debugger,
     Contacts,
     Preference,
-    Search,
     UserCenter,
     Manual,
     Welcome,

@@ -1,7 +1,7 @@
 import React from "react";
 import clientConfig from "../client_config";
+import * as AQUI from "./Window/core";
 import * as UI from "@material-ui/core";
-import Spinner from "./spinner";
 import ReactJson from "react-json-view";
 import { R } from "../resources_feeder";
 
@@ -118,7 +118,7 @@ class Notif extends React.Component {
         if (!this.props.progressBar) return null;
 
         if (!this.props.progress) {
-            return <Spinner style={{ transform: "scale(0.5)" }} />;
+            return <AQUI.Spinner style={{ transform: "scale(0.5)" }} />;
         } else
             return (
                 <UI.CircularProgress

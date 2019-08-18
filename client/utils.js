@@ -62,6 +62,7 @@ export function Collection(string) {
 }
 
 export function oss(...paths) {
+    if (!paths || paths.length === 0 || paths[0] === undefined) return null;
     let { ossBucket, ossRegion } = clientConfig;
     return [`https://${ossBucket}.${ossRegion}.aliyuncs.com`, ...paths].join("/");
 }

@@ -9,10 +9,14 @@ import DockItem from "./dock_item";
 import PropTypes from "prop-types";
 
 class Dock extends React.Component {
+    dockRef = React.createRef();
+
+    state = {};
+
     render() {
         return (
             <div id="dock-container" style={{ transform: this.props.system.dockHide ? "translate(0,80px)" : "translate(0,0)" }}>
-                <div id="dock" style={{ width: (Object.keys(this.props.apps).length + 1) * 72 }} onContextMenu={this.onContextMenu}>
+                <div id="dock" ref={this.dockRef} style={{ width: (Object.keys(this.props.apps).length + 1) * 72 }} onContextMenu={this.onContextMenu}>
                     <DockItem
                         id="di-launchpad"
                         key="launchpad"

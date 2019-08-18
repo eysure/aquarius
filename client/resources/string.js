@@ -99,5 +99,8 @@ export default {
 
     RAW_DATA: ["Raw Data", "原始数据"],
 
+    // Cardinal
+    CARDINAL_PH: ["Cardinal Search...", "搜索..."],
+
     ...countries
 };

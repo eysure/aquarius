@@ -134,6 +134,7 @@ class Window extends Component {
     renderWindow = () => {
         // Window className
         let classList = ["window"];
+        if (this.props.className) classList.push(...this.props.className.split(" "));
         if (this.state.windowStatus === WINDOW_STATUS_MAX) classList.push("max");
         if (this.state.windowStatus === WINDOW_STATUS_NORMAL && this.props.canDrag) classList.push("draggable");
         if (this.state.windowStatus === WINDOW_STATUS_NORMAL && this.props.canResize) classList.push("resizable");
@@ -148,12 +149,12 @@ class Window extends Component {
                     id={this.props.id}
                     className={classList.join(" ")}
                     style={{
-                        ...this.props.style,
                         top: this.state.top,
                         left: this.state.left,
                         width: this.state.width,
                         height: this.state.height,
-                        zIndex: this.props.backDrop ? "2001" : "auto"
+                        zIndex: this.props.backDrop ? "2001" : "auto",
+                        ...this.props.style
                     }}
                     onMouseDown={this.handleMouseDown}
                 >
@@ -371,8 +372,6 @@ class Window extends Component {
     };
 }
 
-const mapStateToProps = state => ({});
-
 const mapDispatchToProps = dispatch =>
     bindActionCreators(
         {
@@ -385,7 +384,7 @@ const mapDispatchToProps = dispatch =>
     );
 
 export default connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps
 )(Window);
 

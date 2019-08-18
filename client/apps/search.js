@@ -1,12 +1,8 @@
-import React, { Component } from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-
+import React, {Component} from "react";
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
 import * as UI from "@material-ui/core";
-import Str from "../components/string_component";
-
 import Window from "../components/Window";
-import { getAppName } from "../app_utils";
 
 class Search extends Component {
     constructor() {

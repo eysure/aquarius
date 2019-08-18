@@ -6,9 +6,9 @@ import ReactDOM from "react-dom";
 import _ from "lodash";
 import hotkeys from "hotkeys-js";
 import DropFile from "../DropFile";
-import Spinner from "../spinner";
 import Select from "react-select";
 import Fuse from "fuse.js";
+import PropTypes from "prop-types";
 
 export class Button extends Component {
     render() {
@@ -124,6 +124,22 @@ export class Button extends Component {
 //         );
 //     }
 // }
+
+export default function Spinner(props) {
+    let blades = [];
+    for (let i = 0; i < 12; i++) {
+        blades.push(<div key={i} />);
+    }
+    return (
+        <div className="spinner" style={props.style}>
+            {blades}
+        </div>
+    );
+}
+
+Spinner.propTypes = {
+    style: PropTypes.object
+};
 
 export class FieldItem extends Component {
     state = {
@@ -242,29 +258,6 @@ export class FieldItem extends Component {
         if (!this.parentState["modified"]) this.props.context.setState({ modified: true });
     };
 
-    renderSelect = () => {
-        let options = this.field.options;
-        if (_.isArray(options)) {
-            return options.map(key => {
-                return (
-                    <option key={key} value={key}>
-                        {key}
-                    </option>
-                );
-            });
-        } else if (_.isObject(options)) {
-            return Object.keys(options).map(key => {
-                return (
-                    <option key={key} value={key}>
-                        {options[key]}
-                    </option>
-                );
-            });
-        } else {
-            return null;
-        }
-    };
-
     onSelectChange = (name, val) => {
         let res = null;
         if (_.isArray(val)) {
@@ -379,21 +372,6 @@ export class FieldItem extends Component {
                 return (
                     <div id={`${name}-input-item`} className="aqui-input-item vss" style={{ width: this.props.width || "100%" }}>
                         {field.title && <div className="hsc aqui-input-title">{field.title}</div>}
-                        {/* <select
-                            ref={this.inputRef}
-                            id={name}
-                            name={name}
-                            className="input"
-                            value={state[name]}
-                            onChange={this.onChange}
-                            onKeyDown={this.onKeyDown}
-                            disabled={disabled}
-                        >
-                            <option value={""} disabled>
-                                {field.placeholder || "Please Select"}
-                            </option>
-                            {this.renderSelect()}
-                        </select> */}
                         <Select
                             ref={this.inputRef}
                             className="h-full"
@@ -510,6 +488,8 @@ export class FieldItem extends Component {
         }
         // Enter
         if (e.keyCode === 13 && e.target.tagName === "INPUT") {
+            // Exclude Select
+            if (this.inputRef.current && this.inputRef.current.select) return;
             for (let field in this.schema) {
                 // Only button with callByEnter and itself is not disabled can dispatch the onClick
                 if (this.schema[field].type === "button" && this.schema[field].callByEnter && !this.calculateDisable(field)) this.schema[field].onClick();

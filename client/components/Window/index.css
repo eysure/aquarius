@@ -1172,3 +1172,153 @@ th.dsc > div {
     border: 1px solid rgba(0, 0, 0, 0.5);
     box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.52), inset 0 0 0 0.5px rgba(255, 255, 255, 0.28);
 }
+
+/*
+ * Cardinal
+ */
+
+.cardinal__control {
+    border: 0 !important;
+    border-radius: 0 !important;
+    min-height: 36px !important;
+    font-size: 1.5rem !important;
+    padding: 4px 0 !important;
+}
+.cardinal__control--is-focused {
+    border: 0 !important;
+    box-shadow: none !important;
+}
+.cardinal__value-container {
+    height: 100% !important;
+}
+.cardinal__dropdown-indicator {
+    display: none !important;
+}
+.cardinal__indicator-separator {
+    display: none !important;
+}
+.cardinal__input input {
+    transition: 0ms !important;
+    border-radius: 0 !important;
+    font-weight: 300 !important;
+}
+.cardinal__input input:focus {
+    box-shadow: none !important;
+}
+.cardinal__menu {
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+.light .cardinal__control,
+.light .cardinal__menu {
+    background: rgba(255, 255, 255, 0.75) !important;
+}
+.light .cardinal__menu {
+    border-top: 1px solid rgba(0, 0, 0, 0.15) !important;
+}
+.light .cardinal__control .cardinal__single-value,
+.light .cardinal__control .cardinal__indicator {
+    color: black !important;
+}
+.light .cardinal--is-disabled .cardinal__control {
+    background: rgba(0, 0, 0, 0.05) !important;
+}
+.light .cardinal--is-disabled .cardinal__single-value,
+.light .cardinal--is-disabled .cardinal__indicator {
+    color: #999 !important;
+}
+.light .cardinal__multi-value {
+    background: rgba(0, 0, 0, 0.2) !important;
+}
+.light .cardinal__input,
+.light .cardinal__multi-value__label {
+    color: black !important;
+}
+.light .cardinal__indicator:hover svg {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.dark .cardinal__control,
+.dark .cardinal__menu {
+    background: rgba(0, 0, 0, 0.75) !important;
+}
+.dark .cardinal__menu {
+    border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+.dark .cardinal__control .cardinal__single-value,
+.dark .cardinal__control .cardinal__indicator {
+    color: white !important;
+}
+.dark .cardinal--is-disabled .cardinal__control {
+    background: rgba(0, 0, 0, 0.15) !important;
+}
+.dark .cardinal--is-disabled .cardinal__single-value,
+.dark .cardinal--is-disabled .cardinal__indicator {
+    color: #777 !important;
+}
+.dark .cardinal__multi-value {
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+.dark .cardinal__input,
+.dark .cardinal__multi-value__label {
+    color: white;
+}
+.dark .cardinal__indicator:hover svg {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.cardinal__option {
+    padding: 0 !important;
+}
+.cardinal__option--is-focused {
+    background: #007aff !important;
+    color: white !important;
+}
+.cardinal__option--is-selected {
+    background: rgba(0, 122, 255, 0.5) !important;
+    color: white !important;
+}
+
+.light .cardinal__menu {
+    color: black;
+    background: rgba(240, 240, 240, 1);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.15), 0 25px 60px 0 rgba(0, 0, 0, 0.45);
+}
+
+.dark .cardinal__menu {
+    color: rgba(255, 255, 255, 1);
+    background: rgba(40, 40, 40, 1);
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.52), inset 0 0 0 0.5px rgba(255, 255, 255, 0.28);
+}
+
+/* Cardinal Item */
+.cardinal-item {
+    padding: 8px 16px;
+    box-sizing: border-box;
+}
+
+.cardinal-item-icon {
+    width: 36px;
+    height: 36px;
+    margin-right: 16px;
+}
+
+.cardinal-item-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.cardinal-item-title {
+    font-weight: 400;
+    font-size: 1.2rem;
+}
+.cardinal-item-subtitle {
+    opacity: 0.5;
+    font-size: 0.8rem;
+}

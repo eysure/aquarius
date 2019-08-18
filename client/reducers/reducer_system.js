@@ -5,7 +5,8 @@ const defaultState = {
     menuBarHide: Meteor.userId() ? false : true,
     dockHide: Meteor.userId() ? false : true,
     blurScreen: Meteor.userId() ? 0 : 30,
-    launchpadStatus: false
+    launchpadStatus: false,
+    cardinalOpen: false
 };
 
 export default function(state = { ...defaultState }, action) {
