@@ -168,22 +168,15 @@ class MainFrame extends Component {
         );
         addCommand("sys", Object.keys(this.props.system).map(key => ({ key, value: this.props.system[key].toString() })), { keys: ["key", "value"] }, item => ({
             title: item.key,
-            subtitle: item.value
+            subtitle: item.value,
+            icon: <img src={"/assets/icons/equipement.svg"} />
         }));
-        addRootOptions(
-            "pytest1",
-            {
-                title: "华为"
-            },
-            { pinyinTokenized: true }
-        );
-        addRootOptions(
-            "pytest2",
-            {
-                title: "中兴"
-            },
-            { pinyinTokenized: true }
-        );
+        addRootOptions("logout", {
+            title: "Log Out",
+            subtitle: `Log Out ${this.props.user.nickname}...`,
+            icon: <img src={"/assets/icons/equipement.svg"} />,
+            onSelect: () => Meteor.logout(error => this.props.logout(error))
+        });
     };
 
     getMenuBarExtra = () => {

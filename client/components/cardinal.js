@@ -28,17 +28,7 @@ const defaultFuseOption = {
     keys: []
 };
 
-let rootOptions = {
-    logout: {
-        title: "Logout",
-        onSelect: () => {
-            alert("How dare you!!!");
-        }
-    },
-    lock: {
-        title: "Lock Screen"
-    }
-};
+let rootOptions = {};
 
 let commands = {
     _root: {
@@ -136,21 +126,22 @@ export function addCommand(command, data, fuseOption = { keys: [] }, fields, opt
  *
  * @param {string} key - Unique key to represent this data
  * @param {{title: string, subtitle: string, icon: Node, extra: Node, onSelect: function}} data - same with the fields
+ * @param {{pinyinTokenized: boolean}} options - options when adding command.
  */
-export function addRootOptions(key, data, options = {}) {
+export function addRootOptions(key, item, options = {}) {
     if (options.pinyinTokenized) {
         ["title", "subtitle"].map(k => {
-            let pinYinFirstLetters = pinyin(data[k], { style: pinyin.STYLE_FIRST_LETTER }).join("");
-            if (pinyin !== data[k]) {
-                data[`${k}_pyi`] = pinYinFirstLetters;
-                data[`${k}_py`] = pinyin(data[k], { style: pinyin.STYLE_NORMAL }).join("");
+            let pinYinFirstLetters = pinyin(item[k], { style: pinyin.STYLE_FIRST_LETTER }).join("");
+            if (pinyin !== item[k]) {
+                item[`${k}_pyi`] = pinYinFirstLetters;
+                item[`${k}_py`] = pinyin(item[k], { style: pinyin.STYLE_NORMAL }).join("");
             }
         });
         if (!commands._root.fuseOption.keys.includes("title_py")) {
             commands._root.fuseOption.keys.push("title_py", "title_pyi", "subtitle_py", "subtitle_pyi");
         }
     }
-    rootOptions[key] = data;
+    rootOptions[key] = item;
 
     commands._root.data = Object.values(rootOptions);
 }

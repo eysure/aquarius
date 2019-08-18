@@ -104,9 +104,9 @@ export default function(state = defaultState, action) {
             if (state[appKey]) {
                 delete state[appKey][windowKey];
                 deactivateWindow(state, appKey, windowKey);
-            }
-            if (Object.keys(state[appKey]).length === 0) {
-                delete state[appKey];
+                if (Object.keys(state[appKey]).length === 0) {
+                    delete state[appKey];
+                }
             }
             break;
         }
