@@ -109,7 +109,6 @@ class SupplierContactsNew extends Component {
                 _key={R.get("NEW_SUPPLIER_CONTACT")}
                 appKey={this.props.appKey}
                 title={R.get("NEW_SUPPLIER_CONTACT")}
-                theme="light"
                 escToClose
             >
                 <div className="window-content-inner handle">

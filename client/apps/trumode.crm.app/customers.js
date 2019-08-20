@@ -148,7 +148,7 @@ class Customers extends Component {
         let menu = (
             <Menu context={this} name="customerTableContextMenu" x={this.state.contextMenuX} y={this.state.contextMenuY} content={customerTableContextMenu} />
         );
-        return ReactDOM.createPortal(menu, document.getElementById("menu-container"));
+        return ReactDOM.createPortal(menu, document.getElementById("aq-components"));
     };
 }
 

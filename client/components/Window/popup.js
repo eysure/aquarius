@@ -1,13 +1,37 @@
 import React, { Component } from "react";
 import Window from ".";
+import PropTypes from "prop-types";
 
 export default class Popup extends Component {
-    onClose = e => {
+    static propTypes = {
+        onCancel: PropTypes.func,
+        onCheck: PropTypes.func,
+        context: PropTypes.instanceOf(Component).isRequired,
+        title: PropTypes.string,
+        name: PropTypes.string.isRequired,
+        _key: PropTypes.string,
+        appKey: PropTypes.string.isRequired,
+        content: PropTypes.node,
+        children: PropTypes.node
+    };
+
+    static defaultProps = {
+        width: 480,
+        escToClose: true,
+        canClose: true,
+        backDrop: true,
+        canResize: false,
+        canMaximize: false,
+        canMinimize: false,
+        noControl: true
+    };
+
+    onClose = () => {
         if (this.props.onCancel) this.props.onCancel();
         this.props.context.setState({ [this.props.name]: false });
     };
 
-    onCheck = e => {
+    onCheck = () => {
         if (this.props.onCheck) this.props.onCheck();
         this.onClose();
     };
@@ -19,19 +43,10 @@ export default class Popup extends Component {
             <Window
                 onClose={this.onClose}
                 _key={this.props._key || this.props.name}
-                width={this.props.width}
-                height={this.props.height}
                 appKey={this.props.appKey}
                 title={this.props.title || this.props.name}
                 noTitlebar
-                theme="light"
-                escToClose={this.props.escToClose}
-                canClose={this.props.canClose}
-                canResize={false}
-                canMaximize={false}
-                canMinimize={false}
-                noControl={true}
-                backDrop={this.props.backDrop}
+                {...this.props}
             >
                 <div className="vcc v-full h-full">
                     <div className="hsc" style={{ margin: 24, fontWeight: 400 }}>
@@ -59,11 +74,3 @@ export default class Popup extends Component {
         );
     }
 }
-
-Popup.defaultProps = {
-    width: 480,
-    height: "auto",
-    escToClose: true,
-    canClose: true,
-    backDrop: true
-};

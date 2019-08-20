@@ -5,7 +5,7 @@ export default class MenuBar extends Component {
     render() {
         return (
             <div
-                id="menu-bar"
+                className="menu-bar"
                 style={{
                     transform: this.props.hide ? "translate(0,-24px)" : "translate(0,0)",
                     ...this.props.style

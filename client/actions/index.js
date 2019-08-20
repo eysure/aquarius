@@ -76,7 +76,7 @@ export function systemControl(system) {
     };
 }
 
-export function throwMsg(msg, args = null) {
+export function throwMsg(msg) {
     // TODO: Back compatible, no longer support in current version
     if (typeof msg === "string" || msg instanceof String) {
         msg = {
@@ -141,7 +141,7 @@ export function appLaunch(appKey, option = null) {
     if (!report.result) {
         console.error("App validation failed: " + report.description);
 
-        let msgContent = `${report.description}\\n\\nappKey: ${appKey}\\nstartOption: ${JSON.stringify(startOption)}`;
+        let msgContent = `${report.description}\\n\\nappKey: ${appKey}\\nstartOption: ${JSON.stringify(option)}`;
 
         return {
             type: INTERNAL_MSG,

@@ -4,11 +4,12 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { activateWindow, launchPadControl, logout, throwMsg } from "../actions";
+import { activateWindow, launchPadControl, logout, throwMsg, systemControl } from "../actions";
 import { R } from "../resources_feeder";
 import { fileUploadVerify, oss, upload } from "../utils";
 import DropFile from "./DropFile";
 import Menu from "./Menus";
+import Window from "./Window/index";
 
 const desktopMainStyle = {
     width: "100%",
@@ -65,7 +66,7 @@ class Desktop extends Component {
             {
                 title: R.get("SEARCH"),
                 onClick: () => {
-                    this.props.launchPadControl(true);
+                    this.props.systemControl({ cardinalOpen: true });
                 }
             },
             { divider: true }
@@ -161,6 +162,11 @@ class Desktop extends Component {
                     <DropFile handleDrop={this.handleDesktopUpload} style={desktopMainStyle} />
                 </div>
                 {this.renderContextMenu()}
+                <Window _key={"Tester"} height={300} width={400} x={"64px"} y={"64px"} title="Tester" toolbar={<div>Toolbar</div>}>
+                    <div>
+                        <h3>Tester</h3>
+                    </div>
+                </Window>
             </div>
         );
     }
@@ -180,7 +186,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ throwMsg, launchPadControl, logout, activateWindow }, dispatch);
+    return bindActionCreators({ throwMsg, launchPadControl, logout, activateWindow, systemControl }, dispatch);
 }
 
 export default connect(
@@ -194,5 +200,6 @@ Desktop.propTypes = {
     throwMsg: PropTypes.func,
     launchPadControl: PropTypes.func,
     logout: PropTypes.func,
-    activateWindow: PropTypes.func
+    activateWindow: PropTypes.func,
+    systemControl: PropTypes.func
 };

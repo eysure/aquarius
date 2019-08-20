@@ -93,15 +93,7 @@ class CustomerNew extends Component {
 
     render() {
         return (
-            <Window
-                onClose={this.props.onClose}
-                _key={R.get("NEW_CUSTOMER")}
-                appKey={this.props.appKey}
-                width={480}
-                title={R.get("NEW_CUSTOMER")}
-                theme="light"
-                escToClose
-            >
+            <Window onClose={this.props.onClose} _key={R.get("NEW_CUSTOMER")} appKey={this.props.appKey} width={480} title={R.get("NEW_CUSTOMER")} escToClose>
                 <div className="window-content-inner handle">
                     <AQUI.FieldItem context={this} schema={this.schema} name="name" />
                     <AQUI.FieldItem context={this} schema={this.schema} name="abbr" />

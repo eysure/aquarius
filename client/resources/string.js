@@ -102,5 +102,8 @@ export default {
     // Cardinal
     CARDINAL_PH: ["Cardinal Search...", "搜索..."],
 
+    // Notification
+    NOTIFICATION_DEFAULT_TITLE: ["Notification", "通知"],
+
     ...countries
 };

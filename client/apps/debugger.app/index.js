@@ -1,13 +1,18 @@
+import PropTypes from "prop-types";
 import React, { Component } from "react";
+import ReactJson from "react-json-view";
 import { connect } from "react-redux";
-
+import Window, { WINDOW_PRIORITY_HIGH } from "../../components/Window";
 import { ResourceFeeder } from "../../resources_feeder";
+
 const R = new ResourceFeeder(require("./resources/strings").default, null);
 
-import Window, { WINDOW_PRIORITY_HIGH } from "../../components/Window";
-import ReactJson from "react-json-view";
-
 class Debugger extends Component {
+    static propTypes = {
+        appKey: PropTypes.string.isRequired,
+        allStates: PropTypes.object
+    };
+
     state = { open: true };
     toolbar = () => {
         return null;
@@ -24,17 +29,17 @@ class Debugger extends Component {
                 x={"70vw"}
                 y={"0px"}
                 title={R.trans(Debugger.manifest.appName)}
-                theme="dark"
                 windowPriority={WINDOW_PRIORITY_HIGH}
                 contentStyle={{ background: "rgba(39, 40, 34, 0.8)" }}
                 toolbar={this.toolbar()}
-                onClose={e => this.setState({ open: false })}
+                onClose={() => this.setState({ open: false })}
             >
                 <ReactJson
                     style={{
-                        fontFamily: "menlo",
-                        fontSize: "12px",
-                        lineHeight: "16px"
+                        lineHeight: "16px",
+                        background: "none",
+                        fontFamily: "monaco",
+                        fontSize: "0.8rem"
                     }}
                     src={this.props.allStates}
                     theme="monokai"
@@ -44,7 +49,6 @@ class Debugger extends Component {
                     displayDataTypes={false}
                     enableClipboard={false}
                     iconStyle={"circle"}
-                    style={{ background: "none", fontFamily: "monaco", fontSize: "0.8rem" }}
                 />
             </Window>
         );

@@ -61,7 +61,6 @@ class OrderManager extends Component {
                 appKey={this.props.appKey}
                 title={R.trans(OrderManager.manifest.appName)}
                 noTitlebar
-                theme="dark"
                 onClose={e => this.setState({ open: false })}
             >
                 <UI.DialogContent className="no-padding" onMouseMove={this.adjustWidthMove} onMouseUp={this.adjustWidthEnd}>

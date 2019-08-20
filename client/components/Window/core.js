@@ -125,7 +125,7 @@ export class Button extends Component {
 //     }
 // }
 
-export default function Spinner(props) {
+export function Spinner(props) {
     let blades = [];
     for (let i = 0; i < 12; i++) {
         blades.push(<div key={i} />);
@@ -388,7 +388,7 @@ export class FieldItem extends Component {
                                 return true;
                             }}
                             onKeyDown={this.onKeyDown}
-                            menuPortalTarget={document.body}
+                            menuPortalTarget={document.getElementById("aq-components") || document.body}
                         />
                         {this.props.caption && <span className="aqui-input-caption">{this.props.caption}</span>}
                     </div>
@@ -907,8 +907,7 @@ export class Table extends Component {
         }
 
         let renderedContextMenu = <Menu context={this} name="headContextMenu" x={this.state.contextMenuX} y={this.state.contextMenuY} content={contextMenu} />;
-        let menuContainer = document.getElementById("menu-container");
-        return ReactDOM.createPortal(renderedContextMenu, menuContainer);
+        return ReactDOM.createPortal(renderedContextMenu, document.body);
     }
 
     render() {

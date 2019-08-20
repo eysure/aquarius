@@ -1,12 +1,15 @@
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import clientConfig from "../../client_config.js";
-
+import Window from "../../components/Window";
 import { ResourceFeeder } from "../../resources_feeder";
+
 const R = new ResourceFeeder(require("./resources/strings").default, require("./resources/messages").default);
 
-import Window from "../../components/Window";
-
 class AboutSystem extends Component {
+    static propTypes = {
+        appKey: PropTypes.string.isRequired
+    };
     state = {
         open: true
     };
@@ -21,7 +24,7 @@ class AboutSystem extends Component {
                 appKey={this.props.appKey}
                 canMaximize={false}
                 canResize={false}
-                onClose={e => this.setState({ open: false })}
+                onClose={() => this.setState({ open: false })}
                 title={R.trans(AboutSystem.manifest.appName)}
                 noTitlebar
                 escToClose

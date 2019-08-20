@@ -118,15 +118,7 @@ class SupplierNew extends Component {
 
     render() {
         return (
-            <Window
-                onClose={this.props.onClose}
-                _key={R.get("NEW_SUPPLIER")}
-                width={640}
-                appKey={this.props.appKey}
-                title={R.get("NEW_SUPPLIER")}
-                theme="light"
-                escToClose
-            >
+            <Window onClose={this.props.onClose} _key={R.get("NEW_SUPPLIER")} width={640} appKey={this.props.appKey} title={R.get("NEW_SUPPLIER")} escToClose>
                 <div className="window-content-inner handle">
                     <AQUI.InputGroup>
                         <AQUI.FieldItem context={this} schema={this.schema} name="name" width="200%" />

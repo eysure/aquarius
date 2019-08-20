@@ -1,9 +1,9 @@
+import hotkeys from "hotkeys-js";
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import _ from "lodash";
-import hotkeys from "hotkeys-js";
 import { activateWindow, deactivateWindow, registerWindow, unregisterWindow } from "../../actions";
 
 export const WINDOW_STATUS_INVALID = 0;
@@ -45,12 +45,12 @@ class Window extends Component {
         if (this.props.noControl) return null;
         return (
             <div className="window-ctrl">
-                {this.props.canClose ? (
+                {this.props.onClose && this.props.canClose ? (
                     <button className="unhandle window-ctrl-btn btn-close" onClick={this.handleClose} onMouseDown={e => e.stopPropagation()} />
                 ) : (
                     <button className="unhandle window-ctrl-btn" disabled />
                 )}
-                {this.props.canMinimize ? (
+                {this.props.appKey && this.props.canMinimize ? (
                     <button className="unhandle window-ctrl-btn btn-min" onClick={this.handleMin} onMouseDown={e => e.stopPropagation()} />
                 ) : (
                     <button className="unhandle window-ctrl-btn" disabled />
@@ -133,7 +133,7 @@ class Window extends Component {
 
     renderWindow = () => {
         // Window className
-        let classList = ["window"];
+        let classList = ["window", "aqui-glass"];
         if (this.props.className) classList.push(...this.props.className.split(" "));
         if (this.state.windowStatus === WINDOW_STATUS_MAX) classList.push("max");
         if (this.state.windowStatus === WINDOW_STATUS_NORMAL && this.props.canDrag) classList.push("draggable");
@@ -146,7 +146,7 @@ class Window extends Component {
                 {this.renderBackDrop()}
                 <div
                     ref={this.windowRef}
-                    id={this.props.id}
+                    id={this.id}
                     className={classList.join(" ")}
                     style={{
                         top: this.state.top,
@@ -233,11 +233,11 @@ class Window extends Component {
         hotkeys.setScope(this.id);
     };
 
-    handleClose = e => {
+    handleClose = () => {
         if (this.props.onClose) this.props.onClose();
     };
 
-    handleMin = e => {
+    handleMin = () => {
         if (!this.props.canMinimize) return;
         // Only when this window belongs to an application can this do minimize
         let div = this.windowRef.current;
@@ -245,7 +245,7 @@ class Window extends Component {
         if (!div || !dockItem) return;
 
         if (this.state.windowStatus !== WINDOW_STATUS_MIN) {
-            div.style.transition = "300ms ease-in";
+            div.style.transition = "200ms ease-in";
             this.storeWindowProps(div); // Store width, height, top, left to tmp
 
             let divH = div.offsetHeight;
@@ -264,7 +264,7 @@ class Window extends Component {
             }
             this.props.deactivateWindow(this.props.appKey, this.props._key);
         } else {
-            div.style.transition = "300ms ease-out";
+            div.style.transition = "200ms ease-out";
             div.style.removeProperty("transform");
             this.setState({
                 width: this.tmp_width,
@@ -277,15 +277,15 @@ class Window extends Component {
         }
         setTimeout(() => {
             div.style.transition = "0ms";
-        }, 300);
+        }, 200);
     };
 
-    handleMax = e => {
+    handleMax = () => {
         if (!this.props.canMaximize) return;
         let div = this.windowRef.current;
         if (!div) return;
 
-        div.style.transition = "300ms ease-in-out";
+        div.style.transition = "200ms ease-in-out";
         if (this.state.windowStatus !== WINDOW_STATUS_MAX) {
             this.storeWindowProps(div); // Store width, height, top, left to tmp
             this.setState({
@@ -306,7 +306,7 @@ class Window extends Component {
         }
         setTimeout(() => {
             div.style.transition = "0ms";
-        }, 300);
+        }, 200);
     };
 
     componentDidMount() {
@@ -332,19 +332,19 @@ class Window extends Component {
         this.restoreWindowPosition();
 
         // Hotkeys
-        hotkeys("cmd+enter,ctrl+enter", this.id, (event, handler) => {
+        hotkeys("cmd+enter,ctrl+enter", this.id, event => {
             event.preventDefault();
             this.handleMax();
         });
-        hotkeys("cmd+m,ctrl+m", this.id, (event, handler) => {
+        hotkeys("cmd+m,ctrl+m", this.id, event => {
             event.preventDefault();
             this.handleMin();
         });
-        hotkeys("cmd+backspace,ctrl+backspace", { scope: this.id, keydown: true }, (event, handler) => {
+        hotkeys("cmd+backspace,ctrl+backspace", { scope: this.id, keydown: true }, event => {
             event.preventDefault();
             this.handleClose();
         });
-        hotkeys("esc", { scope: this.id, keydown: true }, (event, handler) => {
+        hotkeys("esc", { scope: this.id, keydown: true }, () => {
             if (!this.props.canClose || !this.props.escToClose) return;
             this.handleClose();
         });
@@ -388,6 +388,41 @@ export default connect(
     mapDispatchToProps
 )(Window);
 
+Window.propTypes = {
+    _key: PropTypes.string.isRequired,
+    appKey: PropTypes.string,
+    className: PropTypes.string,
+    title: PropTypes.string,
+    toolbar: PropTypes.node,
+    children: PropTypes.node,
+
+    theme: PropTypes.string,
+    width: PropTypes.any,
+    height: PropTypes.any,
+    x: PropTypes.any,
+    y: PropTypes.any,
+    style: PropTypes.object,
+    contentStyle: PropTypes.object,
+    windowPriority: PropTypes.number,
+
+    canDrag: PropTypes.bool,
+    canResize: PropTypes.bool,
+    canClose: PropTypes.bool,
+    canMaximize: PropTypes.bool,
+    canMinimize: PropTypes.bool,
+    noTitlebar: PropTypes.bool,
+    noControl: PropTypes.bool,
+    escToClose: PropTypes.bool,
+    backDrop: PropTypes.bool,
+
+    onClose: PropTypes.func,
+
+    activateWindow: PropTypes.func,
+    deactivateWindow: PropTypes.func,
+    registerWindow: PropTypes.func,
+    unregisterWindow: PropTypes.func
+};
+
 Window.defaultProps = {
     // Application context which enable this window do context related task
     appKey: "system",
@@ -429,7 +464,7 @@ Window.defaultProps = {
     toolbar: null,
 
     // Define the theme of the window
-    theme: "light",
+    theme: null,
 
     // Absolute disable control buttons
     noControl: false,

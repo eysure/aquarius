@@ -837,7 +837,6 @@ export class EmployeeInitialize extends Component {
                 noTitlebar
                 appKey={this.props.context.props.appKey}
                 windowPriority={WINDOW_PRIORITY_HIGH}
-                theme="dark"
             >
                 {this.renderPage()}
             </Window>

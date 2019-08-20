@@ -63,7 +63,6 @@ class SupplierDetail extends Component {
                 height={700}
                 appKey={this.props.appKey}
                 title={this.state.name}
-                theme="light"
                 escToClose
             >
                 <div className="window-sidebar-container">

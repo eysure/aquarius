@@ -121,7 +121,6 @@ class UserCenter extends Component {
                     appKey={this.props.appKey}
                     title={R.trans(UserCenter.manifest.appName)}
                     noTitlebar
-                    theme="light"
                     onClose={e => this.setState({ open: false })}
                 >
                     <div className="window-sidebar-container">

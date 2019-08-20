@@ -3,33 +3,33 @@ export default {
     FILL_ALL_FIELDS: [
         {
             title: "Please fill in all fields",
-            class: 3
+            class: 4
         },
         {
             title: "请填写所有项目",
-            class: 3
+            class: 4
         }
     ],
     NEW_PASSWORD_NOT_MATCH: [
         {
             title: "New password and repeat not match",
-            class: 3
+            class: 4
         },
         {
             title: "新密码与重复新密码不匹配",
-            class: 3
+            class: 4
         }
     ],
     NEW_PASSWORD_NOT_VALID: [
         {
             title: "New password not valid",
             content: "Please check the password rules and try again",
-            class: 3
+            class: 4
         },
         {
             title: "新密码不符合规范",
             content: "请确认密码强度规则，并重试",
-            class: 3
+            class: 4
         }
     ],
     CHANGE_PASSWORD_SUCCESSFUL: [

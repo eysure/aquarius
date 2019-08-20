@@ -70,7 +70,6 @@ export class AddUser extends Component {
                 width={480}
                 appKey={this.props.context.props.appKey}
                 title={R.get("ADD_USER")}
-                theme="dark"
                 escToClose
             >
                 <div className="window-content-inner handle">

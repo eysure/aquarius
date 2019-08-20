@@ -12,6 +12,7 @@ import initialize from "./initialization";
 
 // Components
 import VirtualDataLayer from "./components/virtual_data_layer";
+import Stylelized from "./components/stylized";
 import Desktop from "./components/desktop";
 import AppHost from "./components/app_host";
 import MainFrame from "./components/main_frame";
@@ -26,13 +27,14 @@ Meteor.startup(() => {
     ReactDOM.render(
         <Provider store={store}>
             <VirtualDataLayer />
-            <Desktop />
-            <AppHost />
-            <MainFrame />
+            <Stylelized>
+                <Desktop />
+                <AppHost />
+                <MainFrame />
+                <NotificationBar />
+            </Stylelized>
             <AccessControl />
-            <NotificationBar />
-            <div id="menu-container" className="first-class-overlap" />
         </Provider>,
-        document.querySelector("#root")
+        document.querySelector("#aq-root")
     );
 });

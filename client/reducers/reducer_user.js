@@ -1,4 +1,4 @@
-import { CHANGE_LANGUAGE_LOCAL, BIND_USER_INFO, LOGOUT, BIND_EMPLOYEES_AUTH } from "../actions";
+import { BIND_USER_INFO, CHANGE_LANGUAGE_LOCAL, LOGOUT } from "../actions";
 
 export default function(state = {}, action) {
     switch (action.type) {

@@ -1,16 +1,15 @@
-import { REGISTER_WINDOW, UNREGISTER_WINDOW, ACTIVATE_WINDOW, DEACTIVATE_WINDOW, LOGOUT, deactivateWindow } from "../actions";
-import _ from "lodash";
+import { ACTIVATE_WINDOW, DEACTIVATE_WINDOW, LOGOUT, REGISTER_WINDOW, UNREGISTER_WINDOW } from "../actions";
 
-defaultState = {
+const defaultState = {
     system: {},
     _awc: []
 };
 
-activeWindowChain = [];
-lAct = null; // Last Active Window (appKey::windowKey)
-cAct = null; // Current Active Window (appKey::windowKey)
+const activeWindowChain = [];
+let lAct = null; // Last Active Window (appKey::windowKey)
+let cAct = null; // Current Active Window (appKey::windowKey)
 
-activeWindowChainPush = (state, appKey, windowKey) => {
+const activeWindowChainPush = (state, appKey, windowKey) => {
     if (activeWindowChain.length > 0 && activeWindowChain[activeWindowChain.length - 1] === appKey + "::" + windowKey) return;
     lAct = getCurrent();
     activeWindowChainRemove(state, appKey, windowKey);
@@ -18,7 +17,7 @@ activeWindowChainPush = (state, appKey, windowKey) => {
     cAct = getCurrent();
 };
 
-activeWindowChainRemove = (state, appKey, windowKey) => {
+const activeWindowChainRemove = (state, appKey, windowKey) => {
     let index = activeWindowChainFetch(appKey, windowKey);
     if (index === -1) return -1;
     if (index === activeWindowChain.length - 1) {
@@ -29,11 +28,11 @@ activeWindowChainRemove = (state, appKey, windowKey) => {
     return index;
 };
 
-activeWindowChainFetch = (appKey, windowKey) => {
+const activeWindowChainFetch = (appKey, windowKey) => {
     return activeWindowChain.indexOf(appKey + "::" + windowKey);
 };
 
-activateWindow = (state, appKey, windowKey) => {
+const activateWindow = (state, appKey, windowKey) => {
     if (!appKey) {
         // If appKey is not set, throw an error
         console.error("appKey is not set when activating window.");
@@ -51,11 +50,11 @@ activateWindow = (state, appKey, windowKey) => {
     }
 };
 
-getCurrent = () => {
+const getCurrent = () => {
     return activeWindowChain.length > 0 ? activeWindowChain[activeWindowChain.length - 1] : null;
 };
 
-deactivateWindow = (state, appKey, windowKey) => {
+const deactivateWindow = (state, appKey, windowKey) => {
     if (!appKey) {
         activeWindowChainPush(state, "system", "desktop");
         console.warn("Attempt to deactivate all windows, in what senario are you doing this?");
@@ -72,7 +71,7 @@ deactivateWindow = (state, appKey, windowKey) => {
     }
 };
 
-setStateToWindow = (keys, state, isActive) => {
+const setStateToWindow = (keys, state, isActive) => {
     if (!keys) return;
     let [appKey, windowKey] = keys.split("::");
 
@@ -87,7 +86,7 @@ setStateToWindow = (keys, state, isActive) => {
     }
 };
 
-responsibleActionType = new Set([REGISTER_WINDOW, UNREGISTER_WINDOW, ACTIVATE_WINDOW, DEACTIVATE_WINDOW, LOGOUT]);
+const responsibleActionType = new Set([REGISTER_WINDOW, UNREGISTER_WINDOW, ACTIVATE_WINDOW, DEACTIVATE_WINDOW, LOGOUT]);
 
 export default function(state = defaultState, action) {
     if (!responsibleActionType.has(action.type)) return state;
@@ -96,6 +95,7 @@ export default function(state = defaultState, action) {
     switch (action.type) {
         case REGISTER_WINDOW: {
             if (!state[appKey]) state[appKey] = {};
+            // TODO: Need to modify to the state of window.
             state[appKey][windowKey] = window;
             activateWindow(state, appKey, windowKey);
             break;
@@ -120,7 +120,7 @@ export default function(state = defaultState, action) {
         }
         case LOGOUT: {
             // When logout, close all apps
-            activeWindowChain = [];
+            activeWindowChain.splice(0);
             lAct = null;
             cAct = null;
             state = {};

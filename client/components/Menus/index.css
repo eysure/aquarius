@@ -1,11 +1,9 @@
 /* Aquarius Menu CSS */
 ul.menu {
     box-sizing: content-box;
-    color: rgba(255, 255, 255, 1);
-    background: rgba(54, 54, 54, 0.7);
+
     position: fixed;
     z-index: 2000;
-    border: 1px solid rgba(0, 0, 0, 0.5);
     border-radius: 5px;
     box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.52), inset 0 0 0 0.5px rgba(255, 255, 255, 0.28);
     -webkit-backdrop-filter: blur(17px);
@@ -43,14 +41,6 @@ li.menu-item {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-}
-
-li.menu-item.disabled {
-    color: rgba(255, 255, 255, 0.28);
-}
-
-li.menu-item.title {
-    color: rgba(255, 255, 255, 0.28);
 }
 
 li.menu-item .menu-item-main {
@@ -111,7 +101,6 @@ li.menu-divider hr {
     height: 2px;
     width: 100%;
     border: 0;
-    background: rgba(255, 255, 255, 0.28);
 }
 
 div.menu-back-drop {
@@ -201,4 +190,43 @@ div.menu-back-drop {
     animation-name: fadeOut;
     -webkit-animation-duration: 200ms;
     animation-duration: 200ms;
+}
+
+/*
+ * Stylization ---------------------------------------------------------------------------------
+ */
+.light ul.menu {
+    color: rgba(0, 0, 0, 0.85);
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid #c5c5c5;
+}
+
+.light li.menu-divider hr {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.light li.menu-item.disabled {
+    color: rgba(0, 0, 0, 0.28);
+}
+
+.light li.menu-item.title {
+    color: rgba(0, 0, 0, 0.28);
+}
+
+.dark ul.menu {
+    color: white;
+    background: rgba(54, 54, 54, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.dark li.menu-divider hr {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.dark li.menu-item.disabled {
+    color: rgba(255, 255, 255, 0.28);
+}
+
+.dark li.menu-item.title {
+    color: rgba(255, 255, 255, 0.28);
 }

@@ -236,43 +236,6 @@
     box-sizing: border-box;
     background-clip: content-box;
     overflow: visible;
-
-    -webkit-backdrop-filter: blur(30px);
-    -moz-backdrop-filter: blur(30px);
-    -ms-backdrop-filter: blur(30px);
-    backdrop-filter: blur(30px);
-}
-
-.window.inactive {
-    backdrop-filter: blur(0px);
-}
-
-.window.light {
-    color: black;
-    background: rgba(240, 240, 240, 0.8);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.15), 0 25px 60px 0 rgba(0, 0, 0, 0.45);
-}
-
-.window.light.inactive {
-    color: rgba(0, 0, 0, 0.8);
-    background: rgb(200, 200, 200);
-    border: 1px solid rgba(150, 150, 150, 1);
-    box-shadow: 0px 15px 40px 0px rgba(0, 0, 0, 0.2);
-}
-
-.window.dark {
-    color: rgba(255, 255, 255, 1);
-    background: rgba(40, 40, 40, 0.8);
-    border: 1px solid rgba(0, 0, 0, 0.5);
-    box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.52), inset 0 0 0 0.5px rgba(255, 255, 255, 0.28);
-}
-
-.window.dark.inactive {
-    color: rgba(255, 255, 255, 0.8);
-    background: rgba(40, 40, 40, 0.9);
-    border: 1px solid rgba(0, 0, 0, 0.5);
-    box-shadow: 0px 15px 40px 0px rgba(0, 0, 0, 0.2);
 }
 
 .window.max {
@@ -302,22 +265,23 @@
     border-radius: 6px 6px 0 0;
 }
 
-.window.light .window-titlebar {
+.light .window-titlebar {
     color: #333;
     background-image: linear-gradient(-180deg, #edeced 1%, #d2d1d2 97%);
     box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 0 #b7b4b7, inset 0 -1px 0 0 rgba(183, 180, 183, 0.2);
 }
-.window.light.inactive .window-titlebar {
+.light .inactive .window-titlebar {
     color: #888;
     background-image: linear-gradient(to bottom, #f1f2f1, #f5f4f5);
     box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 0 #b7b4b7, inset 0 -1px 0 0 rgba(183, 180, 183, 0.2);
 }
-.window.dark .window-titlebar {
+
+.dark .window-titlebar {
     color: #ddd;
     background-image: linear-gradient(180deg, #4b4b4b 1%, #3d3d3d 97%);
     box-shadow: inset 0 -1px 0px 0 rgba(0, 0, 0, 0.5), inset 0 -0.5px 0 0 #2b2b2b, inset 0 0.5px 0 0 rgba(255, 255, 255, 0.1);
 }
-.window.dark.inactive .window-titlebar {
+.dark .inactive .window-titlebar {
     color: rgba(255, 255, 255, 0.3);
     background: #2f2f2f;
     box-shadow: inset 0 -1px 0px 0 rgba(0, 0, 0, 0.5), inset 0 -0.5px 0 0 #2b2b2b, inset 0 0.5px 0 0 rgba(255, 255, 255, 0.1);
@@ -386,7 +350,7 @@
     border-color: #e24640;
     background: #ff6157;
 }
-.window button.btn-close:hover:after {
+.window .window-ctrl:hover button.btn-close:after {
     font-family: "San Francisco";
     content: " \00D7";
     top: -5px;
@@ -401,7 +365,7 @@
     border-color: #dfa017;
     background: #ffbd2e;
 }
-.window button.btn-min:hover:after {
+.window .window-ctrl:hover button.btn-min:after {
     font-family: "San Francisco";
     content: " \2212";
     top: -5px;
@@ -416,7 +380,7 @@
     border-color: #1bac2c;
     background: #27cb42;
 }
-.window button.btn-max:hover:after {
+.window .window-ctrl:hover button.btn-max:after {
     font-family: "San Francisco";
     content: " \002B";
     top: -5px;
@@ -430,20 +394,20 @@
     content: " \2212";
 }
 
-.window.light.inactive .window-ctrl-btn {
+.light .inactive .window-ctrl-btn {
     background-color: #d9d9d9;
     border: 1px solid #cacaca;
 }
-.window.dark.inactive .window-ctrl-btn {
+.dark .inactive .window-ctrl-btn {
     border: 0;
     background: rgba(255, 255, 255, 0.2);
 }
 
-.window.light .window-ctrl-btn:disabled {
+.light .window-ctrl-btn:disabled {
     background-color: #d9d9d9;
     border: 1px solid #cacaca;
 }
-.window.dark .window-ctrl-btn:disabled {
+.dark .window-ctrl-btn:disabled {
     border: 0;
     background: rgba(255, 255, 255, 0.2);
 }
@@ -563,11 +527,11 @@
     border-radius: 0 5px 5px 0;
 }
 
-.window.light .window-sidebar-content {
+.light .window-sidebar-content {
     background: #f2f2f6;
     border-color: #c6c6c7;
 }
-.window.dark .window-sidebar-content {
+.dark .window-sidebar-content {
     background: #2d2e2f;
     border-color: black;
 }
@@ -834,7 +798,6 @@
     padding: 8px 20px;
     font-size: 1rem;
     border: 0;
-    margin: 16px 8px;
     border-radius: 6px;
     transition: 200ms;
     background: none;
@@ -849,6 +812,8 @@
 }
 .aqui-btn.circle {
     border-radius: 50%;
+    padding: 4px;
+    line-height: 0;
 }
 
 .window.inactive .aqui-btn,
@@ -1321,4 +1286,241 @@ th.dsc > div {
 .cardinal-item-subtitle {
     opacity: 0.5;
     font-size: 0.8rem;
+}
+
+/* Spinner */
+.spinner {
+    position: relative;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+}
+.spinner.center {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+.spinner div {
+    position: absolute;
+    left: 0.4629em;
+    bottom: 0;
+    width: 0.074em;
+    height: 0.2777em;
+    border-radius: 0.0555em;
+    background-color: transparent;
+    -webkit-transform-origin: center -0.2222em;
+    -ms-transform-origin: center -0.2222em;
+    transform-origin: center -0.2222em;
+    -webkit-animation: spinner-fade 1s infinite linear;
+    animation: spinner-fade 1s infinite linear;
+}
+.spinner div:nth-child(1) {
+    -webkit-animation-delay: 0s;
+    animation-delay: 0s;
+    -webkit-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+}
+.spinner div:nth-child(2) {
+    -webkit-animation-delay: 0.083s;
+    animation-delay: 0.083s;
+    -webkit-transform: rotate(30deg);
+    -ms-transform: rotate(30deg);
+    transform: rotate(30deg);
+}
+.spinner div:nth-child(3) {
+    -webkit-animation-delay: 0.166s;
+    animation-delay: 0.166s;
+    -webkit-transform: rotate(60deg);
+    -ms-transform: rotate(60deg);
+    transform: rotate(60deg);
+}
+.spinner div:nth-child(4) {
+    -webkit-animation-delay: 0.249s;
+    animation-delay: 0.249s;
+    -webkit-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+.spinner div:nth-child(5) {
+    -webkit-animation-delay: 0.332s;
+    animation-delay: 0.332s;
+    -webkit-transform: rotate(120deg);
+    -ms-transform: rotate(120deg);
+    transform: rotate(120deg);
+}
+.spinner div:nth-child(6) {
+    -webkit-animation-delay: 0.415s;
+    animation-delay: 0.415s;
+    -webkit-transform: rotate(150deg);
+    -ms-transform: rotate(150deg);
+    transform: rotate(150deg);
+}
+.spinner div:nth-child(7) {
+    -webkit-animation-delay: 0.498s;
+    animation-delay: 0.498s;
+    -webkit-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+.spinner div:nth-child(8) {
+    -webkit-animation-delay: 0.581s;
+    animation-delay: 0.581s;
+    -webkit-transform: rotate(210deg);
+    -ms-transform: rotate(210deg);
+    transform: rotate(210deg);
+}
+.spinner div:nth-child(9) {
+    -webkit-animation-delay: 0.664s;
+    animation-delay: 0.664s;
+    -webkit-transform: rotate(240deg);
+    -ms-transform: rotate(240deg);
+    transform: rotate(240deg);
+}
+.spinner div:nth-child(10) {
+    -webkit-animation-delay: 0.747s;
+    animation-delay: 0.747s;
+    -webkit-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    transform: rotate(270deg);
+}
+.spinner div:nth-child(11) {
+    -webkit-animation-delay: 0.83s;
+    animation-delay: 0.83s;
+    -webkit-transform: rotate(300deg);
+    -ms-transform: rotate(300deg);
+    transform: rotate(300deg);
+}
+.spinner div:nth-child(12) {
+    -webkit-animation-delay: 0.913s;
+    animation-delay: 0.913s;
+    -webkit-transform: rotate(330deg);
+    -ms-transform: rotate(330deg);
+    transform: rotate(330deg);
+}
+
+@-webkit-keyframes spinner-fade {
+    0% {
+        background-color: #69717d;
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+@keyframes spinner-fade {
+    0% {
+        background-color: #69717d;
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+/*
+ * Notification
+ */
+.aqui-notif-bar {
+    position: absolute;
+    padding: 56px 32px 32px 32px;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    transition: all 300ms ease 0s;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: flex-end;
+}
+.aqui-notif {
+    position: relative;
+    top: 0;
+    margin-bottom: 20px;
+    width: 360px;
+    max-width: 800px;
+    background: #dadada;
+    border-radius: 6px;
+    box-shadow: 0 5px 40px 5px rgba(0, 0, 0, 0.2);
+    max-height: 480px;
+    pointer-events: all;
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+    border: 1px solid rgba(35, 35, 35, 0.15);
+    user-select: none;
+}
+.aqui-notif-icon {
+    margin-right: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+.aqui-notif-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px 10px 16px;
+}
+.aqui-notif-header h3 {
+    font-weight: 500;
+    margin: 0;
+}
+.aqui-notif button {
+    opacity: 0;
+    transition: 150ms;
+}
+.aqui-notif:hover button {
+    opacity: 1;
+}
+.aqui-notif-body {
+    padding: 0 16px 10px 16px;
+}
+
+/*
+ * Glass: Basic container of AquariusUI
+ */
+.aqui-glass {
+    font-family: "San Francisco", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    -webkit-backdrop-filter: blur(30px);
+    -moz-backdrop-filter: blur(30px);
+    -ms-backdrop-filter: blur(30px);
+    backdrop-filter: blur(30px);
+}
+
+.light .aqui-glass,
+.aqui-glass.light {
+    color: black;
+    background: rgba(240, 240, 240, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.15), 0 25px 60px 0 rgba(0, 0, 0, 0.45);
+}
+
+.light .aqui-glass.inactive,
+.aqui-glass.light.inactive {
+    color: rgba(0, 0, 0, 0.8);
+    background: rgb(200, 200, 200);
+    border: 1px solid rgba(150, 150, 150, 1);
+    box-shadow: 0px 15px 40px 0px rgba(0, 0, 0, 0.2);
+}
+
+.dark .aqui-glass,
+.aqui-glass.dark {
+    color: rgba(255, 255, 255, 1);
+    background: rgba(40, 40, 40, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.52), inset 0 0 0 0.5px rgba(255, 255, 255, 0.28);
+}
+
+.dark .aqui-glass.inactive,
+.aqui-glass.dark.inactive {
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(40, 40, 40, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 15px 40px 0px rgba(0, 0, 0, 0.2);
 }

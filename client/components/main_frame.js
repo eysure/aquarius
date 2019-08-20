@@ -177,6 +177,44 @@ class MainFrame extends Component {
             icon: <img src={"/assets/icons/equipement.svg"} />,
             onSelect: () => Meteor.logout(error => this.props.logout(error))
         });
+        this.props.throwMsg({
+            title: "Class 1 - Info",
+            content:
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+            class: 1,
+            persist: true
+        });
+        this.props.throwMsg({
+            title: "Class 2 - Success",
+            class: 2,
+            persist: true
+        });
+        this.props.throwMsg({
+            title: "Class 3 - Warning",
+            class: 3,
+            persist: true
+        });
+        this.props.throwMsg({
+            title: "Class 4 - Client Error",
+            class: 4,
+            persist: true
+        });
+        this.props.throwMsg({
+            title: "Class 5 - Server Error",
+            class: 5,
+            persist: true
+        });
+        this.props.throwMsg({
+            title: "Class 6 - Pending",
+            pending: true,
+            persist: true
+        });
+        this.props.throwMsg({
+            content:
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+            class: 5,
+            persist: true
+        });
     };
 
     getMenuBarExtra = () => {

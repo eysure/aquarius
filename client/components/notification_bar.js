@@ -1,16 +1,24 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import Notif from "./notification";
+import Notification from "./notification";
 import FlipMove from "react-flip-move";
 import { closeMsg } from "../actions";
 import _ from "lodash";
+import PropTypes from "prop-types";
 
 class NotificationBar extends Component {
+    static propTypes = {
+        notifications: PropTypes.array.isRequired,
+        closeMsg: PropTypes.func
+    };
+
     render() {
         return (
             <FlipMove
                 id="notification-bar"
+                className="aqui-notif-bar"
+                style={{ position: "absolute" }}
                 appearAnimation={{
                     from: {
                         transform: "translateX(calc(100% + 32px))",
@@ -44,20 +52,7 @@ class NotificationBar extends Component {
                     },
                     easing: "ease-in"
                 }}
-                duration={300}
-                style={{
-                    position: "absolute",
-                    padding: 32,
-                    paddingTop: 68,
-                    right: 0,
-                    height: "100%",
-                    width: "100%",
-                    overflow: "hidden",
-                    boxSizing: "border-box",
-                    transition: "300ms all",
-                    pointerEvents: "none",
-                    zIndex: 1800
-                }}
+                duration={200}
             >
                 {this.renderNotifications()}
             </FlipMove>
@@ -67,7 +62,7 @@ class NotificationBar extends Component {
     renderNotifications() {
         return _.map(this.props.notifications, notif => {
             if (notif.new) {
-                return <Notif key={notif.key} _key={notif.key} {...notif} closeMsg={this.props.closeMsg} />;
+                return <Notification key={notif.key} _key={notif.key} {...notif} closeMsg={this.props.closeMsg} />;
             }
         });
     }
@@ -75,9 +70,7 @@ class NotificationBar extends Component {
 
 function mapStateToProps(state) {
     return {
-        notifications: state.notifications,
-        user: state.user,
-        system: state.system
+        notifications: state.notifications
     };
 }
 

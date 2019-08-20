@@ -1,54 +1,40 @@
+import PropTypes from "prop-types";
 import React from "react";
-import clientConfig from "../client_config";
-import * as AQUI from "./Window/core";
-import * as UI from "@material-ui/core";
 import ReactJson from "react-json-view";
 import { R } from "../resources_feeder";
-
-const notificationStyle = {
-    position: "relative",
-    top: 0,
-    marginBottom: "20px",
-    width: "360px",
-    backgroundColor: "#dadada",
-    borderRadius: "6px",
-    float: "right",
-    clear: "both",
-    boxShadow: "0 5px 40px 5px rgba(0,0,0,0.2)",
-    overflow: "auto",
-    maxWidth: "800px",
-    maxHeight: "480px",
-    pointerEvents: "all",
-    display: "flex",
-    flexFlow: "column",
-    padding: "12px 16px",
-    border: "1px solid rgba(35,35,35,0.15)"
-};
-
-const titleStyle = {
-    fontFamily: "San Francisco",
-    fontWeight: 400,
-    fontSize: "1.125rem"
-};
-
-const contentStyle = {
-    fontFamily: "San Francisco",
-    fontSize: "1rem",
-    fontWeight: 300,
-    whiteSpace: "pre-wrap",
-    marginTop: "8px"
-};
+import * as AQUI from "./Window/core";
 
 const msgClsIconMap = {
     0: "info",
     1: "info",
     2: "check_circle",
-    3: "error_outline",
-    4: "warning",
+    3: "warning",
+    4: "error_outline",
     5: "error"
 };
 
-class Notif extends React.Component {
+class Notification extends React.Component {
+    static propTypes = {
+        _key: PropTypes.string.isRequired,
+        title: PropTypes.string,
+        icon: PropTypes.node,
+        class: PropTypes.number,
+        hideClose: PropTypes.bool,
+        more_info_button: PropTypes.string,
+        more_info_uri: PropTypes.string,
+
+        content: PropTypes.node,
+        raw: PropTypes.object,
+
+        delay: PropTypes.number,
+        pending: PropTypes.bool,
+        progress: PropTypes.number,
+        persist: PropTypes.bool,
+        onClick: PropTypes.func,
+
+        closeMsg: PropTypes.func
+    };
+
     handleClose = () => {
         this.props.closeMsg(this.props._key);
     };
@@ -61,32 +47,41 @@ class Notif extends React.Component {
 
     render() {
         return (
-            <div id={this.props._key} style={notificationStyle}>
-                <div className="msg-header">
-                    <div className="flex-start">
-                        {this.renderProgressBar()}
-                        {this.props.icon || this.props.class ? (
-                            <UI.Icon className="msg-header-icon">{this.props.icon || msgClsIconMap[this.props.class]}</UI.Icon>
-                        ) : null}
-                        <h3 style={titleStyle}>{this.props.title}</h3>
+            <div id={this.props._key} className="aqui-glass aqui-notif" onClick={this.props.onClick || this.handleClose}>
+                <div className="aqui-notif-header">
+                    <div className="hsc">
+                        <div className="aqui-notif-icon">{this.renderIcon()}</div>
+                        <h3>{this.props.title || R.get("NOTIFICATION_DEFAULT_TITLE")}</h3>
                     </div>
-                    <div className="flex-end">
-                        {this.props.more_info_uri ? (
-                            <UI.Button key="more" color="secondary" size="small" onClick={this.handleMore}>
+                    <div className="hec aqui-notif-operations">
+                        {this.props.more_info_uri && (
+                            <button className="aqui-btn" onClick={this.handleMore}>
                                 {this.props.more_info_button || "More"}
-                            </UI.Button>
-                        ) : null}
+                            </button>
+                        )}
                         {this.props.hideClose ? null : (
-                            <UI.IconButton key="close" aria-label="Close" color="inherit" style={{ padding: "4px" }} onClick={this.handleClose}>
+                            <button className="aqui-btn circle" onClick={this.handleClose}>
                                 <i className="material-icons">close</i>
-                            </UI.IconButton>
+                            </button>
                         )}
                     </div>
                 </div>
-                {this.props.content && <div style={contentStyle}>{this.props.content}</div>}
+                {this.props.content && <div className="aqui-notif-body">{this.props.content}</div>}
                 {this.renderJsonView()}
             </div>
         );
+    }
+
+    renderIcon() {
+        if (this.props.pending) {
+            return <AQUI.Spinner style={{ fontSize: 24 }} />;
+        }
+        if (this.props.icon) {
+            return this.props.icon;
+        }
+        if (this.props.class) {
+            return <i className="material-icons">{msgClsIconMap[this.props.class]}</i>;
+        }
     }
 
     renderJsonView() {
@@ -114,25 +109,6 @@ class Notif extends React.Component {
         );
     }
 
-    renderProgressBar = () => {
-        if (!this.props.progressBar) return null;
-
-        if (!this.props.progress) {
-            return <AQUI.Spinner style={{ transform: "scale(0.5)" }} />;
-        } else
-            return (
-                <UI.CircularProgress
-                    style={{
-                        marginRight: 8,
-                        color: "black"
-                    }}
-                    size={24}
-                    thickness={6}
-                    value={this.props.progress}
-                />
-            );
-    };
-
     componentDidUpdate() {
         this.setAutoHide();
     }
@@ -142,8 +118,8 @@ class Notif extends React.Component {
     }
 
     setAutoHide() {
-        if (!this.props.progressBar && !this.props.persist) {
-            let delay = this.props.delay || clientConfig.messageCloseDelay;
+        if (!this.props.pending && !this.props.progress && !this.props.persist) {
+            let delay = this.props.delay || 3000;
             this.autoHideTimeout = setTimeout(() => {
                 this.handleClose();
             }, delay);
@@ -155,4 +131,4 @@ class Notif extends React.Component {
     };
 }
 
-export default Notif;
+export default Notification;

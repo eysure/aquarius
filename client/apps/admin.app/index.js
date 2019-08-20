@@ -6,6 +6,7 @@ import Window from "../../components/Window";
 import { ResourceFeeder } from "../../resources_feeder";
 import SystemManager from "./system_manager";
 import UserManager from "./user_manager";
+import * as AQUI from "../../components/Window/core";
 
 export const R = new ResourceFeeder(require("./resources/strings").default, require("./resources/messages").default);
 
@@ -48,7 +49,12 @@ class Admin extends React.Component {
     };
 
     renderDefaultPage = () => {
-        return <div className="empty-page">{R.get("APP_NAME")}</div>;
+        return (
+            <div className="empty-page">
+                {R.get("APP_NAME")}
+                <AQUI.Spinner />
+            </div>
+        );
     };
 
     handleClose = () => {};
@@ -64,7 +70,6 @@ class Admin extends React.Component {
                 appKey={this.props.appKey}
                 title={R.trans(Admin.manifest.appName)}
                 noTitlebar
-                theme={"dark"}
                 onClose={() => this.setState({ open: false })}
             >
                 <div className="window-sidebar-container">

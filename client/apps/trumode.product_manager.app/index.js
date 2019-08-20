@@ -1,11 +1,8 @@
 import React, { Component } from "react";
-import * as UI from "@material-ui/core";
-import clientConfig from "../../client_config.js";
-
-import { ResourceFeeder } from "../../resources_feeder";
-const R = new ResourceFeeder(require("./resources/strings").default, null);
-
 import Window from "../../components/Window";
+import { ResourceFeeder } from "../../resources_feeder";
+
+const R = new ResourceFeeder(require("./resources/strings").default, null);
 
 class ProductManager extends Component {
     state = { open: true };

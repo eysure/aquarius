@@ -234,7 +234,6 @@ class Cardinal extends Component {
                 canMaximize={false}
                 canMinimize={false}
                 className="handle"
-                theme="dark"
             >
                 <Select
                     ref={this.inputRef}
