@@ -25,8 +25,8 @@ class CustomerContacts extends Component {
                 <div className="handle roof-toolbar">
                     <div className="hbc h-full">
                         <div className="hcc">
-                            <button className="roof-toolbar-btn material-icons" onClick={() => this.setState({ renderedNewCustomerContact: true })}>
-                                person_add
+                            <button className="aqui-toolbar-btn" onClick={() => this.setState({ renderedNewCustomerContact: true })}>
+                                <i className="material-icons">person_add</i>
                             </button>
                         </div>
                     </div>

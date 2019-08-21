@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 
 import Menu from "../Menus";
 
@@ -106,22 +107,30 @@ export default class MenuBarMenu extends Component {
                     {this.renderMenuBarMenus(this.props.content || this.props.children)}
                 </ul>
 
-                <Menu
-                    isSubmenu
-                    parentOpen={this.state.submenuOpen}
-                    x={this.state.submenuX}
-                    y={this.state.submenuY}
-                    content={this.state.submenuContent}
-                    context={this}
-                    name={this.props.name}
-                    style={this.props.style}
-                    menuItemStyle={this.props.menuItemStyle}
-                    disableEmptyMenu={this.props.disableEmptyMenu}
-                    emptyMenuText={this.props.emptyMenuText}
-                    dropDown
-                    exit={this.menuExit}
-                />
+                {this.renderMenu()}
             </>
+        );
+    }
+
+    renderMenu() {
+        if (!document.getElementById("aq-components")) return null;
+        return ReactDOM.createPortal(
+            <Menu
+                isSubmenu
+                parentOpen={this.state.submenuOpen}
+                x={this.state.submenuX}
+                y={this.state.submenuY}
+                content={this.state.submenuContent}
+                context={this}
+                name={this.props.name}
+                style={this.props.style}
+                menuItemStyle={this.props.menuItemStyle}
+                disableEmptyMenu={this.props.disableEmptyMenu}
+                emptyMenuText={this.props.emptyMenuText}
+                dropDown
+                exit={this.menuExit}
+            />,
+            document.getElementById("aq-components")
         );
     }
 }

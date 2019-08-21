@@ -162,11 +162,53 @@ class Desktop extends Component {
                     <DropFile handleDrop={this.handleDesktopUpload} style={desktopMainStyle} />
                 </div>
                 {this.renderContextMenu()}
-                <Window _key={"Tester"} height={300} width={400} x={"64px"} y={"64px"} title="Tester" toolbar={<div>Toolbar</div>}>
-                    <div>
-                        <h3>Tester</h3>
-                    </div>
-                </Window>
+                <Window
+                    _key={"Tester"}
+                    height={300}
+                    width={400}
+                    x={"64px"}
+                    y={"64px"}
+                    title="Window Title"
+                    toolbar={
+                        <>
+                            <button className="aqui-toolbar-btn">NRM</button>
+                            <button className="aqui-toolbar-btn active">ACT</button>
+                            <button className="aqui-toolbar-btn" disabled>
+                                DAB
+                            </button>
+                            <button className="aqui-toolbar-btn selected">SLT</button>
+                            <div className="aqui-toolbar-btn-group">
+                                <button className="aqui-toolbar-btn">GP1</button>
+                                <button className="aqui-toolbar-btn">GP2</button>
+                                <button className="aqui-toolbar-btn">GP3</button>
+                            </div>
+                        </>
+                    }
+                />
+                <Window
+                    _key={"Tester2"}
+                    height={300}
+                    width={400}
+                    x={"64px"}
+                    y={"64px"}
+                    title="Window Title"
+                    theme="light"
+                    toolbar={
+                        <>
+                            <button className="aqui-toolbar-btn">NRM</button>
+                            <button className="aqui-toolbar-btn active">ACT</button>
+                            <button className="aqui-toolbar-btn" disabled>
+                                DAB
+                            </button>
+                            <button className="aqui-toolbar-btn selected">SLT</button>
+                            <div className="aqui-toolbar-btn-group">
+                                <button className="aqui-toolbar-btn">GP1</button>
+                                <button className="aqui-toolbar-btn">GP2</button>
+                                <button className="aqui-toolbar-btn">GP3</button>
+                            </div>
+                        </>
+                    }
+                />
             </div>
         );
     }

@@ -71,7 +71,8 @@ class VirtualDataLayer extends React.Component {
                     nickname: employee.nickname,
                     avatar: employee.avatar,
                     email: employee.email,
-                    desktop: _.get(employee, "preferences.desktop", null)
+                    desktop: _.get(employee, "preferences.desktop", null),
+                    theme: _.get(employee, "preferences.theme", "light")
                 })
             );
 

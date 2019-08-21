@@ -16,7 +16,13 @@ class Dock extends React.Component {
     render() {
         return (
             <div id="dock-container" style={{ transform: this.props.system.dockHide ? "translate(0,80px)" : "translate(0,0)" }}>
-                <div id="dock" ref={this.dockRef} style={{ width: (Object.keys(this.props.apps).length + 1) * 72 }} onContextMenu={this.onContextMenu}>
+                <div
+                    id="dock"
+                    className="aqui-glass"
+                    ref={this.dockRef}
+                    style={{ width: (Object.keys(this.props.apps).length + 1) * 72 }}
+                    onContextMenu={this.onContextMenu}
+                >
                     <DockItem
                         id="di-launchpad"
                         key="launchpad"

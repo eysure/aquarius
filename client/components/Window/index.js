@@ -38,28 +38,39 @@ class Window extends Component {
     toolbarRef = React.createRef();
     contentRef = React.createRef();
 
+    canClose;
+    canMinimize;
+    canMaximize;
+
     /**
      * Render the window control buttons
      */
     renderWindowControl = () => {
+        this.canClose = this.props.canClose && this.props.onClose;
+        this.canMinimize = this.props.canMinimize && this.props.appKey !== "system";
+        this.canMaximize = this.props.canMaximize;
+
         if (this.props.noControl) return null;
         return (
             <div className="window-ctrl">
-                {this.props.onClose && this.props.canClose ? (
-                    <button className="unhandle window-ctrl-btn btn-close" onClick={this.handleClose} onMouseDown={e => e.stopPropagation()} />
-                ) : (
-                    <button className="unhandle window-ctrl-btn" disabled />
-                )}
-                {this.props.appKey && this.props.canMinimize ? (
-                    <button className="unhandle window-ctrl-btn btn-min" onClick={this.handleMin} onMouseDown={e => e.stopPropagation()} />
-                ) : (
-                    <button className="unhandle window-ctrl-btn" disabled />
-                )}
-                {this.props.canMaximize ? (
-                    <button className="unhandle window-ctrl-btn btn-max" onClick={this.handleMax} onMouseDown={e => e.stopPropagation()} />
-                ) : (
-                    <button className="unhandle window-ctrl-btn" disabled />
-                )}
+                <button
+                    className="unhandle window-ctrl-btn btn-close"
+                    onClick={this.handleClose}
+                    onMouseDown={e => e.stopPropagation()}
+                    disabled={!this.canClose}
+                />
+                <button
+                    className="unhandle window-ctrl-btn btn-min"
+                    onClick={this.handleMin}
+                    onMouseDown={e => e.stopPropagation()}
+                    disabled={!this.canMinimize}
+                />
+                <button
+                    className="unhandle window-ctrl-btn btn-max"
+                    onClick={this.handleMax}
+                    onMouseDown={e => e.stopPropagation()}
+                    disabled={!this.canMaximize}
+                />
             </div>
         );
     };
@@ -321,12 +332,11 @@ class Window extends Component {
         this.props.registerWindow(this.props.appKey, this.props._key, this);
 
         let div = this.windowRef.current;
-        if (!div) return;
 
         // Put the window on the center of the screen
         this.setState({
-            top: this.props.y || `calc(50% - ${div.offsetHeight / 2}px)`,
-            left: this.props.x || `calc(50% - ${div.offsetWidth / 2}px)`
+            top: this.props.y || `calc(50% - ${div ? div.offsetHeight / 2 : 0}px)`,
+            left: this.props.x || `calc(50% - ${div ? div.offsetWidth / 2 : 0}px)`
         });
 
         this.restoreWindowPosition();

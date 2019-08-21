@@ -67,6 +67,7 @@ class MainFrame extends Component {
                 }
 
                 windowMenu.push({
+                    key: windows[w].id,
                     title: windows[w].props.title || w,
                     prefix: prefix,
                     onClick
@@ -83,7 +84,7 @@ class MainFrame extends Component {
                         onClick: () => {
                             activeWindow.handleMax();
                         },
-                        disabled: !activeWindow || !activeWindow.props.canMaximize
+                        disabled: !activeWindow || !activeWindow.canMaximize
                     },
                     {
                         title: "Minimize",
@@ -91,7 +92,7 @@ class MainFrame extends Component {
                         onClick: () => {
                             activeWindow.handleMin();
                         },
-                        disabled: !activeWindow || !activeWindow.props.canMinimize
+                        disabled: !activeWindow || !activeWindow.canMinimize
                     },
                     {
                         title: "Close",
@@ -99,7 +100,7 @@ class MainFrame extends Component {
                         onClick: () => {
                             activeWindow.handleClose();
                         },
-                        disabled: !activeWindow || !activeWindow.props.canClose
+                        disabled: !activeWindow || !activeWindow.canClose
                     }
                 ];
         }

@@ -11,7 +11,12 @@ export class Stylized extends Component {
 
     render() {
         let classList = [];
-        classList.push(_.get(this.props.user, "preferences.theme", "light"));
+        let theme = _.get(this.props.user, "preferences.theme");
+        if (!theme) {
+            const lastLoginUser = localStorage.getItem("lastLoginUser");
+            if (lastLoginUser) theme = JSON.parse(lastLoginUser).theme;
+        }
+        classList.push(theme || "light");
 
         return (
             <div id="aq-components" className={classList.join(" ")}>

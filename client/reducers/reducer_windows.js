@@ -95,7 +95,6 @@ export default function(state = defaultState, action) {
     switch (action.type) {
         case REGISTER_WINDOW: {
             if (!state[appKey]) state[appKey] = {};
-            // TODO: Need to modify to the state of window.
             state[appKey][windowKey] = window;
             activateWindow(state, appKey, windowKey);
             break;

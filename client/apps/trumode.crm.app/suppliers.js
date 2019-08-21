@@ -31,12 +31,18 @@ class Suppliers extends Component {
                 <div className="handle roof-toolbar">
                     <div className="hbc h-full">
                         <div className="hcc">
-                            <button className="roof-toolbar-btn material-icons" onClick={() => this.setState({ renderedNewSupplier: true })}>
-                                person_add
+                            <button className="aqui-toolbar-btn" onClick={() => this.setState({ renderNewSupplier: true })}>
+                                <i className="material-icons">person_add</i>
                             </button>
                         </div>
                         <div className="hcc">
-                            <input className="toolbar-input" name="query" value={this.state.query} onChange={this.handleChange} />
+                            <input
+                                className="aqui-toolbar-btn"
+                                name="query"
+                                value={this.state.query}
+                                onChange={this.handleChange}
+                                placeholder={R.get("SEARCH")}
+                            />
                         </div>
                     </div>
                 </div>

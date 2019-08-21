@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 
 import MenuItem from "./menu_item";
 import MenuDivider from "./menu_divider";
@@ -82,10 +83,14 @@ export default class Menu extends Component {
             return null;
         }
 
+        return this.renderPortal();
+    }
+
+    renderPortal() {
+        if (!document.getElementById("aq-components")) return null;
         let classList = ["menu"];
         if (this.props.dropDown) classList.push("drop-down");
-
-        return (
+        return ReactDOM.createPortal(
             <>
                 {!this.props.isSubmenu ? this.renderBackDrop() : ""}
                 <ul
@@ -111,7 +116,8 @@ export default class Menu extends Component {
                     disableEmptyMenu={this.props.disableEmptyMenu}
                     emptyMenuText={this.props.emptyMenuText}
                 />
-            </>
+            </>,
+            document.getElementById("aq-components")
         );
     }
 

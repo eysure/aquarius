@@ -10,11 +10,7 @@
 }
 
 #dock {
-    color: white;
     height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(30px);
-    border: 1px solid rgba(0, 0, 0, 0.6);
     border-bottom: 0;
     border-radius: 6px 6px 0 0;
     box-shadow: inset 0 0 0 0.2px rgba(255, 255, 255, 0.28);
@@ -45,13 +41,24 @@
 }
 
 .dock-item-indicator {
-    background: rgba(255, 255, 255, 0.7);
     width: 0.3vh;
     height: 0.3vh;
     margin: 0.5vh;
     border-radius: 50%;
     box-sizing: border-box;
     transition: 300ms;
+}
+
+.light #dock {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.light .dock-item-indicator {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.dark .dock-item-indicator {
+    background: rgba(255, 255, 255, 0.7);
 }
 
 @keyframes dockItemEnter {
