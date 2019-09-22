@@ -4,12 +4,11 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { activateWindow, launchPadControl, logout, throwMsg, systemControl } from "../actions";
+import { activateWindow, logout, throwMsg, systemControl } from "../actions";
 import { R } from "../resources_feeder";
 import { fileUploadVerify, oss, upload } from "../utils";
 import DropFile from "./DropFile";
 import Menu from "./Menus";
-import Window from "./Window/index";
 
 const desktopMainStyle = {
     width: "100%",
@@ -39,7 +38,7 @@ class Desktop extends Component {
                 break;
             }
             case 1: {
-                this.props.launchPadControl(true);
+                this.props.systemControl({ launchpadStatus: !this.props.system.launchpadStatus });
                 break;
             }
         }
@@ -60,7 +59,7 @@ class Desktop extends Component {
                 title: R.get("LAUNCHPAD"),
                 extra: "⌘L",
                 onClick: () => {
-                    this.props.launchPadControl(true);
+                    this.props.systemControl({ launchpadStatus: !this.props.system.launchpadStatus });
                 }
             },
             {
@@ -162,53 +161,6 @@ class Desktop extends Component {
                     <DropFile handleDrop={this.handleDesktopUpload} style={desktopMainStyle} />
                 </div>
                 {this.renderContextMenu()}
-                <Window
-                    _key={"Tester"}
-                    height={300}
-                    width={400}
-                    x={"64px"}
-                    y={"64px"}
-                    title="Window Title"
-                    toolbar={
-                        <>
-                            <button className="aqui-toolbar-btn">NRM</button>
-                            <button className="aqui-toolbar-btn active">ACT</button>
-                            <button className="aqui-toolbar-btn" disabled>
-                                DAB
-                            </button>
-                            <button className="aqui-toolbar-btn selected">SLT</button>
-                            <div className="aqui-toolbar-btn-group">
-                                <button className="aqui-toolbar-btn">GP1</button>
-                                <button className="aqui-toolbar-btn">GP2</button>
-                                <button className="aqui-toolbar-btn">GP3</button>
-                            </div>
-                        </>
-                    }
-                />
-                <Window
-                    _key={"Tester2"}
-                    height={300}
-                    width={400}
-                    x={"64px"}
-                    y={"64px"}
-                    title="Window Title"
-                    theme="light"
-                    toolbar={
-                        <>
-                            <button className="aqui-toolbar-btn">NRM</button>
-                            <button className="aqui-toolbar-btn active">ACT</button>
-                            <button className="aqui-toolbar-btn" disabled>
-                                DAB
-                            </button>
-                            <button className="aqui-toolbar-btn selected">SLT</button>
-                            <div className="aqui-toolbar-btn-group">
-                                <button className="aqui-toolbar-btn">GP1</button>
-                                <button className="aqui-toolbar-btn">GP2</button>
-                                <button className="aqui-toolbar-btn">GP3</button>
-                            </div>
-                        </>
-                    }
-                />
             </div>
         );
     }
@@ -228,7 +180,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ throwMsg, launchPadControl, logout, activateWindow, systemControl }, dispatch);
+    return bindActionCreators({ throwMsg, logout, activateWindow, systemControl }, dispatch);
 }
 
 export default connect(
@@ -240,7 +192,6 @@ Desktop.propTypes = {
     user: PropTypes.object,
     system: PropTypes.object,
     throwMsg: PropTypes.func,
-    launchPadControl: PropTypes.func,
     logout: PropTypes.func,
     activateWindow: PropTypes.func,
     systemControl: PropTypes.func

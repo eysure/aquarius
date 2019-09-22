@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Window from "../../components/Window";
 import { ResourceFeeder } from "../../resources_feeder";
+import { addCommand } from "../../components/cardinal";
+import { Collection } from "../../utils";
 
 export const TAB_CUSTOMERS = "TAB_CUSTOMERS";
 export const TAB_SUPPLIERS = "TAB_SUPPLIERS";
@@ -64,6 +66,26 @@ class CustomerRelationshipManager extends Component {
             </Window>
         );
     }
+
+    addCardinalCommands = () => {
+        addCommand(
+            "sup",
+            Collection("suppliers")
+                .find()
+                .fetch(),
+            { keys: ["name", "abbr"] },
+            item => ({
+                title: item.name,
+                subtitle: item.abbr,
+                onSelect: () => {
+                    console.log("Supplier select: ", item);
+                }
+            }),
+            {
+                pinyinTokenized: true
+            }
+        );
+    };
 }
 
 CustomerRelationshipManager.manifest = {

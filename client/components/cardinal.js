@@ -55,13 +55,10 @@ let commands = {
             const src = oss(item.avatar);
             return {
                 icon: <img src={src} />,
-                title: `${item.nickname} - ${item.fname}`,
+                title: `${item.nickname} - ${item.fname} ${item.lname}`,
                 subtitle: `${item.mobile} - ${item.email}`,
                 onSelect: () => {
                     console.log("Employee Click: ", item);
-                },
-                optionProps: {
-                    style: { background: "gold" }
                 }
             };
         }

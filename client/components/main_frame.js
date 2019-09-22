@@ -13,23 +13,36 @@ import MenuBar from "./MenuBar/menu_bar";
 import MenuBarTimeWidget from "./MenuBar/menu_bar_time_widget";
 import { WINDOW_STATUS_MIN } from "./Window";
 import Cardinal, { addCommand, addRootOptions } from "./cardinal";
-import { Collection } from "../utils";
+import _ from "lodash";
+
+import Window from "./Window";
 
 class MainFrame extends Component {
     state = {
-        fullscreen: false
+        fullscreen: false,
+        launchpadStatus: false
     };
 
-    packLaunchpadApps() {
-        if (!this.props.auth || !this.props.auth.apps) return [];
+    userApps = [];
 
-        let launchpadApps = [];
+    appsInitialize() {
+        if (!this.props.auth || !this.props.auth.apps) return;
+
+        this.userApps = [];
+
         this.props.auth.apps.map(appKey => {
             if (!validateAppWithKey(appKey).result) {
-                console.error("Cannot validate appKey:", appKey, "\nIt's Highly possible when auth.app contains a typo.");
-            } else launchpadApps.push(getAppShortCut(appKey, this));
+                console.error("Cannot validate appKey:", appKey, "\nIt's Highly possible when auth.apps contains a typo.");
+            } else {
+                const appShortcut = getAppShortCut(appKey, this);
+                this.userApps.push(appShortcut);
+                addRootOptions(appKey, {
+                    title: appShortcut.title,
+                    icon: <img src={appShortcut.icon} />,
+                    onSelect: appShortcut.onClick
+                });
+            }
         });
-        return launchpadApps;
     }
 
     toolBarTitle = appKey => {
@@ -137,7 +150,7 @@ class MainFrame extends Component {
                         onClick: () => {
                             this.props.appClose(appKey);
                         },
-                        disabled: !appKey
+                        disabled: !appKey || appKey === "system"
                     }
                 ]
             },
@@ -149,78 +162,8 @@ class MainFrame extends Component {
         return mainMenuBarMenu;
     };
 
-    ac = () => {
-        addCommand(
-            "sup",
-            Collection("suppliers")
-                .find()
-                .fetch(),
-            { keys: ["name", "abbr"] },
-            item => ({
-                title: item.name,
-                subtitle: item.abbr,
-                onSelect: () => {
-                    console.log("Supplier select: ", item);
-                }
-            }),
-            {
-                pinyinTokenized: true
-            }
-        );
-        addCommand("sys", Object.keys(this.props.system).map(key => ({ key, value: this.props.system[key].toString() })), { keys: ["key", "value"] }, item => ({
-            title: item.key,
-            subtitle: item.value,
-            icon: <img src={"/assets/icons/equipement.svg"} />
-        }));
-        addRootOptions("logout", {
-            title: "Log Out",
-            subtitle: `Log Out ${this.props.user.nickname}...`,
-            icon: <img src={"/assets/icons/equipement.svg"} />,
-            onSelect: () => Meteor.logout(error => this.props.logout(error))
-        });
-        this.props.throwMsg({
-            title: "Class 1 - Info",
-            content:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-            class: 1,
-            persist: true
-        });
-        this.props.throwMsg({
-            title: "Class 2 - Success",
-            class: 2,
-            persist: true
-        });
-        this.props.throwMsg({
-            title: "Class 3 - Warning",
-            class: 3,
-            persist: true
-        });
-        this.props.throwMsg({
-            title: "Class 4 - Client Error",
-            class: 4,
-            persist: true
-        });
-        this.props.throwMsg({
-            title: "Class 5 - Server Error",
-            class: 5,
-            persist: true
-        });
-        this.props.throwMsg({
-            title: "Class 6 - Pending",
-            pending: true,
-            persist: true
-        });
-        this.props.throwMsg({
-            content:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-            class: 5,
-            persist: true
-        });
-    };
-
     getMenuBarExtra = () => {
         return [
-            { key: "addCommand", title: "Add Command", onClick: this.ac },
             { key: "full-screen-btn", title: <i>{this.state.fullscreen ? "fullscreen_exit" : "fullscreen"}</i>, onClick: this.toggleFullscreen },
             { key: "time", title: <MenuBarTimeWidget /> },
             {
@@ -244,22 +187,99 @@ class MainFrame extends Component {
         }
     };
 
+    launchpadClose = () => {
+        let launchpad = document.querySelector("#launchpad");
+        if (!launchpad) return;
+        launchpad.classList.remove("launchpad-enter");
+        let eventListener = () => {
+            launchpad.classList.remove("launchpad-close");
+            launchpad.removeEventListener("animationend", eventListener);
+            this.setState({ launchpadStatus: false });
+        };
+        launchpad.classList.add("launchpad-close");
+        launchpad.addEventListener("animationend", eventListener);
+    };
+
+    renderSystemWindows = () => {
+        if (!this.props.windows._windowPool) return null;
+        const systemWindows = [];
+        for (let [, window] of Object.entries(this.props.windows._windowPool)) {
+            if (!window.key) console.error("No window key is provided in the window");
+            else systemWindows.push(window);
+        }
+        return systemWindows;
+    };
+
     render() {
         return (
             <>
                 <MenuBar menuBarMenu={this.getMenuBarMenu()} menuBarExtra={this.getMenuBarExtra()} hide={this.props.system.menuBarHide} />
-                <Launchpad open={this.props.system.launchpadStatus} items={this.packLaunchpadApps()} close={() => this.props.launchPadControl(false)} />
+                {this.renderSystemWindows()}
+                <Launchpad
+                    open={this.state.launchpadStatus}
+                    items={this.userApps}
+                    close={() => {
+                        this.props.systemControl({ launchpadStatus: false });
+                    }}
+                />
                 <Dock />
                 <Cardinal ref={this.cardinalRef} onClose={() => this.props.systemControl({ cardinalOpen: false })} open={this.props.system.cardinalOpen} />
             </>
         );
     }
 
+    addSystemCommands = () => {
+        addCommand("sys", Object.keys(this.props.system).map(key => ({ key, value: this.props.system[key].toString() })), { keys: ["key", "value"] }, item => ({
+            title: item.key,
+            subtitle: item.value,
+            icon: <img src={"/assets/icons/equipement.svg"} />
+        }));
+        addRootOptions("logout", {
+            title: "Log Out",
+            subtitle: `Log Out current user`,
+            icon: <img src={"/assets/icons/equipement.svg"} />,
+            onSelect: () => Meteor.logout(error => this.props.logout(error))
+        });
+        addRootOptions("debug_window", {
+            title: "Create Demo Window",
+            subtitle: "Display a full featured window",
+            onSelect: () => {
+                this.props.addWindow(
+                    <Window
+                        key={"tester"}
+                        _key={"tester"}
+                        height={300}
+                        width={400}
+                        x={"64px"}
+                        y={"64px"}
+                        title="Window Title"
+                        onClose={() => this.props.closeWindow("system", "tester")}
+                        toolbar={
+                            <>
+                                <button className="aqui-toolbar-btn">NRM</button>
+                                <button className="aqui-toolbar-btn active">ACT</button>
+                                <button className="aqui-toolbar-btn" disabled>
+                                    DAB
+                                </button>
+                                <button className="aqui-toolbar-btn selected">SLT</button>
+                                <div className="aqui-toolbar-btn-group">
+                                    <button className="aqui-toolbar-btn">GP1</button>
+                                    <button className="aqui-toolbar-btn">GP2</button>
+                                    <button className="aqui-toolbar-btn">GP3</button>
+                                </div>
+                            </>
+                        }
+                    />
+                );
+            }
+        });
+    };
+
     componentDidMount() {
         // Open Launcher
-        hotkeys("cmd+l,ctrl+l,f1", event => {
+        hotkeys("cmd+p,ctrl+p,f1", event => {
             event.preventDefault();
-            this.props.launchPadControl(!this.props.system.launchpadStatus);
+            this.props.systemControl({ launchpadStatus: !this.props.system.launchpadStatus });
         });
 
         // Logout
@@ -283,11 +303,6 @@ class MainFrame extends Component {
             event.preventDefault();
         });
 
-        // hotkeys("ctrl+space,cmd+space", event => {
-        //     event.preventDefault();
-        //     this.props.systemControl({ cardinalOpen: !this.props.system.cardinalOpen });
-        // });
-
         // Quit app
         hotkeys("cmd+shift+backspace,ctrl+shift+backspace", { keydown: true }, event => {
             event.preventDefault();
@@ -296,6 +311,41 @@ class MainFrame extends Component {
         });
 
         document.addEventListener("keydown", this.keydownListerner);
+
+        // Add commands to cardinal
+        this.addSystemCommands();
+        // addCommand(
+        //     "sup",
+        //     () => {
+        //         return Collection("suppliers")
+        //             .find()
+        //             .fetch();
+        //     },
+        //     { keys: ["name", "abbr"] },
+        //     item => ({
+        //         title: item.name,
+        //         subtitle: item.abbr,
+        //         onSelect: () => {
+        //             console.log("Supplier select: ", item);
+        //         }
+        //     }),
+        //     {
+        //         pinyinTokenized: true
+        //     }
+        // );
+    }
+
+    componentDidUpdate(prevProps) {
+        if (!_.isEqual(this.props.auth.apps, prevProps.auth.apps)) {
+            this.appsInitialize();
+        }
+        if (!_.isEqual(this.props.system.launchpadStatus, prevProps.system.launchpadStatus)) {
+            if (this.props.system.launchpadStatus) {
+                this.setState({ launchpadStatus: true });
+            } else {
+                this.launchpadClose();
+            }
+        }
     }
 
     componentWillUnmount() {
@@ -303,7 +353,7 @@ class MainFrame extends Component {
     }
 
     keydownListerner = e => {
-        if (e.keyCode === 32 && e.metaKey) {
+        if ((e.keyCode === 32 && e.metaKey) || e.keyCode === 36) {
             this.props.systemControl({ cardinalOpen: !this.props.system.cardinalOpen });
         }
     };
@@ -340,7 +390,8 @@ MainFrame.propTypes = {
     logout: PropTypes.func,
     appLaunch: PropTypes.func,
     appClose: PropTypes.func,
-    launchPadControl: PropTypes.func,
     throwMsg: PropTypes.func,
-    systemControl: PropTypes.func
+    systemControl: PropTypes.func,
+    addWindow: PropTypes.func,
+    closeWindow: PropTypes.func
 };

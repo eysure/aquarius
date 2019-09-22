@@ -1269,6 +1269,7 @@ tbody tr:active {
     min-height: 36px !important;
     font-size: 1.5rem !important;
     padding: 4px 0 !important;
+    overflow: hidden !important;
 }
 .cardinal__control--is-focused {
     border: 0 !important;

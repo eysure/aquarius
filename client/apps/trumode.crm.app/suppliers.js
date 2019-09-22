@@ -137,10 +137,9 @@ class Suppliers extends Component {
                 }
             }
         ];
-        let menu = (
+        return (
             <Menu context={this} name="supplierTableContextMenu" x={this.state.contextMenuX} y={this.state.contextMenuY} content={supplierTableContextMenu} />
         );
-        return ReactDOM.createPortal(menu, document.getElementById("aq-components"));
     };
 }
 

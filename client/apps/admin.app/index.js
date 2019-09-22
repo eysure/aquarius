@@ -81,6 +81,8 @@ class Admin extends React.Component {
             </Window>
         );
     }
+
+    addCommands = () => {};
 }
 
 const mapStateToProps = state => ({

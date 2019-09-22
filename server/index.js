@@ -129,8 +129,8 @@ Meteor.publish("allEmployeesBasicInfo", function() {
                 nickname: 1,
                 email: 1,
                 name_cn: 1,
-                fn_en: 1,
-                ln_en: 1,
+                fname: 1,
+                lname: 1,
                 mobile: 1,
                 ext: 1,
                 avatar: 1

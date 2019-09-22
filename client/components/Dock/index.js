@@ -2,7 +2,7 @@ import _ from "lodash";
 import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { activateWindow, appClose, appLaunch, launchPadControl } from "../../actions";
+import { activateWindow, appClose, appLaunch, systemControl } from "../../actions";
 import { getAppName } from "../../app_utils";
 import { WINDOW_STATUS_MIN } from "../Window";
 import DockItem from "./dock_item";
@@ -28,7 +28,7 @@ class Dock extends React.Component {
                         key="launchpad"
                         img="/assets/apps/rocket.svg"
                         title="Launchpad"
-                        onClick={() => this.props.launchPadControl(!this.props.system.launchpadStatus)}
+                        onClick={() => this.props.systemControl({ launchpadStatus: !this.props.system.launchpadStatus })}
                     />
                     {this.renderDockItems()}
                 </div>
@@ -80,7 +80,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ appLaunch, appClose, launchPadControl, activateWindow }, dispatch);
+    return bindActionCreators({ appLaunch, appClose, systemControl, activateWindow }, dispatch);
 }
 
 export default connect(
@@ -95,6 +95,6 @@ Dock.propTypes = {
     windows: PropTypes.object,
     appLaunch: PropTypes.func,
     appClose: PropTypes.func,
-    launchPadControl: PropTypes.func,
+    systemControl: PropTypes.func,
     activateWindow: PropTypes.func
 };

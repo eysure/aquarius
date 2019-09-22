@@ -10,48 +10,6 @@ export default class Launchpad extends React.Component {
         isItemHovering: false
     };
 
-    launchpadRef = React.createRef();
-    swipeableViewsRef = React.createRef();
-
-    pointerMoved = [null, null];
-
-    onTouchStart = e => {
-        if (e.button === 1) {
-            this.close();
-            return;
-        }
-        this.pointerMoved = [];
-        this.pointerMoved[0] = e.touches ? [e.touches[0].pageX, e.touches[0].pageY] : [e.clientX, e.clientY];
-    };
-    onTouchMove = e => {
-        this.pointerMoved[1] = [e.touches[0].pageX, e.touches[0].pageY];
-    };
-    onTouchEnd = e => {
-        if (!this.pointerMoved[0]) return;
-        if (e.button === 1) return;
-        if (e.clientX || e.clientY) this.pointerMoved[1] = [e.clientX, e.clientY];
-        if (!this.pointerMoved[1]) {
-            this.close();
-            return;
-        }
-        let dist = Math.pow(this.pointerMoved[0][0] - this.pointerMoved[1][0], 2) + Math.pow(this.pointerMoved[0][1] - this.pointerMoved[1][1], 2);
-        if (dist < 36) {
-            if (!this.state.isItemHovering) this.close();
-        }
-    };
-
-    close = () => {
-        let launchpad = this.launchpadRef.current;
-        launchpad.classList.remove("launchpad-enter");
-        let eventListener = () => {
-            launchpad.classList.remove("launchpad-close");
-            launchpad.removeEventListener("animationend", eventListener);
-            this.props.close();
-        };
-        launchpad.classList.add("launchpad-close");
-        launchpad.addEventListener("animationend", eventListener);
-    };
-
     renderLaunchpadPages = () => {
         let launchpadGridStyle = {
             gridTemplateColumns: `repeat(${this.state.isViewPortVertical ? 5 : 7}, 16vmin)`
@@ -77,7 +35,7 @@ export default class Launchpad extends React.Component {
     renderLaunchpadItems = items => {
         if (!items || items.length === 0) return null;
         return items.map(item => {
-            return <LaunchpadItem key={item.appKey} {...item} itemHovering={this.itemHovering} close={this.close} />;
+            return <LaunchpadItem key={item.appKey} {...item} itemHovering={this.itemHovering} close={this.props.close} />;
         });
     };
 
@@ -99,17 +57,7 @@ export default class Launchpad extends React.Component {
         else this.pages = Math.floor((this.props.items.length - 1) / 35) + 1;
 
         return (
-            <div
-                id="launchpad"
-                className="launchpad-enter"
-                ref={this.launchpadRef}
-                onContextMenu={e => e.preventDefault()}
-                onMouseDown={this.onTouchStart}
-                onMouseUp={this.onTouchEnd}
-                onTouchStart={this.onTouchStart}
-                onTouchMove={this.onTouchMove}
-                onTouchEnd={this.onTouchEnd}
-            >
+            <div id="launchpad" className="launchpad-enter" onContextMenu={e => e.preventDefault()} onMouseUp={this.props.close}>
                 {/* <SwipeableViews
                     ref={this.swipeableViewsRef}
                     id="launchpad-carousel"
@@ -128,9 +76,9 @@ export default class Launchpad extends React.Component {
         );
     }
 
-    navigateTo = index => {
-        this.setState({ index });
-    };
+    // navigateTo = index => {
+    //     this.setState({ index });
+    // };
 
     updateWindowDimensions = () => {
         this.setState({
@@ -142,7 +90,7 @@ export default class Launchpad extends React.Component {
         this.updateWindowDimensions();
         window.addEventListener("resize", this.updateWindowDimensions);
         hotkeys("escape", () => {
-            if (this.props.open) this.close();
+            if (this.props.open) this.props.close();
         });
         // hotkeys("left", () => {
         //     if (this.state.index === 0) {

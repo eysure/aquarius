@@ -1,8 +1,9 @@
-import { ACTIVATE_WINDOW, DEACTIVATE_WINDOW, LOGOUT, REGISTER_WINDOW, UNREGISTER_WINDOW } from "../actions";
+import { ACTIVATE_WINDOW, DEACTIVATE_WINDOW, LOGOUT, REGISTER_WINDOW, UNREGISTER_WINDOW, ADD_WINDOW, CLOSE_WINDOW } from "../actions";
 
 const defaultState = {
     system: {},
-    _awc: []
+    _awc: [],
+    _windowPool: {}
 };
 
 const activeWindowChain = [];
@@ -86,7 +87,7 @@ const setStateToWindow = (keys, state, isActive) => {
     }
 };
 
-const responsibleActionType = new Set([REGISTER_WINDOW, UNREGISTER_WINDOW, ACTIVATE_WINDOW, DEACTIVATE_WINDOW, LOGOUT]);
+const responsibleActionType = new Set([REGISTER_WINDOW, UNREGISTER_WINDOW, ACTIVATE_WINDOW, DEACTIVATE_WINDOW, ADD_WINDOW, CLOSE_WINDOW, LOGOUT]);
 
 export default function(state = defaultState, action) {
     if (!responsibleActionType.has(action.type)) return state;
@@ -114,6 +115,16 @@ export default function(state = defaultState, action) {
             break;
         }
         case DEACTIVATE_WINDOW: {
+            deactivateWindow(state, appKey, windowKey);
+            break;
+        }
+        case ADD_WINDOW: {
+            state._windowPool[appKey + "::" + windowKey] = window;
+            activateWindow(state, appKey, windowKey);
+            break;
+        }
+        case CLOSE_WINDOW: {
+            delete state._windowPool[appKey + "::" + windowKey];
             deactivateWindow(state, appKey, windowKey);
             break;
         }

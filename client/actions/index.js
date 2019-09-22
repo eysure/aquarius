@@ -35,6 +35,8 @@ export const ACTIVATE_WINDOW = "ACTIVATE_WINDOW";
 export const DEACTIVATE_WINDOW = "DEACTIVATE_WINDOW";
 export const REGISTER_WINDOW = "REGISTER_WINDOW";
 export const UNREGISTER_WINDOW = "UNREGISTER_WINDOW";
+export const ADD_WINDOW = "ADD_WINDOW";
+export const CLOSE_WINDOW = "CLOSE_WINDOW";
 
 export function logout(msg = null) {
     msg = msg ? msg : R.get("LOGOUT_OK");
@@ -118,17 +120,6 @@ export function changeLanguageLocal(language) {
     return {
         type: CHANGE_LANGUAGE_LOCAL,
         payload: { language }
-    };
-}
-
-export function launchPadControl(status) {
-    return {
-        type: LAUNCHPAD_CONTROL,
-        payload: {
-            data: {
-                launchpadStatus: status
-            }
-        }
     };
 }
 
@@ -249,6 +240,36 @@ export function registerWindow(appKey, windowKey, window) {
 export function unregisterWindow(appKey, windowKey) {
     return {
         type: UNREGISTER_WINDOW,
+        payload: {
+            appKey,
+            windowKey
+        }
+    };
+}
+
+/**
+ * Directly add a system window and show.
+ * @param {string} windowKey
+ * @param {React.Component} window
+ */
+export function addWindow(window) {
+    let appKey = window.props.appKey || "system";
+    let windowKey = window.key;
+    if (!windowKey) console.error("windowKey is not defined when directly add window. add the key as prop inside window component.");
+
+    return {
+        type: ADD_WINDOW,
+        payload: {
+            appKey,
+            windowKey,
+            window
+        }
+    };
+}
+
+export function closeWindow(appKey = "system", windowKey) {
+    return {
+        type: CLOSE_WINDOW,
         payload: {
             appKey,
             windowKey

@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { activateWindow } from "../../actions";
@@ -151,10 +150,9 @@ class Customers extends Component {
                 }
             }
         ];
-        let menu = (
+        return (
             <Menu context={this} name="customerTableContextMenu" x={this.state.contextMenuX} y={this.state.contextMenuY} content={customerTableContextMenu} />
         );
-        return ReactDOM.createPortal(menu, document.getElementById("aq-components"));
     };
 }
 
