@@ -4,7 +4,6 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import _ from "lodash";
-import hotkeys from "hotkeys-js";
 import DropFile from "../DropFile";
 import Select from "react-select";
 import Fuse from "fuse.js";

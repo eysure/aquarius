@@ -234,13 +234,7 @@ class MainFrame extends Component {
             subtitle: item.value,
             icon: <img src={"/assets/icons/equipement.svg"} />
         }));
-        addRootOptions("logout", {
-            title: "Log Out",
-            subtitle: `Log Out current user`,
-            icon: <img src={"/assets/icons/equipement.svg"} />,
-            onSelect: () => Meteor.logout(error => this.props.logout(error))
-        });
-        addRootOptions("debug_window", {
+        addRootOptions("window_demo", {
             title: "Create Demo Window",
             subtitle: "Display a full featured window",
             onSelect: () => {
@@ -248,10 +242,10 @@ class MainFrame extends Component {
                     <Window
                         key={"tester"}
                         _key={"tester"}
-                        height={300}
+                        height={200}
                         width={400}
-                        x={"64px"}
-                        y={"64px"}
+                        x={"20px"}
+                        y={"20px"}
                         title="Window Title"
                         onClose={() => this.props.closeWindow("system", "tester")}
                         toolbar={
@@ -269,7 +263,132 @@ class MainFrame extends Component {
                                 </div>
                             </>
                         }
-                    />
+                        theme="light"
+                    >
+                        A window with titlebar and toolbar.
+                    </Window>
+                );
+                this.props.addWindow(
+                    <Window
+                        key={"tester2"}
+                        _key={"tester2"}
+                        height={200}
+                        width={400}
+                        x={"440px"}
+                        y={"20px"}
+                        title="Window Title"
+                        onClose={() => this.props.closeWindow("system", "tester")}
+                        theme="light"
+                    >
+                        A window with titlebar without toolbar.
+                    </Window>
+                );
+                this.props.addWindow(
+                    <Window
+                        key={"tester3"}
+                        _key={"tester3"}
+                        height={200}
+                        width={600}
+                        x={"860px"}
+                        y={"20px"}
+                        title="Window Title"
+                        onClose={() => this.props.closeWindow("system", "tester")}
+                        noTitlebar
+                        toolbar={
+                            <>
+                                <button className="aqui-toolbar-btn">NRM</button>
+                                <button className="aqui-toolbar-btn active">ACT</button>
+                                <button className="aqui-toolbar-btn" disabled>
+                                    DAB
+                                </button>
+                                <button className="aqui-toolbar-btn selected">SLT</button>
+                                <div className="aqui-toolbar-btn-group">
+                                    <button className="aqui-toolbar-btn">GP1</button>
+                                    <button className="aqui-toolbar-btn">GP2</button>
+                                    <button className="aqui-toolbar-btn">GP3</button>
+                                </div>
+                            </>
+                        }
+                        theme="light"
+                    >
+                        A window without titlebar but with toolbar.
+                    </Window>
+                );
+                this.props.addWindow(
+                    <Window
+                        key={"tester4"}
+                        _key={"tester4"}
+                        height={200}
+                        width={400}
+                        x={"20px"}
+                        y={"240px"}
+                        title="Window Title"
+                        onClose={() => this.props.closeWindow("system", "tester")}
+                        toolbar={
+                            <>
+                                <button className="aqui-toolbar-btn">NRM</button>
+                                <button className="aqui-toolbar-btn active">ACT</button>
+                                <button className="aqui-toolbar-btn" disabled>
+                                    DAB
+                                </button>
+                                <button className="aqui-toolbar-btn selected">SLT</button>
+                                <div className="aqui-toolbar-btn-group">
+                                    <button className="aqui-toolbar-btn">GP1</button>
+                                    <button className="aqui-toolbar-btn">GP2</button>
+                                    <button className="aqui-toolbar-btn">GP3</button>
+                                </div>
+                            </>
+                        }
+                        theme="dark"
+                    >
+                        A window with titlebar and toolbar.
+                    </Window>
+                );
+                this.props.addWindow(
+                    <Window
+                        key={"tester5"}
+                        _key={"tester5"}
+                        height={200}
+                        width={400}
+                        x={"440px"}
+                        y={"240px"}
+                        title="Window Title"
+                        onClose={() => this.props.closeWindow("system", "tester")}
+                        theme="dark"
+                    >
+                        A window with titlebar without toolbar.
+                    </Window>
+                );
+                this.props.addWindow(
+                    <Window
+                        key={"tester6"}
+                        _key={"tester6"}
+                        height={200}
+                        width={600}
+                        x={"860px"}
+                        y={"240px"}
+                        title="Window Title"
+                        onClose={() => this.props.closeWindow("system", "tester")}
+                        noTitlebar
+                        toolbar={
+                            <>
+                                <button className="aqui-toolbar-btn">NRM</button>
+                                <button className="aqui-toolbar-btn active">ACT</button>
+                                <button className="aqui-toolbar-btn" disabled>
+                                    DAB
+                                </button>
+                                <button className="aqui-toolbar-btn selected">SLT</button>
+                                <div className="aqui-toolbar-btn-group">
+                                    <button className="aqui-toolbar-btn">GP1</button>
+                                    <button className="aqui-toolbar-btn">GP2</button>
+                                    <button className="aqui-toolbar-btn">GP3</button>
+                                </div>
+                            </>
+                        }
+                        theme="dark"
+                    >
+                        A window without titlebar but with toolbar.
+                    </Window>
                 );
             }
         });
@@ -336,6 +455,14 @@ class MainFrame extends Component {
     }
 
     componentDidUpdate(prevProps) {
+        if (!_.isEqual(this.props.user.nickname, prevProps.user.nickname)) {
+            addRootOptions("logout", {
+                title: "Log Out",
+                subtitle: R.get("LOGOUT_WITH_NAME", { user: this.props.user.nickname }),
+                icon: <img src={"/assets/icons/equipement.svg"} />,
+                onSelect: () => Meteor.logout(error => this.props.logout(error))
+            });
+        }
         if (!_.isEqual(this.props.auth.apps, prevProps.auth.apps)) {
             this.appsInitialize();
         }

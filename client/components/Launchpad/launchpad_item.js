@@ -1,7 +1,8 @@
-import React, { Component } from "react";
+import React from "react";
 import { animate } from "../../utils";
+import PropTypes from "prop-types";
 
-export default class LaunchpadItem extends Component {
+export default class LaunchpadItem extends React.PureComponent {
     onClick = e => {
         if (e.button == 1) return;
         animate(e.currentTarget, null, "launchpad-open");
@@ -11,13 +12,7 @@ export default class LaunchpadItem extends Component {
 
     render() {
         return (
-            <div
-                className="launchpad-item"
-                draggable
-                onMouseEnter={() => this.props.itemHovering(true)}
-                onMouseLeave={() => this.props.itemHovering(false)}
-                onClick={this.onClick}
-            >
+            <div className="launchpad-item" draggable onClick={this.onClick}>
                 <div className="launchpad-item-icon" alt={this.props.title} draggable={false}>
                     <img className="launchpad-item-icon" src={this.props.icon || "/assets/apps/box.svg"} />
                 </div>
@@ -28,3 +23,12 @@ export default class LaunchpadItem extends Component {
         );
     }
 }
+
+LaunchpadItem.propTypes = {
+    title: PropTypes.string,
+    subtitle: PropTypes.string,
+    badge: PropTypes.number,
+    icon: PropTypes.string,
+    onClick: PropTypes.func,
+    close: PropTypes.func
+};

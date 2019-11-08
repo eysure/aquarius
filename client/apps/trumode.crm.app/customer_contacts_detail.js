@@ -221,9 +221,10 @@ class CustomerContactsDetail extends Component {
                     name="deleteDoubleCheck"
                     appKey={this.props.appKey}
                     title={`Delete ${this.state.name} checking`}
-                    content={R.get("CUSTOMER_CONTACT_DELETE_DC", { name: this.state.name })}
                     onCheck={this.handleDelete}
-                />
+                >
+                    {R.get("CUSTOMER_CONTACT_DELETE_DC", { name: this.state.name })}
+                </Popup>
             </Window>
         );
     }

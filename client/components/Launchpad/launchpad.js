@@ -6,8 +6,7 @@ import PropTypes from "prop-types";
 export default class Launchpad extends React.Component {
     state = {
         index: 0,
-        isViewPortVertical: false,
-        isItemHovering: false
+        isViewPortVertical: false
     };
 
     renderLaunchpadPages = () => {
@@ -28,14 +27,10 @@ export default class Launchpad extends React.Component {
         return pageList;
     };
 
-    itemHovering = hovering => {
-        this.setState({ isItemHovering: hovering });
-    };
-
     renderLaunchpadItems = items => {
         if (!items || items.length === 0) return null;
         return items.map(item => {
-            return <LaunchpadItem key={item.appKey} {...item} itemHovering={this.itemHovering} close={this.props.close} />;
+            return <LaunchpadItem key={item.appKey} {...item} close={this.props.close} />;
         });
     };
 
@@ -61,7 +56,6 @@ export default class Launchpad extends React.Component {
                 {/* <SwipeableViews
                     ref={this.swipeableViewsRef}
                     id="launchpad-carousel"
-                    enableMouseEvents={!this.state.isItemHovering}
                     resistance
                     index={this.state.index}
                     onChangeIndex={index => this.setState({ index })}

@@ -90,5 +90,4 @@ export class ResourceFeeder {
     }
 }
 
-// This is a global ResourceFeeder, don't have scope, use in the core system.
 export const R = new ResourceFeeder();

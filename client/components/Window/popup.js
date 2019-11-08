@@ -11,8 +11,8 @@ export default class Popup extends Component {
         name: PropTypes.string.isRequired,
         _key: PropTypes.string,
         appKey: PropTypes.string.isRequired,
-        content: PropTypes.node,
-        children: PropTypes.node
+        children: PropTypes.node,
+        content: PropTypes.node
     };
 
     static defaultProps = {
@@ -53,7 +53,7 @@ export default class Popup extends Component {
                         <div style={{ marginRight: 16 }}>
                             <i className="material-icons">warning</i>
                         </div>
-                        {this.props.children || this.props.content || "Are you sure?"}
+                        {this.props.children || this.props.content}
                     </div>
                     <hr style={{ margin: 0 }} />
                     <div className="hbc h-full">

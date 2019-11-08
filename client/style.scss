@@ -6,37 +6,14 @@
     font-weight: 400;
     src: url("./fonts/material-icons.woff2") format("woff2");
 }
+
 @font-face {
     font-family: "SM Icons";
     font-style: normal;
     font-weight: 400;
     src: url("./fonts/Social-Media-Circled.otf");
 }
-@font-face {
-    font-family: "San Serif";
-    font-weight: 100;
-    src: url("./fonts/Roboto-Thin.ttf");
-}
-@font-face {
-    font-family: "San Serif";
-    font-weight: 300;
-    src: url("./fonts/Roboto-Light.ttf");
-}
-@font-face {
-    font-family: "San Serif";
-    font-weight: 400;
-    src: url("./fonts/Roboto-Regular.ttf");
-}
-@font-face {
-    font-family: "San Serif";
-    font-weight: 500;
-    src: url("./fonts/Roboto-Medium.ttf");
-}
-@font-face {
-    font-family: "San Serif";
-    font-weight: 700;
-    src: url("./fonts/Roboto-Bold.ttf");
-}
+
 @font-face {
     font-family: "Serif";
     font-weight: 300;
@@ -64,75 +41,73 @@
 }
 
 /** Thin */
-
 @font-face {
     font-family: "San Francisco";
     font-weight: 100;
-    src: url("./sanfranciscodisplay/sanfranciscodisplay-thin-webfont.woff2") format("woff2");
+    src: url("./fonts/sanfranciscodisplay-thin-webfont.woff2") format("woff2");
 }
 
 /** Ultra Light */
-
 @font-face {
     font-family: "San Francisco";
     font-weight: 200;
-    src: url("./sanfranciscodisplay/sanfranciscodisplay-ultralight-webfont.woff2") format("woff2");
+    src: url("./fonts/sanfranciscodisplay-ultralight-webfont.woff2") format("woff2");
 }
 
 /** Light */
-
 @font-face {
     font-family: "San Francisco";
     font-weight: 300;
-    src: url("./sanfranciscodisplay/sanfranciscodisplay-light-webfont.woff2") format("woff2");
+    src: url("./fonts/sanfranciscodisplay-light-webfont.woff2") format("woff2");
 }
 
 /** Regular */
-
 @font-face {
     font-family: "San Francisco";
     font-weight: 400;
-    src: url("./sanfranciscodisplay/sanfranciscodisplay-regular-webfont.woff2") format("woff2");
+    src: url("./fonts/sanfranciscodisplay-regular-webfont.woff2") format("woff2");
 }
 
 /** Medium */
-
 @font-face {
     font-family: "San Francisco";
     font-weight: 500;
-    src: url("./sanfranciscodisplay/sanfranciscodisplay-medium-webfont.woff2") format("woff2");
+    src: url("./fonts/sanfranciscodisplay-medium-webfont.woff2") format("woff2");
 }
 
 /** Semi Bold */
-
 @font-face {
     font-family: "San Francisco";
     font-weight: 600;
-    src: url("./sanfranciscodisplay/sanfranciscodisplay-semibold-webfont.woff2") format("woff2");
+    src: url("./fonts/sanfranciscodisplay-semibold-webfont.woff2") format("woff2");
 }
 
 /** Bold */
-
 @font-face {
     font-family: "San Francisco";
     font-weight: 700;
-    src: url("./sanfranciscodisplay/sanfranciscodisplay-bold-webfont.woff2") format("woff2");
+    src: url("./fonts/sanfranciscodisplay-bold-webfont.woff2") format("woff2");
 }
 
 /** Heavy */
-
 @font-face {
     font-family: "San Francisco";
     font-weight: 800;
-    src: url("./sanfranciscodisplay/sanfranciscodisplay-heavy-webfont.woff2") format("woff2");
+    src: url("./fonts/sanfranciscodisplay-heavy-webfont.woff2") format("woff2");
 }
 
 /** Black */
-
 @font-face {
     font-family: "San Francisco";
     font-weight: 900;
-    src: url("./sanfranciscodisplay/sanfranciscodisplay-black-webfont.woff2") format("woff2");
+    src: url("./fonts/sanfranciscodisplay-black-webfont.woff2") format("woff2");
+}
+
+/** Top-level Element **/
+
+body {
+    margin: 0;
+    font-family: "San Francisco", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 code {
@@ -145,8 +120,16 @@ code {
     font-size: 0.8rem;
 }
 
+a {
+    text-decoration: none;
+}
+
+.handle {
+    cursor: default;
+}
+
 i,
-.material-icons {
+i.material-icons {
     font-family: "Material Icons";
     font-weight: normal;
     font-style: normal;
@@ -161,7 +144,7 @@ i,
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
 }
-.sm-icons {
+i.sm-icons {
     font-family: "SM Icons";
     font-weight: normal;
     font-style: normal;
@@ -182,7 +165,7 @@ i,
     background: transparent; /* make scrollbar transparent */
 }
 
-#no-script {
+.no-script {
     position: absolute;
     left: 0;
     right: 0;
@@ -212,79 +195,8 @@ i,
     font-weight: normal;
 }
 
-body {
-    margin: 0;
-    font-family: "San Francisco", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-}
-
 form a {
     margin-left: 10px;
-}
-
-.list-item-badge {
-    background: grey;
-    color: white;
-    min-width: 20px;
-    height: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    font-size: 0.75rem;
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-    align-items: center;
-    border-radius: 50%;
-    align-content: center;
-    flex-direction: row;
-    justify-content: center;
-    right: 16px !important;
-}
-
-.badge-danger {
-    background: red;
-    color: white;
-}
-
-.text-field-group {
-    display: flex;
-}
-
-.text-field-group span {
-    padding: 32px 12px 0px 0px;
-    font-size: 28px;
-}
-
-.dialog-caption {
-    color: grey;
-    font-size: 0.8em !important;
-    padding: 4px !important;
-    text-align: right;
-}
-
-.full-width {
-    width: 100% !important;
-}
-
-.container {
-    transition: 0.3s;
-}
-
-.container .blured {
-    filter: blur(10px);
-}
-
-.error {
-    color: firebrick !important;
-}
-
-.warning {
-    color: darkorange !important;
-}
-
-.info {
-    color: #0277bd !important;
-}
-
-.succeed {
-    color: #00695c !important;
 }
 
 .flex {
@@ -310,41 +222,6 @@ form a {
     justify-content: flex-end;
 }
 
-/* Toolbar */
-.toolbar-icon {
-    display: flex;
-    justify-content: space-between;
-}
-.toolbar-icon button {
-    box-sizing: content-box;
-    padding: 0;
-    width: 38px;
-    height: 21px;
-    background-image: linear-gradient(-180deg, #fefefe 0%, #f3f3f3 100%);
-    border: 0.5px solid rgba(0, 0, 0, 0.15);
-    box-shadow: 0 0.5px 0 0 rgba(0, 0, 0, 0.15);
-    border-radius: 5px;
-    position: relative;
-    color: #686868;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-right: 11px;
-}
-.toolbar-icon button:last-child {
-    margin-right: 0;
-}
-
-.toolbar-icon button i {
-    font-size: 1rem;
-}
-.toolbar-icon button:not(:disabled):active {
-    background-image: linear-gradient(-180deg, #e0e0e0 0%, #d7d7d7 100%);
-}
-.toolbar-icon button:disabled {
-    color: #b7b7b7;
-}
-
 .full-height {
     height: 100% !important;
 }
@@ -366,6 +243,8 @@ form a {
     padding-top: 8px !important;
     padding-bottom: 8px !important;
 }
+
+// Order (Legacy)
 
 .order-detail-paper {
     padding: 16px;
@@ -420,24 +299,6 @@ form a {
     align-items: center;
 }
 
-.app-enter {
-    opacity: 0.01;
-}
-
-.app-enter.app-enter-active {
-    opacity: 1;
-    transition: opacity 300ms ease-in;
-}
-
-.app-leave {
-    opacity: 1;
-}
-
-.app-leave.app-leave-active {
-    opacity: 0.01;
-    transition: opacity 300ms ease-in;
-}
-
 .unselectable {
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -447,51 +308,6 @@ form a {
 
 .react-swipeable-view-container {
     height: 100%;
-}
-
-.launchpad-item :active {
-    filter: brightness(0.9);
-}
-
-/* Spinner */
-.lds-ripple {
-    display: inline-block;
-    position: relative;
-    width: 24px;
-    height: 24px;
-    margin-right: 8px;
-    box-sizing: border-box;
-    transform: scale(0.1);
-}
-.lds-ripple div {
-    position: absolute;
-    border: 20px solid black;
-    opacity: 1;
-    border-radius: 50%;
-    animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-    transform: translate(-124px, -124px);
-}
-.lds-ripple div:nth-child(2) {
-    animation-delay: -0.33s;
-}
-.lds-ripple div:nth-child(3) {
-    animation-delay: -0.66s;
-}
-@keyframes lds-ripple {
-    0% {
-        top: 120px;
-        left: 120px;
-        width: 0;
-        height: 0;
-        opacity: 0.99;
-    }
-    100% {
-        top: 0px;
-        left: 0px;
-        width: 240px;
-        height: 240px;
-        opacity: 0.01;
-    }
 }
 
 .monospace {
@@ -567,10 +383,6 @@ form a {
 .carousel-ctrl button:hover {
     color: rgba(0, 0, 0, 0.5);
     background-color: rgba(0, 0, 0, 0.2);
-}
-
-a {
-    text-decoration: none;
 }
 
 .sm-list {

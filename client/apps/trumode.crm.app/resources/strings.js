@@ -39,8 +39,8 @@ export default {
     type_4: ["Special Customer", "特殊客户"],
 
     CUSTOMER_DELETE_DC: [
-        'Are you sure to delete customer "${name}"? This cannot be restore. Only customers with no order placed can be removed.',
-        '你确定要删除客户"${name}"吗？此操作不能复原。只有从未下单的客人可以被删除。'
+        args => `Are you sure to delete customer "${args.name}"? This cannot be restore. Only customers with no order placed can be removed.`,
+        args => `你确定要删除客户"${args.name}"吗？此操作不能复原。只有从未下单的客人可以被删除。`
     ],
     NEW_CUSTOMER: ["New Customer", "新建客户"],
 
@@ -62,15 +62,18 @@ export default {
     email: ["Email", "邮箱"],
     mobile: ["Mobile", "电话"],
 
-    CUSTOMER_CONTACT_DELETE_DC: ['Are you sure to delete "${name}"? \n This cannot be undo.', '你确定要删除"${name}"吗？此操作不能复原。'],
+    CUSTOMER_CONTACT_DELETE_DC: [
+        args => `Are you sure to delete "${args.name}"? \n This cannot be undo.`,
+        args => `你确定要删除"${args.name}"吗？此操作不能复原。`
+    ],
 
     // Suppliers Fields
     city: ["City", "城市"],
     state: ["State", "省/州"],
 
     SUPPLIER_DELETE_DC: [
-        'Are you sure to delete supplier "${name}"? This cannot be restore. Only suppliers with no order taken can be removed.',
-        '你确定要删除供应商"${name}"吗？此操作不能复原。只有从未承接订单的供应商可以被删除。'
+        args => `Are you sure to delete supplier "${args.name}"? This cannot be restore. Only suppliers with no order taken can be removed.`,
+        args => `你确定要删除供应商"${args.name}"吗？此操作不能复原。只有从未承接订单的供应商可以被删除。`
     ],
 
     NEW_SUPPLIER: ["New Supplier", "新建供应商"],
@@ -87,5 +90,8 @@ export default {
 
     supplier_id: ["Belongs to Supplier", "所属供应商"],
 
-    SUPPLIER_CONTACT_DELETE_DC: ['Are you sure to delete "${name}"? \n This cannot be undo.', '你确定要删除"${name}"吗？此操作不能复原。']
+    SUPPLIER_CONTACT_DELETE_DC: [
+        args => `Are you sure to delete "${args.name}"? \n This cannot be undo.`,
+        args => `你确定要删除"${args.name}"吗？此操作不能复原。`
+    ]
 };

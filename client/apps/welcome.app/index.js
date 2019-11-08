@@ -90,8 +90,8 @@ class Welcome extends Component {
                     Enjoy
                 </button>
                 <p style={{ fontSize: "1rem", fontWeight: 300, width: "80%", position: "absolute", bottom: "32px", color: "grey" }}>
-                    Please understand that this system is still developing and maintaining. Bugs and crashes may occur during the demo. If you have any advice
-                    or feekback, feel free to open an issue, or send me an email at eysure@gmail.com. Thanks for all your cooperation.
+                    Please understand that this system is still working in progress. Bugs and crashes should be expected. Any advice or feekback are welcome,
+                    feel free to send me an email. Thanks for all your understanding.
                 </p>
                 <div className="sm-list">
                     <a href="mailto:eysure@gmail.com">
@@ -106,13 +106,13 @@ class Welcome extends Component {
     ];
 }
 
-mapStateToProps = state => {
+const mapStateToProps = state => {
     return {
         user: state.user
     };
 };
 
-mapDispatchToProps = dispatch => bindActionCreators({ appClose }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ appClose }, dispatch);
 
 Welcome.manifest = {
     appKey: "welcome",

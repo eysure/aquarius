@@ -1,17 +1,14 @@
-import React, { Component } from "react";
+import React from "react";
+import moment from "moment";
 
-export default class MenuBarTimeWidget extends Component {
-    state = {
-        time: new Date()
-    };
-
+export default class MenuBarTimeWidget extends React.Component {
     render() {
-        return this.state.time.toLocaleString();
+        return moment().format("llll");
     }
 
     componentDidMount() {
         setInterval(() => {
-            this.setState({ time: new Date() });
-        }, 1000);
+            this.forceUpdate();
+        }, 10000);
     }
 }
