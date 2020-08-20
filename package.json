@@ -15,7 +15,7 @@
         "@material-ui/core": "^3.9.3",
         "ajv": "^6.10.2",
         "ali-oss": "^6.1.1",
-        "bcrypt": "^3.0.6",
+        "bcrypt": "^5.0.0",
         "bufferutil": "^4.0.1",
         "fuse.js": "^3.4.5",
         "hotkeys-js": "^3.7.2",
