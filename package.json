@@ -20,7 +20,7 @@
         "fuse.js": "^3.4.5",
         "hotkeys-js": "^3.7.2",
         "interactjs": "^1.6.3",
-        "lodash": "^4.17.15",
+        "lodash": "^4.17.21",
         "meteor-node-stubs": "^0.4.1",
         "moment": "^2.24.0",
         "node-sass": "^4.13.0",
